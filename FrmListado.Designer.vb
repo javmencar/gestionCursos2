@@ -43,7 +43,6 @@ Partial Class FrmListado
         Me.lblFiltroGordo = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.ListView1 = New System.Windows.Forms.ListView()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.GbBusquedaUnica.SuspendLayout()
         CType(Me.GestionCursosDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GestionCursosDataSetBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -165,7 +164,6 @@ Partial Class FrmListado
         '
         'GbFiltros
         '
-        Me.GbFiltros.Controls.Add(Me.Button1)
         Me.GbFiltros.Controls.Add(Me.cmdQuitarFiltro)
         Me.GbFiltros.Controls.Add(Me.cmdFiltrar)
         Me.GbFiltros.Controls.Add(Me.CboFiltroGordo)
@@ -230,15 +228,6 @@ Partial Class FrmListado
         Me.ListView1.TabIndex = 1
         Me.ListView1.UseCompatibleStateImageBehavior = False
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(492, 37)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(66, 41)
-        Me.Button1.TabIndex = 19
-        Me.Button1.Text = "Quitar Filtro"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'FrmListado
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -286,5 +275,4 @@ Partial Class FrmListado
     Friend WithEvents cmdQuitarFiltro As System.Windows.Forms.Button
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents ListView1 As System.Windows.Forms.ListView
-    Friend WithEvents Button1 As System.Windows.Forms.Button
 End Class
