@@ -5,6 +5,7 @@ Public Class Form2
     Dim cur As Curso
     Public arr As ArrayList
     Dim tipo, idcurso As Integer
+    Private lvwColumnSorter As ListViewColumnSorter
 
     Dim filtrado As Boolean
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -17,10 +18,51 @@ Public Class Form2
         arr.Add("2_modulo 2")
        
         For Each lin As String In arr
-            Me.ListBox1.Items.Add(lin.ToString)
+            '   Me.ListBox1.Items.Add(lin.ToString)
         Next
         tipo = 0
         idcurso = 0
+        Dim columnheader As ColumnHeader
+        ' Se usa para crear encabezados de columna.
+        Dim listviewitem As ListViewItem
+        ' Se usa para crear elementos de ListView.
+
+        'Asegúrese de que la vista se establece para mostrar detalles.
+        ListView1.View = View.Details
+
+        ' Crear algunos elementos de ListView con el nombre y apellidos.
+        listviewitem = New ListViewItem("Mike")
+        listviewitem.SubItems.Add("Nash")
+        Me.ListView1.Items.Add(listviewitem)
+
+        listviewitem = New ListViewItem("Kim")
+        listviewitem.SubItems.Add("Abercrombie")
+        Me.ListView1.Items.Add(listviewitem)
+
+        listviewitem = New ListViewItem("Sunil")
+        listviewitem.SubItems.Add("Koduri")
+        Me.ListView1.Items.Add(listviewitem)
+
+        listviewitem = New ListViewItem("Birgit")
+        listviewitem.SubItems.Add("Seidl")
+        Me.ListView1.Items.Add(listviewitem)
+
+        ' Crear algunos encabezados de columna para los datos.
+        columnheader = New ColumnHeader()
+        columnheader.Text = "Nombre"
+        Me.ListView1.Columns.Add(columnheader)
+
+        columnheader = New ColumnHeader()
+        columnheader.Text = "Apellidos"
+        Me.ListView1.Columns.Add(columnheader)
+
+        ' Recorrer el bucle y asignar el tamaño del encabezado de la columna para que quepa el texto.
+        For Each columnheader In Me.ListView1.Columns
+            columnheader.Width = -2
+        Next
+
+
+
     End Sub
     Public Function cambiarPutoFormatoFecha(ByVal s As String) As Date
         Dim t As String = "311299990000"
@@ -318,4 +360,26 @@ Public Class Form2
 
 
     End Sub
+
+    Private Sub ListView1_DoubleClick(sender As Object, e As ColumnClickEventArgs) Handles ListView1.ColumnClick
+        MsgBox("HOLA")
+        ' Determinar si la columna en la que se hizo clic ya es la que se está ordenando. 
+        If (e.Column = lvwColumnSorter.SortColumn) Then
+            ' Revertir la dirección de ordenación actual de esta columna.
+            If (lvwColumnSorter.Order = SortOrder.Ascending) Then
+                lvwColumnSorter.Order = SortOrder.Descending
+            Else
+                lvwColumnSorter.Order = SortOrder.Ascending
+            End If
+        Else
+            ' Establecer el número de columna que se va a ordenar; de forma predeterminada, en orden ascendente.
+            lvwColumnSorter.SortColumn = e.Column
+            lvwColumnSorter.Order = SortOrder.Ascending
+        End If
+        ' Realizar la ordenación con estas nuevas opciones de ordenación. 
+        Me.ListView1.Sort()
+
+    End Sub
+
+    
 End Class

@@ -25,13 +25,13 @@ Partial Class Form2
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.TextBox2 = New System.Windows.Forms.TextBox()
-        Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.TextBox3 = New System.Windows.Forms.TextBox()
         Me.TextBox4 = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.ListView1 = New System.Windows.Forms.ListView()
         Me.SuspendLayout()
         '
         'TextBox1
@@ -56,14 +56,6 @@ Partial Class Form2
         Me.TextBox2.Name = "TextBox2"
         Me.TextBox2.Size = New System.Drawing.Size(611, 20)
         Me.TextBox2.TabIndex = 2
-        '
-        'ListBox1
-        '
-        Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.Location = New System.Drawing.Point(106, 146)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(340, 121)
-        Me.ListBox1.TabIndex = 3
         '
         'Button2
         '
@@ -116,18 +108,26 @@ Partial Class Form2
         Me.CheckBox1.Text = "con filtro"
         Me.CheckBox1.UseVisualStyleBackColor = True
         '
+        'ListView1
+        '
+        Me.ListView1.Location = New System.Drawing.Point(85, 157)
+        Me.ListView1.Name = "ListView1"
+        Me.ListView1.Size = New System.Drawing.Size(519, 97)
+        Me.ListView1.TabIndex = 12
+        Me.ListView1.UseCompatibleStateImageBehavior = False
+        '
         'Form2
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(675, 294)
+        Me.Controls.Add(Me.ListView1)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.TextBox4)
         Me.Controls.Add(Me.TextBox3)
         Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.ListBox1)
         Me.Controls.Add(Me.TextBox2)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.TextBox1)
@@ -140,11 +140,11 @@ Partial Class Form2
     Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
     Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents TextBox2 As System.Windows.Forms.TextBox
-    Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
     Friend WithEvents Button2 As System.Windows.Forms.Button
     Friend WithEvents TextBox3 As System.Windows.Forms.TextBox
     Friend WithEvents TextBox4 As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
+    Friend WithEvents ListView1 As System.Windows.Forms.ListView
 End Class

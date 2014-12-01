@@ -34,7 +34,7 @@ Public Class FrmListado
                 Me.GroupBox1.Text = "Listado de candidatos"
         End Select
         Me.CboFiltroGordo.SelectedIndex = -1
-        limpiarListView2()
+        PrepararListView()
     End Sub
     Private Sub cargarComboGordo()
         Try
@@ -63,40 +63,35 @@ Public Class FrmListado
             Me.CboFiltroBusquedaUnica.Items.Add(s)
         Next
     End Sub
-    Private Sub limpiarListView()
-        Me.ListView1.Refresh()
-        With Me.ListView1
-            .View = View.Details
-            .FullRowSelect = True
-            .GridLines = True
-            .Sorting = SortOrder.Ascending
-            .Items.Clear()
-            'METER AQUI LOS CAMPOS QUE QUIERAN, POR AHORA LOS TELEFONOS
-            Dim camposListview() As String = {"Id", "DNI", "Nombre", "Apellido1", "Apellido2",
-                                        "Tel1", "tel2", "InInaem", "", ""}
-            With .Columns
-                For i As Integer = 0 To camposListview.Length - 1
-                    Select Case i
-                        Case 0
-                            .Add(camposListview(i), 25, HorizontalAlignment.Center)
-                        Case 1
-                            .Add(camposListview(i), 75, HorizontalAlignment.Center)
-                        Case Else
-                            .Add(camposListview(i), 150, HorizontalAlignment.Center)
-                    End Select
-                Next
-            End With
-        End With
-        Call cargarDatosEnListview()
-    End Sub
-    Private Sub limpiarListView2()
+    'Private Sub limpiarListView()
+    '    Me.ListView1.Refresh()
+    '    With Me.ListView1
+    '        .View = View.Details
+    '        .FullRowSelect = True
+    '        .GridLines = True
+    '        .Sorting = SortOrder.Ascending
+    '        .Items.Clear()
+    '        'METER AQUI LOS CAMPOS QUE QUIERAN, POR AHORA LOS TELEFONOS
+    '        Dim camposListview() As String = {"Id", "DNI", "Nombre", "Apellido1", "Apellido2",
+    '                                    "Tel1", "tel2", "InInaem", "", ""}
+    '        With .Columns
+    '            For i As Integer = 0 To camposListview.Length - 1
+    '                Select Case i
+    '                    Case 0
+    '                        .Add(camposListview(i), 25, HorizontalAlignment.Center)
+    '                    Case 1
+    '                        .Add(camposListview(i), 75, HorizontalAlignment.Center)
+    '                    Case Else
+    '                        .Add(camposListview(i), 150, HorizontalAlignment.Center)
+    '                End Select
+    '            Next
+    '        End With
+    '    End With
+    '    Call cargarDatosEnListview()
+    'End Sub
+    Private Sub PrepararListView()
         Dim columnheader As ColumnHeader
-        ' Se usa para crear encabezados de columna.
-        Dim listviewitem As ListViewItem
-        ' Se usa para crear elementos de ListView.
-
         Me.ListView1.Refresh()
-
         With Me.ListView1
             .View = View.Details
             .FullRowSelect = True
@@ -118,20 +113,9 @@ Public Class FrmListado
                 Me.ListView1.Columns.Add(columnheader)
             Next
             For Each columnheader In Me.ListView1.Columns
-
                 columnheader.Width = -2
             Next
         End With
-        ' Se usa para crear encabezados de columna. Dim listviewitem As ListViewItem    ' Se usa para crear elementos de ListView.
-
-        'Asegúrese de que la vista se establece para mostrar detalles. ListView1.View = View.Details
-
-        ' Crear algunos elementos de ListView con el nombre y apellidos. listviewitem = New ListViewItem("Mike") listviewitem.SubItems.Add("Nash") Me.ListView1.Items.Add(listviewitem)
-
-
-
-
-
         Call cargarDatosEnListview()
     End Sub
 
@@ -196,9 +180,7 @@ Public Class FrmListado
     Private Sub cmdModificar_Click(sender As Object, e As EventArgs) Handles cmdModificar.Click
         Call AccederFicha()
     End Sub
-    Private Sub ListView1_DoubleClick(sender As Object, e As EventArgs)
-        Call AccederFicha()
-    End Sub
+  
     Private Sub AccederFicha()  'Lo saco porque se duplica al poder hacerlo tb. desde dobleClick
         Dim aviso As String = cat.Substring(0, cat.Length - 1)
         Try
@@ -438,9 +420,6 @@ Public Class FrmListado
             End If
         End If
     End Sub
-    Private Sub ListView1_SelectedIndexChanged(sender As Object, e As EventArgs)
-
-    End Sub
     Private Sub CmdActivarExportar_Click(sender As Object, e As EventArgs) Handles CmdExportar.Click
         MsgBox("Proximamente")
     End Sub
@@ -463,7 +442,7 @@ Public Class FrmListado
     End Sub
 
     Private Sub ListView1_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles ListView1.ColumnClick
-     ' Determinar si la columna en la que se hizo clic ya es la que se está ordenando. 
+        ' Determinar si la columna en la que se hizo clic ya es la que se está ordenando. 
         If (e.Column = lvwColumnSorter.SortColumn) Then
             ' Revertir la dirección de ordenación actual de esta columna.
             If (lvwColumnSorter.Order = SortOrder.Ascending) Then
@@ -479,5 +458,8 @@ Public Class FrmListado
         ' Realizar la ordenación con estas nuevas opciones de ordenación. 
         Me.ListView1.Sort()
 
+    End Sub
+    Private Sub ListView1_DoubleClick(sender As Object, e As EventArgs) Handles ListView1.DoubleClick
+        Call AccederFicha()
     End Sub
 End Class
