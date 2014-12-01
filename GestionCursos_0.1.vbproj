@@ -94,9 +94,7 @@
       <DependentUpon>BBDD_02DataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Curso.vb" />
-    <Compile Include="Form1.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Form1.vb" />
     <Compile Include="Form1.Designer.vb">
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
@@ -106,27 +104,21 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Form2.vb">
-      <SubType>Form</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="FrmAlumnos.Designer.vb">
       <DependentUpon>FrmAlumnos.vb</DependentUpon>
     </Compile>
-    <Compile Include="FrmAlumnos.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FrmAlumnos.vb" />
     <Compile Include="FrmComentarios.Designer.vb">
       <DependentUpon>FrmComentarios.vb</DependentUpon>
     </Compile>
-    <Compile Include="FrmComentarios.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FrmComentarios.vb" />
     <Compile Include="FrmCursos.Designer.vb">
       <DependentUpon>FrmCursos.vb</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="FrmCursos.vb">
-      <SubType>Form</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="FrmFichas.Designer.vb">
@@ -140,15 +132,11 @@
     <Compile Include="FrmGestionar.Designer.vb">
       <DependentUpon>FrmGestionar.vb</DependentUpon>
     </Compile>
-    <Compile Include="FrmGestionar.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FrmGestionar.vb" />
     <Compile Include="FrmCrear.Designer.vb">
       <DependentUpon>FrmCrear.vb</DependentUpon>
     </Compile>
-    <Compile Include="FrmCrear.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FrmCrear.vb" />
     <Compile Include="FrmListado.Designer.vb">
       <DependentUpon>FrmListado.vb</DependentUpon>
     </Compile>
@@ -158,15 +146,11 @@
     <Compile Include="FrmModificarCursos.Designer.vb">
       <DependentUpon>FrmModificarCursos.vb</DependentUpon>
     </Compile>
-    <Compile Include="FrmModificarCursos.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FrmModificarCursos.vb" />
     <Compile Include="FrmModificarModulos.Designer.vb">
       <DependentUpon>FrmModificarModulos.vb</DependentUpon>
     </Compile>
-    <Compile Include="FrmModificarModulos.vb">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FrmModificarModulos.vb" />
     <Compile Include="GestionCursosDataSet1.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
