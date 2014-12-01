@@ -90,8 +90,13 @@ Public Class FrmListado
         Call cargarDatosEnListview()
     End Sub
     Private Sub limpiarListView2()
-        Me.ListView1.Refresh()
         Dim columnheader As ColumnHeader
+        ' Se usa para crear encabezados de columna.
+        Dim listviewitem As ListViewItem
+        ' Se usa para crear elementos de ListView.
+
+        Me.ListView1.Refresh()
+
         With Me.ListView1
             .View = View.Details
             .FullRowSelect = True
@@ -101,13 +106,19 @@ Public Class FrmListado
             'METER AQUI LOS CAMPOS QUE QUIERAN, POR AHORA LOS TELEFONOS
             Dim camposListview() As String = {"Id", "DNI", "Nombre", "Apellido1", "Apellido2",
                                         "Tel1", "tel2", "InInaem", "", ""}
-
+            Dim s As String = ""
             For i As Integer = 0 To camposListview.Length - 1
+                If i = 0 Then
+                    s = camposListview(i).ToString.PadRight(5)
+                Else
+                    s = camposListview(i).ToString.PadRight(20)
+                End If
                 columnheader = New ColumnHeader()
-                columnheader.Text = camposListview(i)
+                columnheader.Text = s
                 Me.ListView1.Columns.Add(columnheader)
             Next
             For Each columnheader In Me.ListView1.Columns
+
                 columnheader.Width = -2
             Next
         End With
@@ -452,21 +463,20 @@ Public Class FrmListado
     End Sub
 
     Private Sub ListView1_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles ListView1.ColumnClick
-        ' Determinar si la columna en la que se hizo clic ya es la que se está ordenando. 
+     ' Determinar si la columna en la que se hizo clic ya es la que se está ordenando. 
         If (e.Column = lvwColumnSorter.SortColumn) Then
-            ' Revertir la dirección de ordenación actual de esta columna. 
+            ' Revertir la dirección de ordenación actual de esta columna.
             If (lvwColumnSorter.Order = SortOrder.Ascending) Then
                 lvwColumnSorter.Order = SortOrder.Descending
             Else
                 lvwColumnSorter.Order = SortOrder.Ascending
             End If
         Else
-            ' Establecer el número de columna que se va a ordenar; de forma predeterminada, en orden ascendente. 
+            ' Establecer el número de columna que se va a ordenar; de forma predeterminada, en orden ascendente.
             lvwColumnSorter.SortColumn = e.Column
             lvwColumnSorter.Order = SortOrder.Ascending
         End If
-
-        ' Realizar la ordenación con estas nuevas opciones de ordenación.
+        ' Realizar la ordenación con estas nuevas opciones de ordenación. 
         Me.ListView1.Sort()
 
     End Sub
