@@ -44,7 +44,6 @@ Partial Class FrmListado
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.ListView1 = New System.Windows.Forms.ListView()
         Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
         Me.GbBusquedaUnica.SuspendLayout()
         CType(Me.GestionCursosDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GestionCursosDataSetBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -166,7 +165,6 @@ Partial Class FrmListado
         '
         'GbFiltros
         '
-        Me.GbFiltros.Controls.Add(Me.Button2)
         Me.GbFiltros.Controls.Add(Me.Button1)
         Me.GbFiltros.Controls.Add(Me.cmdQuitarFiltro)
         Me.GbFiltros.Controls.Add(Me.cmdFiltrar)
@@ -174,7 +172,7 @@ Partial Class FrmListado
         Me.GbFiltros.Controls.Add(Me.lblFiltroGordo)
         Me.GbFiltros.Location = New System.Drawing.Point(37, 27)
         Me.GbFiltros.Name = "GbFiltros"
-        Me.GbFiltros.Size = New System.Drawing.Size(730, 88)
+        Me.GbFiltros.Size = New System.Drawing.Size(668, 88)
         Me.GbFiltros.TabIndex = 9
         Me.GbFiltros.TabStop = False
         Me.GbFiltros.Text = "Filtrar"
@@ -234,21 +232,12 @@ Partial Class FrmListado
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(508, 32)
+        Me.Button1.Location = New System.Drawing.Point(477, 37)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.Size = New System.Drawing.Size(66, 41)
         Me.Button1.TabIndex = 19
-        Me.Button1.Text = "Button1"
+        Me.Button1.Text = "Quitar Filtro"
         Me.Button1.UseVisualStyleBackColor = True
-        '
-        'Button2
-        '
-        Me.Button2.Location = New System.Drawing.Point(615, 32)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 23)
-        Me.Button2.TabIndex = 20
-        Me.Button2.Text = "Button2"
-        Me.Button2.UseVisualStyleBackColor = True
         '
         'FrmListado
         '
@@ -298,5 +287,4 @@ Partial Class FrmListado
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents ListView1 As System.Windows.Forms.ListView
     Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents Button2 As System.Windows.Forms.Button
 End Class
