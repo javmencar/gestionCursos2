@@ -62,7 +62,11 @@ Public Class FrmFichas
             Me.txtFecEntr.Text = "01/01/1900"
             Me.txtInFecha.Text = "01/01/1900"
             Me.OptAptoPendiente.Select()
+            Me.cboCursos.Enabled = True
+            Me.txtCurso.Enabled = False
         Else
+            Me.txtCurso.Enabled = False
+            Me.cboCursos.Enabled = True
             Me.cmdModificar.Text = "GUARDAR CAMBIOS EN LA FICHA"
             Me.cmdCancelar.Text = "Cancelar La Modificación"
             Me.cmdCambiarFoto.Text = "Cambiar Foto"
@@ -76,8 +80,44 @@ Public Class FrmFichas
             End If
 
         End If
+        cargarcomboCursos()
     End Sub
-
+    Private Sub cargarcomboCursos()
+        Try
+            Dim sql As String = "select cursos.Id, cursos.CodCur, cursos.nombre from Cursos ORDER BY Cursos.Id DESC"
+            cn.Open()
+            Dim cmd As New SqlCommand(sql, cn)
+            Dim dr As SqlDataReader
+            If nuevo = True Then ' si es nueva ficha, simplemente cargo el combo para poder elegir
+                dr = cmd.ExecuteReader
+                While dr.Read
+                    Me.cboCursos.Items.Add(String.Format("{0}_{1}_{2}", dr(0), dr(1), dr(2)))
+                End While
+            Else
+                dr = cmd.ExecuteReader
+                While dr.Read
+                    If tipo = 3 Then
+                        If dr(0) = CAND.Curso Then
+                            Me.txtCurso.Text = dr(2)
+                            Exit While
+                        End If
+                    Else
+                        If dr(0) = DP.Curso Then
+                            Me.txtCurso.Text = dr(2)
+                            Exit While
+                        End If
+                    End If
+                    
+                End While
+            End If
+        Catch ex2 As miExcepcion
+            MsgBox(ex2.ToString)
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        Finally
+            cn.Close()
+        End Try
+    End Sub
     Private Sub rellenarCamposDesdeObjeto(ByVal Datos As DatosPersonales)
         With Datos
             Me.txtId.Text = CStr(.Id)
@@ -969,5 +1009,11 @@ Public Class FrmFichas
                 MsgBox("No se ha guardado el comentario")
             End If
         End If
+    End Sub
+    Private Sub cboCursos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCursos.SelectedIndexChanged
+        Me.txtCurso.Text = ""
+        Dim aux(3) As String
+        aux = Split(Me.cboCursos.SelectedItem.ToString, "_")
+        Me.txtCurso.Text = aux(2)
     End Sub
 End Class

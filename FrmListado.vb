@@ -63,32 +63,6 @@ Public Class FrmListado
             Me.CboFiltroBusquedaUnica.Items.Add(s)
         Next
     End Sub
-    'Private Sub limpiarListView()
-    '    Me.ListView1.Refresh()
-    '    With Me.ListView1
-    '        .View = View.Details
-    '        .FullRowSelect = True
-    '        .GridLines = True
-    '        .Sorting = SortOrder.Ascending
-    '        .Items.Clear()
-    '        'METER AQUI LOS CAMPOS QUE QUIERAN, POR AHORA LOS TELEFONOS
-    '        Dim camposListview() As String = {"Id", "DNI", "Nombre", "Apellido1", "Apellido2",
-    '                                    "Tel1", "tel2", "InInaem", "", ""}
-    '        With .Columns
-    '            For i As Integer = 0 To camposListview.Length - 1
-    '                Select Case i
-    '                    Case 0
-    '                        .Add(camposListview(i), 25, HorizontalAlignment.Center)
-    '                    Case 1
-    '                        .Add(camposListview(i), 75, HorizontalAlignment.Center)
-    '                    Case Else
-    '                        .Add(camposListview(i), 150, HorizontalAlignment.Center)
-    '                End Select
-    '            Next
-    '        End With
-    '    End With
-    '    Call cargarDatosEnListview()
-    'End Sub
     Private Sub PrepararListView()
         Dim columnheader As ColumnHeader
         Me.ListView1.Refresh()
@@ -200,7 +174,6 @@ Public Class FrmListado
             If tipo = 3 Then
                 Dim CAND As Candidato = RellenarCandidato()
                 If Not IsNothing(CAND) Then
-                    Call CargarNotas(CAND)
                     Dim frm As New FrmFichas(CAND, False)
                     If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
                         Call cargarDatosEnListview()
@@ -249,13 +222,7 @@ Public Class FrmListado
         End Try
     End Sub
     Private Function RellenarDatosPersonales() As DatosPersonales
-        Dim CA As Candidato
-        Dim DP As DatosPersonales
-        If tipo = 3 Then
-            ca = New Candidato
-        Else
-            DP = New DatosPersonales
-        End If
+        Dim DP As New DatosPersonales
         Try
             cn = New SqlConnection(ConeStr)
             'recupero el id del elemento que quiero modificar a traves del listview
@@ -380,12 +347,6 @@ Public Class FrmListado
             'recupero el id del elemento que quiero modificar a traves del listview
             Dim id As Integer = CInt(Me.ListView1.SelectedItems(0).Text)
             Dim Sqlcurso As String
-            cn.Open()
-            Sqlcurso = String.Format("select cursos.nombre from cursos, Candidatos, Candidatos_Cursos where Candidatos.id=Candidatos_Cursos.IdCa and Cursos.id=Candidatos_Cursos.IdCur and Candidatos.id={0}", id)
-            Dim cmdcur As New SqlCommand(Sqlcurso, cn)
-            Dim cur As String = cmdcur.executescalar
-            cn.Close()
-           
             Dim Sql As String = String.Format("SELECT * FROM DatosPersonales, {0} WHERE DatosPersonales.Id={0}.IdDP and {0}.Id={1}", cat, id)
             '
             cn.Open()
@@ -478,12 +439,12 @@ Public Class FrmListado
                     If Not IsDBNull(dr(27)) Then
                         .Comentarios = dr(27)
                     End If
-                    If Not IsNothing(cur) Then
-                        .Curso = cur
+                    If Not IsDBNull(dr(28)) Then
+                        .Comentarios = dr(28)
                     End If
                     .cargarlistas()
                 End With
-                Call CargarNotas(CA)
+                Call CargarNotas(CA) 'OJO QUE ESTO SOLO SON DATOS DE PRUEBA POR AHORA
             End If
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
