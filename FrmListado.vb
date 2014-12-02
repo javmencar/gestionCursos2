@@ -167,15 +167,27 @@ Public Class FrmListado
         End Try
     End Sub
     Private Sub cmdNuevo_Click(sender As Object, e As EventArgs) Handles cmdNuevo.Click
-        Dim dpers As New DatosPersonales
-        'en tipo llevo si es alumno, profesor o candidato; true porque es nuevo
-        Dim frm As New FrmFichas(dpers, tipo, True)
-        If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
-            MsgBox("Insercion en la base de datos Completada")
-            Call cargarDatosEnListview()
-        Else
-            Throw New miExcepcion("cancelado a peticion del usuario")
+        If tipo = 3 Then    'paso un candidato
+            Dim nwCand As New Candidato
+            Dim frm As New FrmFichas(nwCand, True)
+            If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
+                MsgBox("Insercion en la base de datos Completada")
+                Call cargarDatosEnListview()
+            Else
+                Throw New miExcepcion("cancelado a peticion del usuario")
+            End If
+        Else   ' paso un profesor o un alumno 
+            Dim dpers As New DatosPersonales
+            'en tipo llevo si es alumno, profesor o candidato; true porque es nuevo
+            Dim frm As New FrmFichas(dpers, tipo, True)
+            If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
+                MsgBox("Insercion en la base de datos Completada")
+                Call cargarDatosEnListview()
+            Else
+                Throw New miExcepcion("cancelado a peticion del usuario")
+            End If
         End If
+        
     End Sub
     Private Sub cmdModificar_Click(sender As Object, e As EventArgs) Handles cmdModificar.Click
         Call AccederFicha()
@@ -185,15 +197,28 @@ Public Class FrmListado
         Dim aviso As String = cat.Substring(0, cat.Length - 1)
         Try
             If Me.ListView1.SelectedIndices.Count = 0 Then Throw New miExcepcion("Debe seleccionar un elemento del listado")
-            Dim DP As DatosPersonales = RellenarDatosPersonales()
-            If Not IsNothing(DP) Then
-                'en tipo llevo si es alumno, profesor o candidato; false porque es modificacion de uno existente
-                Dim frm As New FrmFichas(DP, tipo, False)
+            If tipo = 3 Then
+                Dim CAND As Candidato = RellenarCandidato()
+                If Not IsNothing(CAND) Then
+                    Call CargarNotas(CAND)
+                    Dim frm As New FrmFichas(CAND, False)
+                    If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                        Call cargarDatosEnListview()
+                    Else
+                        Throw New miExcepcion("proceso cancelado")
+                    End If
+                End If
+            Else
+                Dim DP As DatosPersonales = RellenarDatosPersonales()
+                If Not IsNothing(DP) Then
+                    'en tipo llevo si es alumno, profesor o candidato; false porque es modificacion de uno existente
+                    Dim frm As New FrmFichas(DP, tipo, False)
 
-                If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                    Call cargarDatosEnListview()
-                Else
-                    Throw New miExcepcion("proceso cancelado")
+                    If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                        Call cargarDatosEnListview()
+                    Else
+                        Throw New miExcepcion("proceso cancelado")
+                    End If
                 End If
             End If
         Catch ex2 As miExcepcion
@@ -202,8 +227,35 @@ Public Class FrmListado
             MsgBox(ex.ToString)
         End Try
     End Sub
+    Private Sub CargarNotas(ByVal ca As Candidato)
+        Try
+            'TO DO: Rellenar las notas por consulta
+            'por probar:
+            With ca
+                .EstecTest = 1.56
+                .EstecDinam = 2.0
+                .EstecEntr = 0.75
+                .InaemMujer = 1
+                .InaemBajaCon = 0
+                .InaemJoven = 1
+                .InaemDiscap = 0
+                .InaemOtros = 0
+            End With
+
+        Catch ex2 As miExcepcion
+            MsgBox(ex2.ToString)
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
+    End Sub
     Private Function RellenarDatosPersonales() As DatosPersonales
-        Dim DP As New DatosPersonales
+        Dim CA As Candidato
+        Dim DP As DatosPersonales
+        If tipo = 3 Then
+            ca = New Candidato
+        Else
+            DP = New DatosPersonales
+        End If
         Try
             cn = New SqlConnection(ConeStr)
             'recupero el id del elemento que quiero modificar a traves del listview
@@ -320,6 +372,129 @@ Public Class FrmListado
             cn.Close()
         End Try
         Return DP
+    End Function
+    Private Function RellenarCandidato() As Candidato
+        Dim CA As New Candidato
+        Try
+            cn = New SqlConnection(ConeStr)
+            'recupero el id del elemento que quiero modificar a traves del listview
+            Dim id As Integer = CInt(Me.ListView1.SelectedItems(0).Text)
+            Dim Sqlcurso As String
+            cn.Open()
+            Sqlcurso = String.Format("select cursos.nombre from cursos, Candidatos, Candidatos_Cursos where Candidatos.id=Candidatos_Cursos.IdCa and Cursos.id=Candidatos_Cursos.IdCur and Candidatos.id={0}", id)
+            Dim cmdcur As New SqlCommand(Sqlcurso, cn)
+            Dim cur As String = cmdcur.executescalar
+            cn.Close()
+           
+            Dim Sql As String = String.Format("SELECT * FROM DatosPersonales, {0} WHERE DatosPersonales.Id={0}.IdDP and {0}.Id={1}", cat, id)
+            '
+            cn.Open()
+            Dim cmd As New SqlCommand(Sql, cn)
+            Dim dr As SqlDataReader
+            dr = cmd.ExecuteReader
+            If dr.Read Then
+                With CA
+                    If Not IsNothing(dr(0)) Then
+                        .Id = dr(0)
+                    End If
+                    If Not IsDBNull(dr(1)) Then
+                        .DNI = dr(1)
+                    End If
+                    If Not IsDBNull(dr(2)) Then
+                        .Nombre = dr(2)
+                    End If
+                    If Not IsDBNull(dr(3)) Then
+                        .Apellido1 = dr(3)
+                    End If
+                    If Not IsDBNull(dr(4)) Then
+                        .Apellido2 = dr(4)
+                    End If
+                    If Not IsDBNull(dr(5)) Then
+                        .Fnac = dr(5)
+                    End If
+                    If Not IsDBNull(dr(6)) Then
+                        .LugNac = dr(6)
+                    End If
+                    If Not IsDBNull(dr(7)) Then
+                        .Edad = dr(7)
+                    End If
+                    If Not IsDBNull(dr(8)) Then
+                        .Domicilio = dr(8)
+                    End If
+                    If Not IsDBNull(dr(9)) Then
+                        .CP = dr(9)
+                    End If
+                    If Not IsDBNull(dr(10)) Then
+                        .Poblacion = dr(10)
+                    End If
+                    If Not IsDBNull(dr(11)) Then
+                        .Tel1 = dr(11)
+                    End If
+                    If Not IsDBNull(dr(12)) Then
+                        .Tel2 = dr(12)
+                    End If
+                    If Not IsDBNull(dr(13)) Then
+                        .NumSS = dr(13)
+                    End If
+                    If Not IsDBNull(dr(14)) Then
+                        .InInaem = dr(14)
+                    End If
+                    If Not IsDBNull(dr(15)) Then
+                        .InFecha = dr(15)
+                    End If
+                    If Not IsDBNull(dr(16)) Then
+                        .NivelEstudios = dr(16)
+                    End If
+                    If Not IsDBNull(dr(17)) Then
+                        .ExpSector = dr(17)
+                    End If
+                    If Not IsDBNull(dr(18)) Then
+                        .TallaCamiseta = dr(18)
+                    End If
+                    If Not IsDBNull(dr(19)) Then
+                        .TallaPantalon = dr(19)
+                    End If
+                    If Not IsDBNull(dr(20)) Then
+                        .TallaZapato = dr(20)
+                    End If
+                    If Not IsDBNull(dr(21)) Then
+                        .Entrevistador = dr(21)
+                    End If
+                    If Not IsDBNull(dr(22)) Then
+                        .FecEntr = dr(22)
+                    End If
+                    If Not IsDBNull(dr(23)) Then
+                        .Valoracion = dr(23)
+                    End If
+                    If Not IsDBNull(dr(24)) Then
+                        .Apto = dr(24)
+                    End If
+                    If Not IsDBNull(dr(25)) Then
+                        .PathFoto = dr(25)
+                    End If
+                    If Not IsDBNull(dr(26)) Then
+                        .Email = dr(26)
+                    End If
+                    If Not IsDBNull(dr(27)) Then
+                        .Comentarios = dr(27)
+                    End If
+                    If Not IsNothing(cur) Then
+                        .Curso = cur
+                    End If
+                    .cargarlistas()
+                End With
+                Call CargarNotas(CA)
+            End If
+        Catch ex2 As miExcepcion
+            MsgBox(ex2.ToString)
+            CA = Nothing
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+            CA = Nothing
+        Finally
+            cn.Close()
+        End Try
+        Return CA
     End Function
     Private Sub cmdSalir_Click(sender As Object, e As EventArgs) Handles cmdSalir.Click
         Me.DialogResult = Windows.Forms.DialogResult.Cancel

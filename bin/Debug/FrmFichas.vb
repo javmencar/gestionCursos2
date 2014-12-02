@@ -3,24 +3,37 @@ Imports System.Data.SqlClient
 Public Class FrmFichas
     Dim nuevo, fotoCambiada As Boolean
     Public DP As DatosPersonales
+    Public CAND As Candidato
+    Dim tipo As Integer
     Public cat As String
     Public cn As SqlConnection
     Dim NuIdDP As Integer
 
-    Sub New(ByVal Da As DatosPersonales, ByVal tipo As Integer, ByVal nw As Boolean)
+    Sub New(ByVal Da As DatosPersonales, ByVal ti As Integer, ByVal nw As Boolean)
         ' Llamada necesaria para el diseñador.
         InitializeComponent()
         ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
         nuevo = nw
-        DP = Da
+        tipo = ti
         Select Case tipo
             Case 1
                 cat = "Alumnos"
+                DP = Da
             Case 2
                 cat = "Profesores"
-            Case 3
+                DP = Da
                 cat = "Candidatos"
+                CAND = Da ' cambio el tipo a candidato para poder llevar las notas.
         End Select
+    End Sub
+    Sub New(ByVal ca As Candidato, ByVal nw As Boolean)     'Voy a ñador un nuevo constructor
+        ' Llamada necesaria para el diseñador.
+        InitializeComponent()
+        ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
+        nuevo = nw
+        tipo = 3
+        cat = "Candidatos"
+        CAND = ca ' cambio el tipo a candidato para poder llevar las notas.
     End Sub
 
     Private Sub FrmFichas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -31,8 +44,13 @@ Public Class FrmFichas
         Me.LstExpSector.Enabled = True
         NuIdDP = -1
         Me.cmdAñadirAAlumnos.Visible = False
+
         If nuevo = True Then
-            DP = New DatosPersonales
+            If tipo = 3 Then
+                CAND = New Candidato
+            Else
+                DP = New DatosPersonales
+            End If
             Me.cmdModificar.Text = "CREAR NUEVA FICHA"
             Me.cmdCancelar.Text = "Cancelar La Creación"
             Me.cmdCambiarFoto.Text = "Insertar Foto"
@@ -50,7 +68,13 @@ Public Class FrmFichas
             Me.cmdCambiarFoto.Text = "Cambiar Foto"
             Me.cmdBorrar.Visible = True
             Me.cmdBorrar.Enabled = True
-            Call rellenarCamposDesdeObjeto(DP)
+            If tipo = 3 Then
+                Call rellenarCamposDesdeCandidato(CAND)
+                Call rellenarNotas(CAND)
+            Else
+                Call rellenarCamposDesdeObjeto(DP)
+            End If
+
         End If
     End Sub
 
@@ -145,8 +169,145 @@ Public Class FrmFichas
                 Me.lblComentarios.BackColor = Color.Red
                 Me.cmdAñadirComentarios.Text = "Acceder a Comentarios"
             End If
-
+            If Not IsNothing(.Curso) Then
+                Me.txtCurso.Text = .Curso
+            End If
         End With
+    End Sub
+    Private Sub rellenarCamposDesdeCandidato(ByVal ca As Candidato)
+        With ca
+            Me.txtId.Text = CStr(.Id)
+            Me.txtApellido1.Text = .Apellido1
+            Me.txtApellido2.Text = .Apellido2
+            Me.txtNombre.Text = .Nombre
+            Me.txtDNI.Text = .DNI
+            Me.txtNumSS.Text = .NumSS
+            If .Fnac <> "1/1/1900" Then
+                Me.txtFNac.Text = .Fnac
+            Else
+                Me.txtFNac.Text = "1/1/1900"
+            End If
+            ' Me.txtFNac.Text = CStr(.FecEntr)
+            Me.txtLugNac.Text = .LugNac
+            Me.txtEdad.Text = CStr(.Edad)
+            Me.txtTel1.Text = .Tel1
+            Me.txtTel2.Text = .Tel2
+            Me.txtDomicilio.Text = .Domicilio
+            Me.txtCP.Text = .CP
+            Me.txtPoblacion.Text = .Poblacion
+            If .InInaem = True Then
+                Me.optInaemSi.Select()
+            Else
+                Me.OptInaemNo.Select()
+            End If
+            If .InFecha <> "1/1/1900" Then
+                Me.txtInFecha.Text = .InFecha
+            Else
+                Me.txtInFecha.Text = "1/1/1900"
+            End If
+            ' Me.txtInFecha.Text = CStr(.InFecha)
+            Me.txtNivelEstudios.Text = .NivelEstudios
+            'hago una matriz con la string de experiencia y la vuelco en el listbox
+            'controlo si hay algo en el string
+            Me.LstExpSector.Items.Clear()
+            If Not IsNothing(.ExpSector) Then
+                Dim sectores() As String = .ExpSector.Split("/")
+                For Each s As String In sectores
+                    Me.LstExpSector.Items.Add(s)
+                Next
+            End If
+            Me.CboTallaCamiseta.SelectedItem = .TallaCamiseta
+            Me.CboTallaPantalon.SelectedItem = .TallaPantalon
+            Me.txtTallaCalzado.Text = CStr(.TallaZapato)
+            Me.txtEntrevistador.Text = .Entrevistador
+            If .FecEntr <> "1/1/1900" Then
+                Me.txtFecEntr.Text = .InFecha
+            Else
+                Me.txtFecEntr.Text = "1/1/1900"
+            End If
+            ' Me.txtFecEntr.Text = CStr(.FecEntr)
+            Me.txtValoracion.Text = .Valoracion
+            If Not IsNothing(.Apto) Then
+                Dim esta As Boolean
+                Select Case .Apto
+                    Case "Apto"
+                        Me.optAptoSi.Select()
+                        Me.cmdAñadirAAlumnos.Visible = True
+                        If nuevo = True Then
+                            Me.cmdAñadirAAlumnos.Enabled = True
+                        Else
+                            If cat = "Alumnos" Or cat = "Profesores" Then
+                                esta = EstaEnTablas(.Id)
+                                If esta = False Then Me.cmdAñadirAAlumnos.Enabled = True
+                            End If
+                        End If
+                    Case "No Apto"
+                        Me.OptAptoNo.Select()
+                    Case "Pendiente"
+                        Me.OptAptoPendiente.Select()
+                        Me.cmdAñadirAAlumnos.Visible = True
+                        Me.cmdAñadirAAlumnos.Enabled = False
+                End Select
+            Else
+                Me.OptAptoPendiente.Select()
+            End If
+            If Not IsNothing(.PathFoto) Then
+                Me.PicBx1.ImageLocation = .PathFoto
+                Me.PicBx1.Show()
+                Me.PicBx1.Tag = .PathFoto
+            Else
+                Me.PicBx1.Image = Image.FromFile("C:\GIT\GestionCursos1\Resources\female-silhouette_0.jpg")
+                Me.PicBx1.Tag = "C:\GIT\GestionCursos1\Resources\female-silhouette_0.jpg"
+            End If
+            Me.txtEmail.Text = .Email
+            If Not IsNothing(.Comentarios) Then
+                Me.lblComentarios.Text = "HAY COMENTARIOS"
+                Me.lblComentarios.BackColor = Color.Red
+                Me.cmdAñadirComentarios.Text = "Acceder a Comentarios"
+            End If
+            If Not IsNothing(.Curso) Then
+                Me.txtCurso.Text = .Curso
+            End If
+        End With
+    End Sub
+    Private Sub rellenarNotas(ByVal CA As Candidato)
+        With CA
+            If Not IsNothing(.EstecTest) Then
+                Me.txtEstecTest.Text = .EstecTest
+            End If
+            If Not IsNothing(.EstecDinam) Then
+                Me.txtEstecDinam.Text = .EstecDinam
+            End If
+            If Not IsNothing(.EstecEntr) Then
+                Me.txtEstecEntr.Text = .EstecEntr
+            End If
+            If Not IsNothing(.notaEstecform) Then
+                Me.txtEstecNOTA.Text = .notaEstecform
+            End If
+            If Not IsNothing(.InaemMujer) Then
+                Me.txtInaemMujer.Text = .InaemMujer
+            End If
+            If Not IsNothing(.InaemDiscap) Then
+                Me.txtInaemDiscap.Text = .InaemDiscap
+            End If
+            If Not IsNothing(.InaemBajaCon) Then
+                Me.txtInaemBajaContr.Text = .InaemBajaCon
+            End If
+
+            If Not IsNothing(.InaemJoven) Then
+                Me.txtInaemJoven.Text = .InaemJoven
+            End If
+            If Not IsNothing(.InaemOtros) Then
+                Me.txtInaemOtros.Text = .InaemOtros
+            End If
+            If Not IsNothing(.InaemMujer) Then
+                Me.txtInaemMujer.Text = .InaemMujer
+            End If
+            If Not IsNothing(.notaINAEM) Then
+                Me.txtInaemNOTA.Text = .notaINAEM
+            End If
+        End With
+
     End Sub
 
     Private Function EstaEnTablas(ByVal i As String) As Boolean
@@ -292,7 +453,12 @@ Public Class FrmFichas
                             vbCrLf & "¿Seguro que desea seguir?", MsgBoxStyle.YesNo)
                 If respuesta = MsgBoxResult.No Then
                     'vuelvo a cargar los datos originales
-                    Call rellenarCamposDesdeObjeto(DP)
+                    If tipo = 3 Then
+                        Call rellenarCamposDesdeCandidato(CAND)
+                    Else
+                        Call rellenarCamposDesdeObjeto(DP)
+                    End If
+                    '  Call rellenarCamposDesdeObjeto(DP)
                     Throw New miExcepcion("Operación cancelada a peticion del usuario")
                 End If
             End If
@@ -782,18 +948,30 @@ Public Class FrmFichas
         Me.cmdAñadirAAlumnos.Enabled = False
     End Sub
 
-    Private Sub GbEntrevista_Enter(sender As Object, e As EventArgs) Handles GbEntrevista.Enter
-
-    End Sub
 
     Private Sub cmdAñadirComentarios_Click(sender As Object, e As EventArgs) Handles cmdAñadirComentarios.Click
-        Dim frm As New FrmComentarios(DP)
-        If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
-            MsgBox("Comentario Guardado")
-            'MsgBox(DP.Comentarios)
-            Me.lblComentariosEscritos.Text = DP.Comentarios
+        If tipo = 3 Then
+            Dim frm As New FrmComentarios(CAND)
+            If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
+                MsgBox("Comentario Guardado")
+                'MsgBox(DP.Comentarios)
+                Me.lblComentariosEscritos.Text = CAND.Comentarios
+            Else
+                MsgBox("No se ha guardado el comentario")
+            End If
         Else
-            MsgBox("No se ha guardado el comentario")
+            Dim frm As New FrmComentarios(DP)
+            If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
+                MsgBox("Comentario Guardado")
+                'MsgBox(DP.Comentarios)
+                Me.lblComentariosEscritos.Text = DP.Comentarios
+            Else
+                MsgBox("No se ha guardado el comentario")
+            End If
         End If
+
+       
     End Sub
+
+   
 End Class
