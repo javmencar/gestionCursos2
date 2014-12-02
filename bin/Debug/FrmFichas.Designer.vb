@@ -76,7 +76,7 @@ Partial Class FrmFichas
         Me.txtId = New System.Windows.Forms.TextBox()
         Me.txtNivelEstudios = New System.Windows.Forms.TextBox()
         Me.lblNivelEstudios = New System.Windows.Forms.Label()
-        Me.GbApto = New System.Windows.Forms.GroupBox()
+        Me.GbCalificacion = New System.Windows.Forms.GroupBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.txtInaemOtros = New System.Windows.Forms.TextBox()
         Me.lblInaemOtros = New System.Windows.Forms.Label()
@@ -125,7 +125,7 @@ Partial Class FrmFichas
         Me.GbExperiencia.SuspendLayout()
         Me.GbUniforme.SuspendLayout()
         Me.GbEntrevista.SuspendLayout()
-        Me.GbApto.SuspendLayout()
+        Me.GbCalificacion.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         CType(Me.PicBx1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -637,19 +637,19 @@ Partial Class FrmFichas
         Me.lblNivelEstudios.TabIndex = 14
         Me.lblNivelEstudios.Text = "Estudios Realizados"
         '
-        'GbApto
+        'GbCalificacion
         '
-        Me.GbApto.Controls.Add(Me.GroupBox2)
-        Me.GbApto.Controls.Add(Me.GroupBox1)
-        Me.GbApto.Controls.Add(Me.OptAptoPendiente)
-        Me.GbApto.Controls.Add(Me.OptAptoNo)
-        Me.GbApto.Controls.Add(Me.optAptoSi)
-        Me.GbApto.Location = New System.Drawing.Point(230, 532)
-        Me.GbApto.Name = "GbApto"
-        Me.GbApto.Size = New System.Drawing.Size(519, 197)
-        Me.GbApto.TabIndex = 18
-        Me.GbApto.TabStop = False
-        Me.GbApto.Text = "Calificacion"
+        Me.GbCalificacion.Controls.Add(Me.GroupBox2)
+        Me.GbCalificacion.Controls.Add(Me.GroupBox1)
+        Me.GbCalificacion.Controls.Add(Me.OptAptoPendiente)
+        Me.GbCalificacion.Controls.Add(Me.OptAptoNo)
+        Me.GbCalificacion.Controls.Add(Me.optAptoSi)
+        Me.GbCalificacion.Location = New System.Drawing.Point(230, 532)
+        Me.GbCalificacion.Name = "GbCalificacion"
+        Me.GbCalificacion.Size = New System.Drawing.Size(519, 197)
+        Me.GbCalificacion.TabIndex = 18
+        Me.GbCalificacion.TabStop = False
+        Me.GbCalificacion.Text = "Calificacion"
         '
         'GroupBox2
         '
@@ -1079,7 +1079,7 @@ Partial Class FrmFichas
         Me.Controls.Add(Me.cmdCambiarFoto)
         Me.Controls.Add(Me.txtEdad)
         Me.Controls.Add(Me.cmdSalir)
-        Me.Controls.Add(Me.GbApto)
+        Me.Controls.Add(Me.GbCalificacion)
         Me.Controls.Add(Me.txtNivelEstudios)
         Me.Controls.Add(Me.lblNivelEstudios)
         Me.Controls.Add(Me.txtId)
@@ -1124,8 +1124,8 @@ Partial Class FrmFichas
         Me.GbUniforme.PerformLayout()
         Me.GbEntrevista.ResumeLayout(False)
         Me.GbEntrevista.PerformLayout()
-        Me.GbApto.ResumeLayout(False)
-        Me.GbApto.PerformLayout()
+        Me.GbCalificacion.ResumeLayout(False)
+        Me.GbCalificacion.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
@@ -1185,7 +1185,7 @@ Partial Class FrmFichas
     Friend WithEvents txtId As System.Windows.Forms.TextBox
     Friend WithEvents txtNivelEstudios As System.Windows.Forms.TextBox
     Friend WithEvents lblNivelEstudios As System.Windows.Forms.Label
-    Friend WithEvents GbApto As System.Windows.Forms.GroupBox
+    Friend WithEvents GbCalificacion As System.Windows.Forms.GroupBox
     Friend WithEvents OptAptoPendiente As System.Windows.Forms.RadioButton
     Friend WithEvents OptAptoNo As System.Windows.Forms.RadioButton
     Friend WithEvents optAptoSi As System.Windows.Forms.RadioButton

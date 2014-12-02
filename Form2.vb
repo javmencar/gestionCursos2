@@ -220,8 +220,8 @@ Public Class Form2
         'Next
         'MsgBox(s)
     End Sub
-    Private Function RellenarDatosPersonales(ByVal i As Integer) As DatosPersonales
-        Dim DP As New DatosPersonales
+    Private Function RellenarDatosPersonales(ByVal i As Integer) As Ficha
+        Dim DP As New Ficha
         Dim cn4 As New SqlConnection(ConeStr)
         Try
 

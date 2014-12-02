@@ -1,5 +1,5 @@
 ﻿
 Public Class Alumno
-    Inherits DatosPersonales
+    Inherits Ficha
 
 End Class

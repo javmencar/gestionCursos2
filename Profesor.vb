@@ -1,4 +1,4 @@
 ﻿Public Class Profesor
-    Inherits DatosPersonales
+    Inherits Ficha
 
 End Class
