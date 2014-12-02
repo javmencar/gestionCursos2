@@ -180,7 +180,7 @@ Public Class FrmListado
     Private Sub cmdModificar_Click(sender As Object, e As EventArgs) Handles cmdModificar.Click
         Call AccederFicha()
     End Sub
-  
+
     Private Sub AccederFicha()  'Lo saco porque se duplica al poder hacerlo tb. desde dobleClick
         Dim aviso As String = cat.Substring(0, cat.Length - 1)
         Try
@@ -209,11 +209,11 @@ Public Class FrmListado
             'recupero el id del elemento que quiero modificar a traves del listview
             Dim id As Integer = CInt(Me.ListView1.SelectedItems(0).Text)
             Dim Sql As String
-            If tipo = 3 Then '3 es candidato
-                sql = String.Format("SELECT * FROM DatosPersonales WHERE DatosPersonales.Id={0}", id)
-            Else
-                Sql = String.Format("SELECT * FROM DatosPersonales, {0} WHERE DatosPersonales.Id={0}.IdDP and {0}.Id={1}", cat, id)
-            End If
+            'If tipo = 3 Then '3 es candidato
+            '    sql = String.Format("SELECT * FROM DatosPersonales WHERE DatosPersonales.Id={0}", id)
+            'Else
+            Sql = String.Format("SELECT * FROM DatosPersonales, {0} WHERE DatosPersonales.Id={0}.IdDP and {0}.Id={1}", cat, id)
+            ' End If
             cn.Open()
             Dim cmd As New SqlCommand(Sql, cn)
             Dim dr As SqlDataReader
@@ -304,10 +304,12 @@ Public Class FrmListado
                     If Not IsDBNull(dr(27)) Then
                         .Comentarios = dr(27)
                     End If
+                    If Not IsNothing(dr(28)) Then
+                        .Curso = dr(28)
+                    End If
                     .cargarlistas()
                 End With
             End If
-
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
             DP = Nothing
@@ -435,7 +437,7 @@ Public Class FrmListado
     Private Sub cmdFiltrar_Click(sender As Object, e As EventArgs) Handles cmdFiltrar.Click
         Call cargarDatosEnListview()
     End Sub
-    
+
     Private Sub cmdQuitarFiltro_Click(sender As Object, e As EventArgs) Handles cmdQuitarFiltro.Click
         Me.CboFiltroGordo.SelectedIndex = -1
         Call cargarDatosEnListview()

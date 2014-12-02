@@ -77,6 +77,9 @@ Partial Class FrmFichas
         Me.txtNivelEstudios = New System.Windows.Forms.TextBox()
         Me.lblNivelEstudios = New System.Windows.Forms.Label()
         Me.GbApto = New System.Windows.Forms.GroupBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.txtEstecTest = New System.Windows.Forms.TextBox()
+        Me.lblEstecTest = New System.Windows.Forms.Label()
         Me.OptAptoPendiente = New System.Windows.Forms.RadioButton()
         Me.OptAptoNo = New System.Windows.Forms.RadioButton()
         Me.optAptoSi = New System.Windows.Forms.RadioButton()
@@ -88,7 +91,7 @@ Partial Class FrmFichas
         Me.LblFoto = New System.Windows.Forms.Label()
         Me.cmdBorrar = New System.Windows.Forms.Button()
         Me.cmdAñadirAAlumnos = New System.Windows.Forms.Button()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.txtCurso = New System.Windows.Forms.TextBox()
         Me.lblCurso = New System.Windows.Forms.Label()
         Me.cmdAñadirComentarios = New System.Windows.Forms.Button()
         Me.lblComentarios = New System.Windows.Forms.Label()
@@ -96,12 +99,35 @@ Partial Class FrmFichas
         Me.lblEmail = New System.Windows.Forms.Label()
         Me.PicBx1 = New System.Windows.Forms.PictureBox()
         Me.lblComentariosEscritos = New System.Windows.Forms.Label()
+        Me.txtEstecDinam = New System.Windows.Forms.TextBox()
+        Me.lblEstecDinam = New System.Windows.Forms.Label()
+        Me.txtEstecEntr = New System.Windows.Forms.TextBox()
+        Me.lblEstecEntr = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtEstecNOTA = New System.Windows.Forms.TextBox()
+        Me.lblEstecNOTA = New System.Windows.Forms.Label()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.txtInaemNOTA = New System.Windows.Forms.TextBox()
+        Me.lblInaemNOTA = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.txtInaemBajaContr = New System.Windows.Forms.TextBox()
+        Me.lblInaemBajaContr = New System.Windows.Forms.Label()
+        Me.txtInaemDiscap = New System.Windows.Forms.TextBox()
+        Me.lblInaemDiscap = New System.Windows.Forms.Label()
+        Me.txtInaemMujer = New System.Windows.Forms.TextBox()
+        Me.lblInaemMujer = New System.Windows.Forms.Label()
+        Me.txtInaemJoven = New System.Windows.Forms.TextBox()
+        Me.lblInaemJoven = New System.Windows.Forms.Label()
+        Me.txtInaemOtros = New System.Windows.Forms.TextBox()
+        Me.lblInaemOtros = New System.Windows.Forms.Label()
         Me.GbInaem.SuspendLayout()
         Me.GbExperiencia.SuspendLayout()
         Me.GbUniforme.SuspendLayout()
         Me.GbEntrevista.SuspendLayout()
         Me.GbApto.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         CType(Me.PicBx1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
         '
         'LblApellido1
@@ -612,20 +638,57 @@ Partial Class FrmFichas
         '
         'GbApto
         '
+        Me.GbApto.Controls.Add(Me.GroupBox2)
+        Me.GbApto.Controls.Add(Me.GroupBox1)
         Me.GbApto.Controls.Add(Me.OptAptoPendiente)
         Me.GbApto.Controls.Add(Me.OptAptoNo)
         Me.GbApto.Controls.Add(Me.optAptoSi)
         Me.GbApto.Location = New System.Drawing.Point(230, 532)
         Me.GbApto.Name = "GbApto"
-        Me.GbApto.Size = New System.Drawing.Size(519, 48)
+        Me.GbApto.Size = New System.Drawing.Size(519, 197)
         Me.GbApto.TabIndex = 18
         Me.GbApto.TabStop = False
         Me.GbApto.Text = "Calificacion"
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.txtEstecNOTA)
+        Me.GroupBox1.Controls.Add(Me.lblEstecNOTA)
+        Me.GroupBox1.Controls.Add(Me.Label4)
+        Me.GroupBox1.Controls.Add(Me.txtEstecEntr)
+        Me.GroupBox1.Controls.Add(Me.lblEstecEntr)
+        Me.GroupBox1.Controls.Add(Me.txtEstecDinam)
+        Me.GroupBox1.Controls.Add(Me.lblEstecDinam)
+        Me.GroupBox1.Controls.Add(Me.txtEstecTest)
+        Me.GroupBox1.Controls.Add(Me.lblEstecTest)
+        Me.GroupBox1.Location = New System.Drawing.Point(9, 33)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(180, 130)
+        Me.GroupBox1.TabIndex = 3
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Valoraciones de ESTECFORM"
+        '
+        'txtEstecTest
+        '
+        Me.txtEstecTest.Location = New System.Drawing.Point(101, 18)
+        Me.txtEstecTest.Name = "txtEstecTest"
+        Me.txtEstecTest.Size = New System.Drawing.Size(40, 20)
+        Me.txtEstecTest.TabIndex = 32
+        Me.txtEstecTest.Tag = "20"
+        '
+        'lblEstecTest
+        '
+        Me.lblEstecTest.AutoSize = True
+        Me.lblEstecTest.Location = New System.Drawing.Point(50, 21)
+        Me.lblEstecTest.Name = "lblEstecTest"
+        Me.lblEstecTest.Size = New System.Drawing.Size(28, 13)
+        Me.lblEstecTest.TabIndex = 33
+        Me.lblEstecTest.Text = "Test"
+        '
         'OptAptoPendiente
         '
         Me.OptAptoPendiente.AutoSize = True
-        Me.OptAptoPendiente.Location = New System.Drawing.Point(350, 19)
+        Me.OptAptoPendiente.Location = New System.Drawing.Point(353, 174)
         Me.OptAptoPendiente.Name = "OptAptoPendiente"
         Me.OptAptoPendiente.Size = New System.Drawing.Size(73, 17)
         Me.OptAptoPendiente.TabIndex = 2
@@ -637,7 +700,7 @@ Partial Class FrmFichas
         'OptAptoNo
         '
         Me.OptAptoNo.AutoSize = True
-        Me.OptAptoNo.Location = New System.Drawing.Point(217, 19)
+        Me.OptAptoNo.Location = New System.Drawing.Point(220, 174)
         Me.OptAptoNo.Name = "OptAptoNo"
         Me.OptAptoNo.Size = New System.Drawing.Size(64, 17)
         Me.OptAptoNo.TabIndex = 1
@@ -649,7 +712,7 @@ Partial Class FrmFichas
         'optAptoSi
         '
         Me.optAptoSi.AutoSize = True
-        Me.optAptoSi.Location = New System.Drawing.Point(95, 19)
+        Me.optAptoSi.Location = New System.Drawing.Point(98, 174)
         Me.optAptoSi.Name = "optAptoSi"
         Me.optAptoSi.Size = New System.Drawing.Size(47, 17)
         Me.optAptoSi.TabIndex = 0
@@ -721,14 +784,14 @@ Partial Class FrmFichas
         Me.cmdAñadirAAlumnos.Text = "Añadir  Como Alumno"
         Me.cmdAñadirAAlumnos.UseVisualStyleBackColor = True
         '
-        'TextBox1
+        'txtCurso
         '
-        Me.TextBox1.Enabled = False
-        Me.TextBox1.Location = New System.Drawing.Point(804, 75)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(197, 20)
-        Me.TextBox1.TabIndex = 50
-        Me.TextBox1.Tag = "0"
+        Me.txtCurso.Enabled = False
+        Me.txtCurso.Location = New System.Drawing.Point(804, 75)
+        Me.txtCurso.Name = "txtCurso"
+        Me.txtCurso.Size = New System.Drawing.Size(197, 20)
+        Me.txtCurso.TabIndex = 50
+        Me.txtCurso.Tag = "0"
         '
         'lblCurso
         '
@@ -796,17 +859,210 @@ Partial Class FrmFichas
         Me.lblComentariosEscritos.TabIndex = 55
         Me.lblComentariosEscritos.Text = "Comentarios"
         '
+        'txtEstecDinam
+        '
+        Me.txtEstecDinam.Location = New System.Drawing.Point(101, 44)
+        Me.txtEstecDinam.Name = "txtEstecDinam"
+        Me.txtEstecDinam.Size = New System.Drawing.Size(40, 20)
+        Me.txtEstecDinam.TabIndex = 34
+        Me.txtEstecDinam.Tag = "20"
+        '
+        'lblEstecDinam
+        '
+        Me.lblEstecDinam.AutoSize = True
+        Me.lblEstecDinam.Location = New System.Drawing.Point(50, 47)
+        Me.lblEstecDinam.Name = "lblEstecDinam"
+        Me.lblEstecDinam.Size = New System.Drawing.Size(51, 13)
+        Me.lblEstecDinam.TabIndex = 35
+        Me.lblEstecDinam.Text = "Dinámica"
+        '
+        'txtEstecEntr
+        '
+        Me.txtEstecEntr.Location = New System.Drawing.Point(101, 72)
+        Me.txtEstecEntr.Name = "txtEstecEntr"
+        Me.txtEstecEntr.Size = New System.Drawing.Size(40, 20)
+        Me.txtEstecEntr.TabIndex = 36
+        Me.txtEstecEntr.Tag = "20"
+        '
+        'lblEstecEntr
+        '
+        Me.lblEstecEntr.AutoSize = True
+        Me.lblEstecEntr.Location = New System.Drawing.Point(46, 75)
+        Me.lblEstecEntr.Name = "lblEstecEntr"
+        Me.lblEstecEntr.Size = New System.Drawing.Size(54, 13)
+        Me.lblEstecEntr.TabIndex = 37
+        Me.lblEstecEntr.Text = "Entrevista"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(-3, 95)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(157, 13)
+        Me.Label4.TabIndex = 38
+        Me.Label4.Text = "_________________________"
+        '
+        'txtEstecNOTA
+        '
+        Me.txtEstecNOTA.Location = New System.Drawing.Point(105, 110)
+        Me.txtEstecNOTA.Name = "txtEstecNOTA"
+        Me.txtEstecNOTA.Size = New System.Drawing.Size(40, 20)
+        Me.txtEstecNOTA.TabIndex = 39
+        Me.txtEstecNOTA.Tag = "20"
+        '
+        'lblEstecNOTA
+        '
+        Me.lblEstecNOTA.AutoSize = True
+        Me.lblEstecNOTA.Location = New System.Drawing.Point(6, 113)
+        Me.lblEstecNOTA.Name = "lblEstecNOTA"
+        Me.lblEstecNOTA.Size = New System.Drawing.Size(99, 13)
+        Me.lblEstecNOTA.TabIndex = 40
+        Me.lblEstecNOTA.Text = "Nota ESTECFORM"
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.txtInaemOtros)
+        Me.GroupBox2.Controls.Add(Me.lblInaemOtros)
+        Me.GroupBox2.Controls.Add(Me.txtInaemJoven)
+        Me.GroupBox2.Controls.Add(Me.lblInaemJoven)
+        Me.GroupBox2.Controls.Add(Me.txtInaemNOTA)
+        Me.GroupBox2.Controls.Add(Me.lblInaemNOTA)
+        Me.GroupBox2.Controls.Add(Me.Label7)
+        Me.GroupBox2.Controls.Add(Me.txtInaemBajaContr)
+        Me.GroupBox2.Controls.Add(Me.lblInaemBajaContr)
+        Me.GroupBox2.Controls.Add(Me.txtInaemDiscap)
+        Me.GroupBox2.Controls.Add(Me.lblInaemDiscap)
+        Me.GroupBox2.Controls.Add(Me.txtInaemMujer)
+        Me.GroupBox2.Controls.Add(Me.lblInaemMujer)
+        Me.GroupBox2.Location = New System.Drawing.Point(199, 33)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(271, 130)
+        Me.GroupBox2.TabIndex = 41
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "Valoraciones de INAEM"
+        '
+        'txtInaemNOTA
+        '
+        Me.txtInaemNOTA.Location = New System.Drawing.Point(133, 110)
+        Me.txtInaemNOTA.Name = "txtInaemNOTA"
+        Me.txtInaemNOTA.Size = New System.Drawing.Size(40, 20)
+        Me.txtInaemNOTA.TabIndex = 39
+        Me.txtInaemNOTA.Tag = "20"
+        '
+        'lblInaemNOTA
+        '
+        Me.lblInaemNOTA.AutoSize = True
+        Me.lblInaemNOTA.Location = New System.Drawing.Point(58, 113)
+        Me.lblInaemNOTA.Name = "lblInaemNOTA"
+        Me.lblInaemNOTA.Size = New System.Drawing.Size(67, 13)
+        Me.lblInaemNOTA.TabIndex = 40
+        Me.lblInaemNOTA.Text = "Nota INAEM"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(-3, 95)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(223, 13)
+        Me.Label7.TabIndex = 38
+        Me.Label7.Text = "____________________________________"
+        '
+        'txtInaemBajaContr
+        '
+        Me.txtInaemBajaContr.Location = New System.Drawing.Point(99, 72)
+        Me.txtInaemBajaContr.Name = "txtInaemBajaContr"
+        Me.txtInaemBajaContr.Size = New System.Drawing.Size(40, 20)
+        Me.txtInaemBajaContr.TabIndex = 36
+        Me.txtInaemBajaContr.Tag = "20"
+        '
+        'lblInaemBajaContr
+        '
+        Me.lblInaemBajaContr.AutoSize = True
+        Me.lblInaemBajaContr.Location = New System.Drawing.Point(6, 75)
+        Me.lblInaemBajaContr.Name = "lblInaemBajaContr"
+        Me.lblInaemBajaContr.Size = New System.Drawing.Size(91, 13)
+        Me.lblInaemBajaContr.TabIndex = 37
+        Me.lblInaemBajaContr.Text = "Baja Contratación"
+        '
+        'txtInaemDiscap
+        '
+        Me.txtInaemDiscap.Location = New System.Drawing.Point(99, 44)
+        Me.txtInaemDiscap.Name = "txtInaemDiscap"
+        Me.txtInaemDiscap.Size = New System.Drawing.Size(40, 20)
+        Me.txtInaemDiscap.TabIndex = 34
+        Me.txtInaemDiscap.Tag = "20"
+        '
+        'lblInaemDiscap
+        '
+        Me.lblInaemDiscap.AutoSize = True
+        Me.lblInaemDiscap.Location = New System.Drawing.Point(6, 47)
+        Me.lblInaemDiscap.Name = "lblInaemDiscap"
+        Me.lblInaemDiscap.Size = New System.Drawing.Size(75, 13)
+        Me.lblInaemDiscap.TabIndex = 35
+        Me.lblInaemDiscap.Text = "Discapacitado"
+        '
+        'txtInaemMujer
+        '
+        Me.txtInaemMujer.Location = New System.Drawing.Point(99, 18)
+        Me.txtInaemMujer.Name = "txtInaemMujer"
+        Me.txtInaemMujer.Size = New System.Drawing.Size(40, 20)
+        Me.txtInaemMujer.TabIndex = 32
+        Me.txtInaemMujer.Tag = "20"
+        '
+        'lblInaemMujer
+        '
+        Me.lblInaemMujer.AutoSize = True
+        Me.lblInaemMujer.Location = New System.Drawing.Point(6, 21)
+        Me.lblInaemMujer.Name = "lblInaemMujer"
+        Me.lblInaemMujer.Size = New System.Drawing.Size(33, 13)
+        Me.lblInaemMujer.TabIndex = 33
+        Me.lblInaemMujer.Text = "Mujer"
+        '
+        'txtInaemJoven
+        '
+        Me.txtInaemJoven.Location = New System.Drawing.Point(198, 15)
+        Me.txtInaemJoven.Name = "txtInaemJoven"
+        Me.txtInaemJoven.Size = New System.Drawing.Size(40, 20)
+        Me.txtInaemJoven.TabIndex = 41
+        Me.txtInaemJoven.Tag = "20"
+        '
+        'lblInaemJoven
+        '
+        Me.lblInaemJoven.AutoSize = True
+        Me.lblInaemJoven.Location = New System.Drawing.Point(147, 18)
+        Me.lblInaemJoven.Name = "lblInaemJoven"
+        Me.lblInaemJoven.Size = New System.Drawing.Size(36, 13)
+        Me.lblInaemJoven.TabIndex = 42
+        Me.lblInaemJoven.Text = "Joven"
+        '
+        'txtInaemOtros
+        '
+        Me.txtInaemOtros.Location = New System.Drawing.Point(198, 44)
+        Me.txtInaemOtros.Name = "txtInaemOtros"
+        Me.txtInaemOtros.Size = New System.Drawing.Size(40, 20)
+        Me.txtInaemOtros.TabIndex = 43
+        Me.txtInaemOtros.Tag = "20"
+        '
+        'lblInaemOtros
+        '
+        Me.lblInaemOtros.AutoSize = True
+        Me.lblInaemOtros.Location = New System.Drawing.Point(147, 47)
+        Me.lblInaemOtros.Name = "lblInaemOtros"
+        Me.lblInaemOtros.Size = New System.Drawing.Size(32, 13)
+        Me.lblInaemOtros.TabIndex = 44
+        Me.lblInaemOtros.Text = "Otros"
+        '
         'FrmFichas
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1013, 636)
+        Me.ClientSize = New System.Drawing.Size(1013, 741)
         Me.Controls.Add(Me.lblComentariosEscritos)
         Me.Controls.Add(Me.txtEmail)
         Me.Controls.Add(Me.lblEmail)
         Me.Controls.Add(Me.lblComentarios)
         Me.Controls.Add(Me.cmdAñadirComentarios)
-        Me.Controls.Add(Me.TextBox1)
+        Me.Controls.Add(Me.txtCurso)
         Me.Controls.Add(Me.lblCurso)
         Me.Controls.Add(Me.cmdAñadirAAlumnos)
         Me.Controls.Add(Me.cmdBorrar)
@@ -861,7 +1117,11 @@ Partial Class FrmFichas
         Me.GbEntrevista.PerformLayout()
         Me.GbApto.ResumeLayout(False)
         Me.GbApto.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         CType(Me.PicBx1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -932,11 +1192,35 @@ Partial Class FrmFichas
     Friend WithEvents LblFoto As System.Windows.Forms.Label
     Friend WithEvents cmdBorrar As System.Windows.Forms.Button
     Friend WithEvents cmdAñadirAAlumnos As System.Windows.Forms.Button
-    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Friend WithEvents txtCurso As System.Windows.Forms.TextBox
     Friend WithEvents lblCurso As System.Windows.Forms.Label
     Friend WithEvents cmdAñadirComentarios As System.Windows.Forms.Button
     Friend WithEvents lblComentarios As System.Windows.Forms.Label
     Friend WithEvents txtEmail As System.Windows.Forms.TextBox
     Friend WithEvents lblEmail As System.Windows.Forms.Label
     Friend WithEvents lblComentariosEscritos As System.Windows.Forms.Label
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents txtEstecTest As System.Windows.Forms.TextBox
+    Friend WithEvents lblEstecTest As System.Windows.Forms.Label
+    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+    Friend WithEvents txtInaemNOTA As System.Windows.Forms.TextBox
+    Friend WithEvents lblInaemNOTA As System.Windows.Forms.Label
+    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents txtInaemBajaContr As System.Windows.Forms.TextBox
+    Friend WithEvents lblInaemBajaContr As System.Windows.Forms.Label
+    Friend WithEvents txtInaemDiscap As System.Windows.Forms.TextBox
+    Friend WithEvents lblInaemDiscap As System.Windows.Forms.Label
+    Friend WithEvents txtInaemMujer As System.Windows.Forms.TextBox
+    Friend WithEvents lblInaemMujer As System.Windows.Forms.Label
+    Friend WithEvents txtEstecNOTA As System.Windows.Forms.TextBox
+    Friend WithEvents lblEstecNOTA As System.Windows.Forms.Label
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents txtEstecEntr As System.Windows.Forms.TextBox
+    Friend WithEvents lblEstecEntr As System.Windows.Forms.Label
+    Friend WithEvents txtEstecDinam As System.Windows.Forms.TextBox
+    Friend WithEvents lblEstecDinam As System.Windows.Forms.Label
+    Friend WithEvents txtInaemOtros As System.Windows.Forms.TextBox
+    Friend WithEvents lblInaemOtros As System.Windows.Forms.Label
+    Friend WithEvents txtInaemJoven As System.Windows.Forms.TextBox
+    Friend WithEvents lblInaemJoven As System.Windows.Forms.Label
 End Class

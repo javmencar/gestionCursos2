@@ -3,24 +3,34 @@ Imports System.Data.SqlClient
 Public Class FrmFichas
     Dim nuevo, fotoCambiada As Boolean
     Public DP As DatosPersonales
+    Public CAND As Candidato
+    Dim tipo As Integer
     Public cat As String
     Public cn As SqlConnection
     Dim NuIdDP As Integer
 
-    Sub New(ByVal Da As DatosPersonales, ByVal tipo As Integer, ByVal nw As Boolean)
+    Sub New(ByVal Da As DatosPersonales, ByVal ti As Integer, ByVal nw As Boolean)
         ' Llamada necesaria para el diseñador.
         InitializeComponent()
         ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
         nuevo = nw
-        DP = Da
+        tipo = ti
         Select Case tipo
             Case 1
                 cat = "Alumnos"
+                DP = Da
             Case 2
                 cat = "Profesores"
-            Case 3
-                cat = "Candidatos"
+                DP = Da
         End Select
+    End Sub
+    Sub New(ByVal ca As Candidato, ByVal nw As Boolean)
+        ' Llamada necesaria para el diseñador.
+        InitializeComponent()
+        ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
+        nuevo = nw
+        cat = "Candidatos"
+        CAND = ca ' cambio el tipo a candidato para poder llevar las notas.
     End Sub
 
     Private Sub FrmFichas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -31,8 +41,13 @@ Public Class FrmFichas
         Me.LstExpSector.Enabled = True
         NuIdDP = -1
         Me.cmdAñadirAAlumnos.Visible = False
+
         If nuevo = True Then
-            DP = New DatosPersonales
+            If tipo = 3 Then
+                CAND = New Candidato
+            Else
+                DP = New DatosPersonales
+            End If
             Me.cmdModificar.Text = "CREAR NUEVA FICHA"
             Me.cmdCancelar.Text = "Cancelar La Creación"
             Me.cmdCambiarFoto.Text = "Insertar Foto"
@@ -50,7 +65,13 @@ Public Class FrmFichas
             Me.cmdCambiarFoto.Text = "Cambiar Foto"
             Me.cmdBorrar.Visible = True
             Me.cmdBorrar.Enabled = True
-            Call rellenarCamposDesdeObjeto(DP)
+            If tipo = 3 Then
+                Call rellenarCamposDesdeObjeto(CAND)
+                Call rellenarNotas(CAND)
+            Else
+                Call rellenarCamposDesdeObjeto(DP)
+            End If
+
         End If
     End Sub
 
@@ -145,8 +166,49 @@ Public Class FrmFichas
                 Me.lblComentarios.BackColor = Color.Red
                 Me.cmdAñadirComentarios.Text = "Acceder a Comentarios"
             End If
-
+            If Not IsNothing(.Curso) Then
+                Me.txtCurso.Text = .Curso
+            End If
         End With
+    End Sub
+    Private Sub rellenarNotas(ByVal CA As Candidato)
+        With CA
+            If Not IsNothing(.EstecTest) Then
+                Me.txtEstecTest.Text = .EstecTest
+            End If
+            If Not IsNothing(.EstecDinam) Then
+                Me.txtEstecDinam.Text = .EstecDinam
+            End If
+            If Not IsNothing(.EstecEntr) Then
+                Me.txtEstecEntr.Text = .EstecEntr
+            End If
+            If Not IsNothing(.notaEstecform) Then
+                Me.txtEstecNOTA.Text = .notaEstecform
+            End If
+            If Not IsNothing(.InaemMujer) Then
+                Me.txtInaemMujer.Text = .InaemMujer
+            End If
+            If Not IsNothing(.InaemDiscap) Then
+                Me.txtInaemDiscap.Text = .InaemDiscap
+            End If
+            If Not IsNothing(.InaemBajaCon) Then
+                Me.txtInaemBajaContr.Text = .InaemBajaCon
+            End If
+
+            If Not IsNothing(.InaemJoven) Then
+                Me.txtInaemJoven.Text = .InaemJoven
+            End If
+            If Not IsNothing(.InaemOtros) Then
+                Me.txtInaemOtros.Text = .InaemOtros
+            End If
+            If Not IsNothing(.InaemMujer) Then
+                Me.txtInaemMujer.Text = .InaemMujer
+            End If
+            If Not IsNothing(.notaINAEM) Then
+                Me.txtInaemNOTA.Text = .notaINAEM
+            End If
+        End With
+
     End Sub
 
     Private Function EstaEnTablas(ByVal i As String) As Boolean
@@ -782,9 +844,6 @@ Public Class FrmFichas
         Me.cmdAñadirAAlumnos.Enabled = False
     End Sub
 
-    Private Sub GbEntrevista_Enter(sender As Object, e As EventArgs) Handles GbEntrevista.Enter
-
-    End Sub
 
     Private Sub cmdAñadirComentarios_Click(sender As Object, e As EventArgs) Handles cmdAñadirComentarios.Click
         Dim frm As New FrmComentarios(DP)
@@ -796,4 +855,6 @@ Public Class FrmFichas
             MsgBox("No se ha guardado el comentario")
         End If
     End Sub
+
+   
 End Class

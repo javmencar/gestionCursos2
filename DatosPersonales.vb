@@ -4,7 +4,7 @@ Public Class DatosPersonales
     Private mId, mEdad, mTallaZapato As Integer
     Private mDNI, mNombre, mApellido1, mApellido2, mLugNac, mDomicilio, mCP, mPoblacion As String
     Private mTel1, mTel2, mNumSS, mNivelEstudios, mExpSector, mTallaCamiseta, mTallaPantalon As String
-    Private mEntrevistador, mValoracion, mApto, mPathFoto As String
+    Private mEntrevistador, mValoracion, mApto, mPathFoto, mcurso As String
     Private mEmail, mComentarios As String
     Private mFnac, mInFecha, mFecEntr As Date
     Private mInInaem As Boolean
@@ -248,6 +248,14 @@ Public Class DatosPersonales
             mComentarios = Value
         End Set
     End Property
+    Public Property Curso As String
+        Get
+            Return mcurso
+        End Get
+        Set(ByVal Value As String)
+            mcurso = Value
+        End Set
+    End Property
     Public ReadOnly Property listadoNombres As List(Of String)
         Get
             Return mlistado
@@ -286,6 +294,7 @@ Public Class DatosPersonales
             .Add("PathFoto")
             .Add("Email")
             .Add("Comentarios")
+            .Add("Curso")
         End With
         Return mlistado
     End Function
@@ -326,6 +335,7 @@ Public Class DatosPersonales
             .Add(PathFoto)
             .Add(Email)
             .Add(Comentarios)
+            .Add(Curso)
         End With
         Return c
     End Function
