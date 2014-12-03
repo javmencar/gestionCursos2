@@ -1,7 +1,6 @@
 ﻿
 Imports System.Data.SqlClient
 Public Class FrmListado
-
     Public cn As SqlConnection
     Public cat, crit As String
     Dim tipo As Integer
@@ -14,7 +13,6 @@ Public Class FrmListado
         ' Crear una instancia de una ordenación de columna ListView y asignarla ' al control ListView. 
         lvwColumnSorter = New ListViewColumnSorter()
         Me.ListView1.ListViewItemSorter = lvwColumnSorter
-
         ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
     End Sub
     Private Sub FrmListado_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -194,9 +192,8 @@ Public Class FrmListado
         Dim cn2 As New SqlConnection(ConeStr)
         Try
             Dim subconsulta As String = String.Format("(SELECT Candidatos.Id FROM Candidatos, DatosPersonales WHERE Candidatos.IdDP=DatosPersonales.Id AND DatosPersonales.Id={0})", fi.Id)
-            ' MsgBox(subconsulta)
             Dim sql2 As String = String.Format("Select EstecTest, EstecDinam, EstecEntr, InaemMujer, InaemBajaCon, InaemJoven, InaemDiscap, InaemOtros FROM Candidatos WHERE Id={0}", subconsulta)
-            '  MsgBox(sql2)
+
             cn2.Open()
             Dim cmd2 As New SqlCommand(sql2, cn2)
             Dim dr2 As SqlDataReader
@@ -215,8 +212,6 @@ Public Class FrmListado
             Else
                 MsgBox("no hay notas")
             End If
-
-
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
         Catch ex As Exception
@@ -392,7 +387,6 @@ Public Class FrmListado
             Dim respuesta1, respuesta2 As MsgBoxResult
             Dim nombre As String = ""
             Dim id As Integer = CInt(Me.ListView1.SelectedItems(0).Text)
-            MsgBox(id)
             If Me.ListView1.SelectedItems.Count = 0 Then
                 MsgBox("Debe seleccionar el elemento a borrar")
             Else
@@ -447,6 +441,19 @@ Public Class FrmListado
     End Sub
     Private Sub CmdActivarExportar_Click(sender As Object, e As EventArgs) Handles CmdExportar.Click
         MsgBox("Proximamente")
+        'Try
+        '    cn.Open()
+        '    Dim cmd As New SqlCommand
+        '    cmd.Connection = cn
+        '    '  cmd.CommandText = Me.cn.
+        'Catch ex2 As miExcepcion
+        '    MsgBox(ex2.ToString)
+        'Catch ex As Exception
+        '    MsgBox(ex.ToString)
+        'Finally
+        '    cn.Close()
+        'End Try
+
     End Sub
     Private Sub ChkExportar_Click(sender As Object, e As EventArgs) Handles ChkExportar.Click
         If ChkExportar.Checked = True Then

@@ -1,5 +1,4 @@
-﻿'Este es el original
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Public Class FrmFichas
     Dim nuevo, fotoCambiada As Boolean
     Public DP As Ficha
@@ -7,7 +6,6 @@ Public Class FrmFichas
     Public cat As String
     Public cn As SqlConnection
     Dim NuIdDP, idcur As Integer
-
     Sub New(ByVal Da As Ficha, ByVal ti As Integer, ByVal nw As Boolean)
         ' Llamada necesaria para el diseñador.
         InitializeComponent()
@@ -76,7 +74,6 @@ Public Class FrmFichas
             For i As Integer = 1 To DP.listaValores.Count
                 acum &= String.Format("{0}=  {1}" & vbCrLf, .listadoNombres(i - 1), .listaValores(i))
             Next
-            MsgBox(acum)
         End With
     End Sub
     Private Sub cargarcomboCursos()
@@ -219,7 +216,6 @@ Public Class FrmFichas
         End With
         Call rellenarNotas(Datos)
     End Sub
-
     Private Sub rellenarNotas(ByVal CA As Ficha)
         With CA
             If Not IsNothing(.EstecTest) Then
@@ -281,7 +277,6 @@ Public Class FrmFichas
         End With
 
     End Sub
-
     Private Function EstaEnTablas(ByVal i As String) As Boolean
         Try
             Dim sql As String = String.Format("SELECT {0}.Id FROM DatosPersonales, {0} " &
@@ -296,7 +291,6 @@ Public Class FrmFichas
         End Try
         Return False
     End Function
-
     Private Function rellenarObjetoDesdeCampos() As Ficha
         Dim D1 As New Ficha
         Try
@@ -380,7 +374,6 @@ Public Class FrmFichas
                     End If
                     '####
                 Else
-                    ' MsgBox("")
                 End If
                 .PathFoto = Me.PicBx1.Tag
                 .Email = Me.txtEmail.Text
@@ -411,12 +404,9 @@ Public Class FrmFichas
         End Try
         Return D1
     End Function
-
-
     Private Sub cmdModificar_Click(sender As Object, e As EventArgs) Handles cmdModificar.Click
         Call ModificarOCrear()
     End Sub
-
     Private Sub ModificarOCrear()
         'Lo he metido en un sub  porque se repite todo en añadir a alumnos
         Try
@@ -514,17 +504,12 @@ Public Class FrmFichas
                     End If
                 Next
                 NotasAcumuladas = NotasAcumuladas.Substring(2)
-                MsgBox(NotasAcumuladas)
-                '#####      'saco la idDP con 1 subconsulta y asi me ahorro una busqueda.
-                'Lo pongo asi para que sea mas legible
-                Dim subconsulta As String = String.Format("(SELECT Candidatos.Id FROM Candidatos, DatosPersonales WHERE Candidatos.IdDP=DatosPersonales.Id AND DatosPersonales.Id={0})", fi.Id)
-                MsgBox(subconsulta)
-                Dim sql As String = String.Format("UPDATE Candidatos SET {0} WHERE Candidatos.id={1}", NotasAcumuladas, subconsulta)
-                MsgBox(sql)
+                'saco la idDP con 1 subconsulta y asi me ahorro una busqueda. Lo pongo asi para que sea mas legible
+                Dim subconsulta As String = String.Format("(SELECT Candidatos.Id FROM Candidatos, DatosPersonales WHERE Candidatos.IdDP=DatosPersonales.Id AND DatosPersonales.Id={0})", fi.Id)                ' MsgBox(subconsulta)
+                Dim sql As String = String.Format("UPDATE Candidatos SET {0} WHERE Candidatos.id={1}", NotasAcumuladas, subconsulta)                ' MsgBox(sql)
                 cn2.Open()
                 Dim cmd As New SqlCommand(sql, cn2)
-                j = cmd.ExecuteNonQuery
-                If j > 0 Then MsgBox("notas cargadas")
+                j = cmd.ExecuteNonQuery                '  If j > 0 Then MsgBox("notas cargadas")
             End If
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
@@ -536,8 +521,6 @@ Public Class FrmFichas
         End Try
         Return j
     End Function
-
-
     Private Function camposvacios() As List(Of String)
         Dim vacios As New List(Of String)
         If Me.txtNombre.Text = "" Then vacios.Add("El campo 'Nombre' está vacío")
@@ -550,7 +533,6 @@ Public Class FrmFichas
         'añadir o quitar los campos que queramos comprobar
         Return vacios
     End Function
-
     Private Function fallosEnCampos() As List(Of String)
         Dim comprobado As Boolean
         Dim cambios As New List(Of String)
@@ -580,7 +562,6 @@ Public Class FrmFichas
         'añadir mas campos si queremos comprobarlos
         Return cambios
     End Function
-
     Public Function cargarCambiosEnDPYaCreado(ByVal dat As Ficha) As Boolean
 
         Try
@@ -622,7 +603,6 @@ Public Class FrmFichas
         End Try
         Return True
     End Function
-
     Public Function CrearNuevoDPEnBaseDeDatos(ByVal Dat As Ficha) As Boolean
         'INSERT INTO 
         'ojo que aqui hay que hacer dos consultas distintas, una por datos personales y otra po candidatos
@@ -673,17 +653,6 @@ Public Class FrmFichas
         End Try
         Return True
     End Function
-
-    Public Function cambiarFormatoFecha(ByVal f As Date) As String
-        Dim vieja, dias, meses, años As String
-        vieja = f.ToString
-        dias = vieja.Substring(0, 2)
-        meses = vieja.Substring(3, 2)
-        años = vieja.Substring(6, 4)
-        Dim nueva As String = "'" & años & meses & dias & "'"
-        Return nueva
-    End Function
-
     Public Function comprobarformatofecha(ByVal s As String) As Integer
         Try
             Dim fechacorrecta As Date = DateTime.Parse(s)
@@ -698,7 +667,6 @@ Public Class FrmFichas
         End Try
         Return 0
     End Function
-
     Private Sub cmdExperiencia_Click(sender As Object, e As EventArgs) Handles cmdExperiencia.Click
         If Me.CboExpSector.SelectedIndex = -1 Then
             MsgBox("seleccione un sector de experiencia laboral a añadir al listado")
@@ -718,24 +686,19 @@ Public Class FrmFichas
             End If
         End If
     End Sub
-
     Private Sub cmdQuitar_Click(sender As Object, e As EventArgs) Handles cmdQuitar.Click
         If Me.LstExpSector.SelectedIndex = -1 Then
-            MsgBox("Seleccione del listado el sector que desse quitar")
+            MsgBox("Seleccione el sector que desee quitar del listado")
         Else
-            Me.LstExpSector.Items.RemoveAt(Me.LstExpSector.SelectedIndex)
-            MsgBox("Sector eliminado del listado")
+            Me.LstExpSector.Items.RemoveAt(Me.LstExpSector.SelectedIndex)            ' MsgBox("Sector eliminado del listado")
         End If
     End Sub
-
     Private Sub cmdCancelar_Click(sender As Object, e As EventArgs) Handles cmdCancelar.Click
         Me.DialogResult = Windows.Forms.DialogResult.Cancel
     End Sub
-
     Private Sub cmdSalir_Click(sender As Object, e As EventArgs) Handles cmdSalir.Click
         Me.DialogResult = Windows.Forms.DialogResult.Abort
     End Sub
-
     Public Function cogerUltimaId() As Integer
         Dim i As Integer = 0
         cn = New SqlConnection(ConeStr)
@@ -751,15 +714,12 @@ Public Class FrmFichas
         End Try
         Return i
     End Function
-
     Public Function insertarEnTablacategoria(ByVal nid As Integer) As Integer
         Dim i As Integer
         cn = New SqlConnection(ConeStr)
         Try
             cn.Open()
-            MsgBox(nid)
-            Dim sql As String = String.Format("INSERT INTO {0} ({0}.idDP) VALUES ({1})", cat, nid)
-            MsgBox(sql)
+            Dim sql As String = String.Format("INSERT INTO {0} ({0}.idDP) VALUES ({1})", cat, nid)         
             Dim cmd As New SqlCommand(sql, cn)
             i = cmd.ExecuteNonQuery
         Catch ex As Exception
@@ -769,11 +729,9 @@ Public Class FrmFichas
         End Try
         Return i
     End Function
-
     Private Sub cmdCambiarFoto_Click(sender As Object, e As EventArgs) Handles cmdCambiarFoto.Click
         Call CambiarFoto()
     End Sub
-
     Private Sub cargarFotoEnFormulario(ByVal I As Integer)
         Try
             'Dim id As String = "22"
@@ -798,11 +756,9 @@ Public Class FrmFichas
             cn.Close()
         End Try
     End Sub
-
     Private Sub PictureBox1_DoubleClick(sender As Object, e As EventArgs) Handles PicBx1.DoubleClick
         Call CambiarFoto()
     End Sub
-
     Private Sub CambiarFoto()
         fotoCambiada = True
         ' PicBx1.Tag = ""
@@ -824,7 +780,6 @@ Public Class FrmFichas
             PicBx1.Tag = Path
         End If
     End Sub
-
     Function ValidaNif(ByVal nif As String) As Boolean
         Dim n As Long
         Dim letras() As String = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"}
@@ -837,7 +792,6 @@ Public Class FrmFichas
         End If
         Return False
     End Function
-
     Public Function GetDCNumSegSocial(ByVal numSegSocial As String, _
                                   ByVal esNumEmpresa As Boolean) As String
         If (numSegSocial.Length > 10) OrElse (numSegSocial.Length = 0) Then _
@@ -881,7 +835,6 @@ Public Class FrmFichas
             Return String.Empty
         End Try
     End Function
-
     Public Function ValidaNumSS(ByVal NSS As String) As Boolean
 
         Dim CP As String = NSS.Substring(0, 2)
@@ -893,7 +846,6 @@ Public Class FrmFichas
         If s = dc Then Return True
         Return False
     End Function
-
     Private Sub cmdBorrar_Click(sender As Object, e As EventArgs) Handles cmdBorrar.Click
         Dim respuesta1, respuesta2 As MsgBoxResult
         'Dim nombre As String = DP.Nombre & DP.Apellido1 & DP.Apellido2
@@ -915,7 +867,6 @@ Public Class FrmFichas
             Throw New miExcepcion("Error al borrar")
         End If
     End Sub
-
     Public Function borrarDatosPersonales(ByVal i As String) As Boolean
         Dim num, idAl_Pr As Integer
         Dim sqlIdAl, sqlalumnos, sqlDatosPersonales As String
@@ -964,43 +915,35 @@ Public Class FrmFichas
         End Try
         Return True
     End Function
-
     Private Sub cmdAñadirAAlumnos_Click(sender As Object, e As EventArgs) Handles cmdAñadirAAlumnos.Click
         If Me.optAptoSi.Checked = False Then
             MsgBox("El candidato no está calificado como Apto")
         Else
             cat = "Alumnos"
             '####
-            'hay que arreglar esto. Quitar de tabla candidatos y añadir a alumnos
-            'Call ModificarOCrear()
+            'TO DO:
+            'Quitar de tabla candidatos y añadir a la tabla alumnos.
             '######
         End If
     End Sub
-
     Private Sub optAptoSi_Click(sender As Object, e As EventArgs) Handles optAptoSi.Click
         Me.cmdAñadirAAlumnos.Visible = True
         Me.cmdAñadirAAlumnos.Enabled = True
     End Sub
-
     Private Sub OptAptoNo_Click(sender As Object, e As EventArgs) Handles OptAptoNo.Click
         Me.cmdAñadirAAlumnos.Visible = False
         Me.cmdAñadirAAlumnos.Enabled = False
     End Sub
-
     Private Sub OptAptoPendiente_Click(sender As Object, e As EventArgs) Handles OptAptoPendiente.Click
         Me.cmdAñadirAAlumnos.Visible = True
         Me.cmdAñadirAAlumnos.Enabled = False
     End Sub
 
-
     Private Sub cmdAñadirComentarios_Click(sender As Object, e As EventArgs) Handles cmdAñadirComentarios.Click
         Dim frm As New FrmComentarios(DP)
         If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
-            MsgBox("Comentario Guardado")
-            'MsgBox(DP.Comentarios)
             Me.lblComentariosEscritos.Text = DP.Comentarios
-        Else
-            MsgBox("No se ha guardado el comentario")
+        Else            '      MsgBox("No se ha guardado el comentario")
         End If
     End Sub
     Private Sub cboCursos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCursos.SelectedIndexChanged
