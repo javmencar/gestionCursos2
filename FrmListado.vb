@@ -26,6 +26,7 @@ Public Class FrmListado
             Case 1
                 cat = "Alumnos"
                 Me.GroupBox1.Text = "Listado de Alumnos"
+
             Case 2
                 cat = "Profesores"
                 Me.GroupBox1.Text = "Listado de Profesores"
@@ -141,16 +142,27 @@ Public Class FrmListado
         End Try
     End Sub
     Private Sub cmdNuevo_Click(sender As Object, e As EventArgs) Handles cmdNuevo.Click
-       
-            Dim dpers As New Ficha
-            'en tipo llevo si es alumno, profesor o candidato; true porque es nuevo
-            Dim frm As New FrmFichas(dpers, tipo, True)
-            If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
-                MsgBox("Insercion en la base de datos Completada")
-                Call cargarDatosEnListview()
+        Try
+            If tipo = 1 Then
+                MsgBox("No se puede crear una ficha de alumno directamente" & vbCrLf &
+                       "Vuelva pulsando el boton salir o la 'X'" & vbCrLf &
+                       "Y pulse el boton de crear 'Candidato a Alumno'")
             Else
-                Throw New miExcepcion("cancelado a peticion del usuario")
+                Dim dpers As New Ficha
+                'en tipo llevo si es alumno, profesor o candidato; true porque es nuevo
+                Dim frm As New FrmFichas(dpers, tipo, True)
+                If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
+                    MsgBox("Insercion en la base de datos Completada")
+                    Call cargarDatosEnListview()
+                Else
+                    Throw New miExcepcion("cancelado a peticion del usuario")
+                End If
             End If
+        Catch ex2 As miExcepcion
+            MsgBox(ex2.ToString)
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
     End Sub
     Private Sub cmdModificar_Click(sender As Object, e As EventArgs) Handles cmdModificar.Click
         Call AccederFicha()

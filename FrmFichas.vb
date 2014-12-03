@@ -33,36 +33,42 @@ Public Class FrmFichas
         NuIdDP = -1
         Me.cmdAñadirAAlumnos.Visible = False
         Me.lblComentariosEscritos.Enabled = False
+        If tipo = 3 Then
+            Me.GbCalificacion.Visible = True
+        Else
+            Me.GbCalificacion.Visible = False
+        End If
+        Call cargarcomboCursos()
         If nuevo = True Then
-                DP = New Ficha
-                Me.cmdModificar.Text = "CREAR NUEVA FICHA"
-                Me.cmdCancelar.Text = "Cancelar La Creación"
-                Me.cmdCambiarFoto.Text = "Insertar Foto"
-                Me.PicBx1.Image = Image.FromFile("C:\GIT\GestionCursos1\Resources\female-silhouette_0.jpg")
-                Me.PicBx1.Tag = "C:\GIT\GestionCursos1\Resources\female-silhouette_0.jpg"
-                ' NuIdDP = cogerUltimaId() + 1
-                ' MsgBox("UltimaID + 1=  " & NuIdDP)
-                Me.txtFNac.Text = "01/01/1900"
-                Me.txtFecEntr.Text = "01/01/1900"
-                Me.txtInFecha.Text = "01/01/1900"
-                Me.OptAptoPendiente.Select()
-                Me.cboCursos.Enabled = True
+            DP = New Ficha
+            Me.cmdModificar.Text = "CREAR NUEVA FICHA"
+            Me.cmdCancelar.Text = "Cancelar La Creación"
+            Me.cmdCambiarFoto.Text = "Insertar Foto"
+            Me.PicBx1.Image = Image.FromFile("C:\GIT\GestionCursos1\Resources\female-silhouette_0.jpg")
+            Me.PicBx1.Tag = "C:\GIT\GestionCursos1\Resources\female-silhouette_0.jpg"
+            ' NuIdDP = cogerUltimaId() + 1
+            ' MsgBox("UltimaID + 1=  " & NuIdDP)
+            Me.txtFNac.Text = "01/01/1900"
+            Me.txtFecEntr.Text = "01/01/1900"
+            Me.txtInFecha.Text = "01/01/1900"
+            Me.OptAptoPendiente.Select()
+            Me.cboCursos.Enabled = True
             Me.txtCurso.Enabled = False
             Me.GbCalificacion.Enabled = False
             Me.GbCalificacion.Visible = False
         Else
-                Me.txtCurso.Enabled = False
-                Me.cboCursos.Enabled = True
-                Me.cmdModificar.Text = "GUARDAR CAMBIOS EN LA FICHA"
-                Me.cmdCancelar.Text = "Cancelar La Modificación"
-                Me.cmdCambiarFoto.Text = "Cambiar Foto"
-                Me.cmdBorrar.Visible = True
+            Me.txtCurso.Enabled = False
+            Me.cboCursos.Enabled = True
+            Me.cmdModificar.Text = "GUARDAR CAMBIOS EN LA FICHA"
+            Me.cmdCancelar.Text = "Cancelar La Modificación"
+            Me.cmdCambiarFoto.Text = "Cambiar Foto"
+            Me.cmdBorrar.Visible = True
             Me.cmdBorrar.Enabled = True
             Me.GbCalificacion.Enabled = True
             Me.GbCalificacion.Visible = True
             Call rellenarCamposDesdeObjeto(DP)
         End If
-        cargarcomboCursos()
+
     End Sub
     Private Sub cargarcomboCursos()
         Try
@@ -78,12 +84,13 @@ Public Class FrmFichas
             Else
                 dr = cmd.ExecuteReader
                 While dr.Read
+                    Me.cboCursos.Items.Add(String.Format("{0}_{1}_{2}", dr(0), dr(1), dr(2)))
                     If dr(0) = DP.Curso Then
                         idcur = dr(0)
                         Me.txtCurso.Text = dr(2)
-                        Exit While
                     End If
                 End While
+
             End If
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
@@ -195,7 +202,7 @@ Public Class FrmFichas
         End With
         Call rellenarNotas(Datos)
     End Sub
-   
+
     Private Sub rellenarNotas(ByVal CA As Ficha)
         With CA
             If Not IsNothing(.EstecTest) Then
@@ -297,24 +304,24 @@ Public Class FrmFichas
                 Else
                     .InInaem = "False"
                 End If
-                    .NivelEstudios = Me.txtNivelEstudios.Text
-                    Dim expSect1 As String = ""
-                    If Me.LstExpSector.Items.Count > 0 Then
-                        For Each l As String In Me.LstExpSector.Items
-                            expSect1 &= String.Format("/{0}", l)
-                        Next
-                        expSect1 = expSect1.Substring(1)
-                    End If
-                    .ExpSector = expSect1
-                    If Me.CboTallaCamiseta.SelectedIndex <> -1 Then
-                        .TallaCamiseta = Me.CboTallaCamiseta.SelectedItem.ToString
-                    End If
-                    If Me.CboTallaPantalon.SelectedIndex <> -1 Then
-                        .TallaPantalon = Me.CboTallaPantalon.SelectedItem.ToString
-                    End If
-                    If Me.txtTallaCalzado.Text = "" Then Me.txtTallaCalzado.Text = "0"
-                    .TallaZapato = CInt(Me.txtTallaCalzado.Text)
-                    .Entrevistador = Me.txtEntrevistador.Text
+                .NivelEstudios = Me.txtNivelEstudios.Text
+                Dim expSect1 As String = ""
+                If Me.LstExpSector.Items.Count > 0 Then
+                    For Each l As String In Me.LstExpSector.Items
+                        expSect1 &= String.Format("/{0}", l)
+                    Next
+                    expSect1 = expSect1.Substring(1)
+                End If
+                .ExpSector = expSect1
+                If Me.CboTallaCamiseta.SelectedIndex <> -1 Then
+                    .TallaCamiseta = Me.CboTallaCamiseta.SelectedItem.ToString
+                End If
+                If Me.CboTallaPantalon.SelectedIndex <> -1 Then
+                    .TallaPantalon = Me.CboTallaPantalon.SelectedItem.ToString
+                End If
+                If Me.txtTallaCalzado.Text = "" Then Me.txtTallaCalzado.Text = "0"
+                .TallaZapato = CInt(Me.txtTallaCalzado.Text)
+                .Entrevistador = Me.txtEntrevistador.Text
                 If Me.txtEntrevistador.Text <> "" Or Me.txtValoracion.Text <> "" Then
                     err = comprobarformatofecha(Me.txtFecEntr.Text)
                     If err <> 0 Then
@@ -341,16 +348,19 @@ Public Class FrmFichas
                 .Email = Me.txtEmail.Text
                 .Comentarios = Me.lblComentariosEscritos.Text
                 .Curso = idcur
-                If tipo = 3 Then
-                    .EstecTest = Me.txtEstecTest.Text
-                    .EstecDinam = Me.txtEstecDinam.Text
-                    .EstecEntr = Me.txtEstecEntr.Text
-                    .InaemMujer = Me.txtInaemMujer.Text
-                    .InaemDiscap = Me.txtInaemDiscap.Text
-                    .InaemJoven = Me.txtInaemJoven.Text
-                    .InaemBajaCon = Me.txtInaemBajaContr.Text
-                    .InaemOtros = Me.txtInaemOtros.Text
-                End If
+                For Each c As Control In Me.GbCalificacion.Controls
+                    If TypeOf (c) Is TextBox Then
+                        If c.Text = "" Then c.Text = "0.00"
+                    End If
+                Next
+                .EstecTest = Me.txtEstecTest.Text
+                .EstecDinam = Me.txtEstecDinam.Text
+                .EstecEntr = Me.txtEstecEntr.Text
+                .InaemMujer = Me.txtInaemMujer.Text
+                .InaemDiscap = Me.txtInaemDiscap.Text
+                .InaemJoven = Me.txtInaemJoven.Text
+                .InaemBajaCon = Me.txtInaemBajaContr.Text
+                .InaemOtros = Me.txtInaemOtros.Text
                 .cargarlistas() 'Llamo al procedimiento de la clase que carga listadoNombres y listavalores
             End With
         Catch ex2 As miExcepcion
@@ -362,7 +372,7 @@ Public Class FrmFichas
         End Try
         Return D1
     End Function
-  
+
 
     Private Sub cmdModificar_Click(sender As Object, e As EventArgs) Handles cmdModificar.Click
         Call ModificarOCrear()
@@ -412,27 +422,23 @@ Public Class FrmFichas
                 If nuevo = True Then ' creo una ficha, porque es nuevo
                     Dim comprobacion As Boolean = CrearNuevoDPEnBaseDeDatos(FichaRellenada)
                     If comprobacion = False Then Throw New miExcepcion("Error al cargar los datos personales de la ficha")
-
                     NuIdDP = cogerUltimaId()
                     If NuIdDP = -1 Then Throw New miExcepcion("Error al calcular la ultima ID")
-
+                    'meto la id en el objeto ficha, porque luego lo voy a utilizar
+                    FichaRellenada.Id = NuIdDP
                     ' con esto inserto en la tabla alumnos, profesores o candidatos
                     Dim comprob As Integer = insertarEnTablacategoria(NuIdDP)
                     If comprob = -1 Then Throw New miExcepcion(String.Format("Problema al insertar en {0}", cat))
-                    '#####
-                    'TO DO: Cargar cosas de candidatos
-                    ' NOOOOOOO, al ser ficha nueva no puedo ponerle notas. Será cuando vuelvan 
-
-                    '######
-                Else
+                Else    ' no hace falta insertar en BBDD, ya está en ambas tablas
                     'cargo los datos del objeto ya creado
                     Dim comprobacion As Boolean = cargarCambiosEnDPYaCreado(FichaRellenada)
                     If comprobacion = False Then Throw New miExcepcion("Error al cargar los datos personales de la ficha")
-                    '#####
-                    'TO DO: Cargar cosas de candidatos
-                    'Puede ser aqui: Call cargarNotas(FichaRellenada)
-                    'o en cargarCambiosEnDPYaCreado(FichaRellenada) , pero entonces tengo que modificarlo
-                    '######
+                End If
+                'con la ficha creada o modificada, meto las notas , si las hay y el curso
+                If FichaRellenada.notaEstecform <> "0.00" Or FichaRellenada.notaINAEM <> "0.00" Then
+                    Dim comprobaNotas As Integer = cargarNotas(FichaRellenada)
+                    If comprobaNotas = 0 Then Throw New miExcepcion("Error al meter las notas")
+                    'hay un msgbox en la funcion. Quitarlo cuando funcione
                 End If
             Else ' si no hay nada en el objeto es que ha habido error al crearlo
                 If nuevo = True Then
@@ -454,33 +460,43 @@ Public Class FrmFichas
             Me.DialogResult = Windows.Forms.DialogResult.None
         End Try
     End Sub
-    Private Sub cargarNotas(ByRef fi As Ficha)
+    Private Function cargarNotas(ByRef fi As Ficha) As Integer
+        Dim cn2 As New SqlConnection(ConeStr)
+        Dim j As Integer = 0
         Try
-            Dim listaColumnas, listaValores As String
-            Dim acumulado As String
-            'Dim idca As String
-            'tengo que acumular y sacar la id de tabla candidatos ¿2 consultas o una subconsulta a traves de la idDP?
-            'Dim sql As String = String.Format("UPDATE Candidatos SET {0} WHERE Candidatos.Id={1}", acumulado, idca)
-            'con subconsulta
-            '#####
-            'Falta Acumular
-            '#####
-            Dim sql As String = String.Format("UPDATE Candidatos SET {0} WHERE Candidatos.id=" & vbCrLf &
-                                               "(SELECT Candidatos.Id FROM candidatos, DatosPersonales where Candidatos.IdDP=DatosPersonales.Id AND DatosPersonales.Id={1})", acumulado, fi.Id)
-            For i As Integer = 29 To 39
-                If Not IsNothing(fi.listaValores(i)) Then
-                End If
-            Next
-            cn.Open()
+            If Not IsNothing(fi.notaEstecform) Or Not IsNothing(fi.notaINAEM) Then
+                Dim NotasAcumuladas As String = ""
+                For i As Integer = 29 To 37
+                    Dim cambiacomas1, cambiacomas2 As String
+                    cambiacomas1 = fi.listadoNombres(i - 1).ToString.Replace(",", ".")
+                    cambiacomas2 = fi.listaValores(i).ToString.Replace(",", ".")
+                    If fi.listaValores(i) <> "0.00" Then
+                        NotasAcumuladas &= String.Format(", {0}={1}", cambiacomas1, cambiacomas2)
+                    End If
+                Next
+                NotasAcumuladas = NotasAcumuladas.Substring(2)
+                MsgBox(NotasAcumuladas)
+                '#####      'saco la idDP con 1 subconsulta y asi me ahorro una busqueda.
+                'Lo pongo asi para que sea mas legible
+                Dim subconsulta As String = String.Format("(SELECT Candidatos.Id FROM Candidatos, DatosPersonales WHERE Candidatos.IdDP=DatosPersonales.Id AND DatosPersonales.Id={0})", fi.Id)
+                MsgBox(subconsulta)
+                Dim sql As String = String.Format("UPDATE Candidatos SET {0} WHERE Candidatos.id={1}", NotasAcumuladas, subconsulta)
+                MsgBox(sql)
+                cn2.Open()
+                Dim cmd As New SqlCommand(sql, cn2)
+                j = cmd.ExecuteNonQuery
+                If j > 0 Then MsgBox("notas cargadas")
+            End If
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
         Catch ex As Exception
             MsgBox(ex.ToString)
         Finally
             cn.Close()
+            cn2.Close()
         End Try
-
-    End Sub
+        Return j
+    End Function
 
 
     Private Function camposvacios() As List(Of String)
@@ -527,13 +543,14 @@ Public Class FrmFichas
     End Function
 
     Public Function cargarCambiosEnDPYaCreado(ByVal dat As Ficha) As Boolean
+
         Try
             Dim Datos As String = ""
-            For i As Integer = 2 To 29  ' i=2 porque listavalores empieza en 1,
+            For i As Integer = 2 To 28  ' i=2 porque listavalores empieza en 1,
                 '  el primer valor (Id)no lo queremos (es autoincremental) y hasta 29 para que solo coja hasta curso
                 If Not IsNothing(dat.listaValores.Item(i)) Then
                     Select Case i
-                        Case 8, 21, 29 'valores integer
+                        Case 8, 21 'valores integer
                             Datos &= String.Format(", {0}={1}", dat.listadoNombres.Item(i - 1), dat.listaValores.Item(i))
                         Case 15  'valores boolean
                             If dat.listaValores.Item(i) = True Then
@@ -554,13 +571,15 @@ Public Class FrmFichas
             Dim j As Integer = cmd.ExecuteNonQuery()
             '   No debería dar distinto de 1, porque solo debería afectar a un registro
             If j <> 1 Then Throw New miExcepcion("error en la insercion")
-            '  MsgBox("Datos personales modificados en la base de datos")
+            'Aqui meto las notas
+            
         Catch ex2 As miExcepcion
             Return False
         Catch ex As Exception
             Return False
         Finally
             cn.Close()
+
         End Try
         Return True
     End Function
@@ -571,11 +590,11 @@ Public Class FrmFichas
         Try
             Dim tablas As String = ""
             Dim valores As String = ""
-            For i As Integer = 2 To 29 ' i=2 porque listavalores empieza en 1,
+            For i As Integer = 2 To 28 ' i=2 porque listavalores empieza en 1,
                 '  el primer valor (Id)no lo queremos (es autoincremental) y hasta 29 para que solo coja hasta curso
                 If Not IsNothing(Dat.listaValores.Item(i)) Then     'solo metemos los valores que NO sean nulos
                     Select Case i
-                        Case 8, 21, 29 'valores integer
+                        Case 8, 21 'valores integer
                             tablas &= String.Format(", {0}", Dat.listadoNombres.Item(i - 1))
                             valores &= String.Format(", {0}", Dat.listaValores.Item(i))
                         Case 15  'valores boolean
@@ -912,7 +931,10 @@ Public Class FrmFichas
             MsgBox("El candidato no está calificado como Apto")
         Else
             cat = "Alumnos"
-            Call ModificarOCrear()
+            '####
+            'hay que arreglar esto. Quitar de tabla candidatos y añadir a alumnos
+            'Call ModificarOCrear()
+            '######
         End If
     End Sub
 
