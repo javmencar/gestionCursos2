@@ -190,25 +190,39 @@ Public Class FrmListado
             MsgBox(ex.ToString)
         End Try
     End Sub
-    Private Sub CargarNotas(ByRef ca As Ficha)
+    Private Sub CargarNotas(ByRef fi As Ficha)
+        Dim cn2 As New SqlConnection(ConeStr)
         Try
-            'TO DO: Rellenar las notas por consulta
-            'por probar:
-            With ca
-                .EstecTest = 1.56
-                .EstecDinam = 2.0
-                .EstecEntr = 0.75
-                .InaemMujer = 1
-                .InaemBajaCon = 0
-                .InaemJoven = 1
-                .InaemDiscap = 0
-                .InaemOtros = 0
-            End With
+            Dim subconsulta As String = String.Format("(SELECT Candidatos.Id FROM Candidatos, DatosPersonales WHERE Candidatos.IdDP=DatosPersonales.Id AND DatosPersonales.Id={0})", fi.Id)
+            ' MsgBox(subconsulta)
+            Dim sql2 As String = String.Format("Select EstecTest, EstecDinam, EstecEntr, InaemMujer, InaemBajaCon, InaemJoven, InaemDiscap, InaemOtros FROM Candidatos WHERE Id={0}", subconsulta)
+            '  MsgBox(sql2)
+            cn2.Open()
+            Dim cmd2 As New SqlCommand(sql2, cn2)
+            Dim dr2 As SqlDataReader
+            dr2 = cmd2.ExecuteReader
+            If dr2.Read Then
+                With fi
+                    .EstecTest = dr2(0)
+                    .EstecDinam = dr2(1)
+                    .EstecEntr = dr2(2)
+                    .InaemMujer = dr2(3)
+                    .InaemBajaCon = dr2(4)
+                    .InaemJoven = dr2(5)
+                    .InaemDiscap = dr2(6)
+                    .InaemOtros = dr2(7)
+                End With
+            Else
+                MsgBox("no hay notas")
+            End If
+
 
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
         Catch ex As Exception
             MsgBox(ex.ToString)
+        Finally
+            cn2.Close()
         End Try
     End Sub
     Private Function RellenarDatosPersonales() As Ficha
@@ -218,9 +232,7 @@ Public Class FrmListado
             'recupero el id del elemento que quiero modificar a traves del listview
             Dim id As Integer = CInt(Me.ListView1.SelectedItems(0).Text)
             Dim Sql As String
-            'If tipo = 3 Then '3 es candidato
-            '    sql = String.Format("SELECT * FROM DatosPersonales WHERE DatosPersonales.Id={0}", id)
-            'Else
+            ' primero los datos personales
             Sql = String.Format("SELECT * FROM DatosPersonales, {0} WHERE DatosPersonales.Id={0}.IdDP and {0}.Id={1}", cat, id)
             ' End If
             cn.Open()

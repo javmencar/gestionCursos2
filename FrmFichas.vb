@@ -68,7 +68,16 @@ Public Class FrmFichas
             Me.GbCalificacion.Visible = True
             Call rellenarCamposDesdeObjeto(DP)
         End If
-
+        Call desplegarficha()
+    End Sub
+    Private Sub desplegarficha()
+        Dim acum As String = ""
+        With DP
+            For i As Integer = 1 To DP.listaValores.Count
+                acum &= String.Format("{0}=  {1}" & vbCrLf, .listadoNombres(i - 1), .listaValores(i))
+            Next
+            MsgBox(acum)
+        End With
     End Sub
     Private Sub cargarcomboCursos()
         Try
@@ -198,6 +207,14 @@ Public Class FrmFichas
             End If
             If Not IsNothing(.Curso) Then
                 Me.txtCurso.Text = .Curso
+                Dim aux(3) As String
+                For i As Integer = 0 To Me.cboCursos.Items.Count - 1
+                    aux = Me.cboCursos.Items.Item(i).ToString.Split("_")
+                    If aux(0) = .Curso Then
+                        Me.txtCurso.Text = aux(2)
+                        Exit For
+                    End If
+                Next
             End If
         End With
         Call rellenarNotas(Datos)
@@ -206,38 +223,59 @@ Public Class FrmFichas
     Private Sub rellenarNotas(ByVal CA As Ficha)
         With CA
             If Not IsNothing(.EstecTest) Then
-                Me.txtEstecTest.Text = .EstecTest
+                Me.MtxtEstecTest.Text = .EstecTest
+            Else
+                Me.MtxtEstecTest.Text = "00.00"
             End If
             If Not IsNothing(.EstecDinam) Then
-                Me.txtEstecDinam.Text = .EstecDinam
+                Me.MtxtEstecDinam.Text = .EstecDinam
+            Else
+                Me.MtxtEstecDinam.Text = "00.00"
             End If
             If Not IsNothing(.EstecEntr) Then
-                Me.txtEstecEntr.Text = .EstecEntr
+                Me.MtxtEstecEntr.Text = .EstecEntr
+            Else
+                Me.MtxtEstecEntr.Text = "00.00"
             End If
             If Not IsNothing(.notaEstecform) Then
-                Me.txtEstecNOTA.Text = .notaEstecform
+                Me.MtxtEstecNOTA.Text = .notaEstecform
+            Else
+                Me.MtxtEstecNOTA.Text = "00.00"
             End If
             If Not IsNothing(.InaemMujer) Then
-                Me.txtInaemMujer.Text = .InaemMujer
+                Me.MtxtInaemMujer.Text = .InaemMujer
+            Else
+                Me.MtxtInaemMujer.Text = "00.00"
             End If
             If Not IsNothing(.InaemDiscap) Then
-                Me.txtInaemDiscap.Text = .InaemDiscap
+                Me.MtxtInaemDiscap.Text = .InaemDiscap
+            Else
+                Me.MtxtInaemDiscap.Text = "00.00"
             End If
             If Not IsNothing(.InaemBajaCon) Then
-                Me.txtInaemBajaContr.Text = .InaemBajaCon
+                Me.MtxtInaemBajaContr.Text = .InaemBajaCon
+            Else
+                Me.MtxtInaemBajaContr.Text = "00.00"
             End If
-
             If Not IsNothing(.InaemJoven) Then
-                Me.txtInaemJoven.Text = .InaemJoven
+                Me.MtxtInaemJoven.Text = .InaemJoven
+            Else
+                Me.MtxtInaemJoven.Text = "00.00"
             End If
             If Not IsNothing(.InaemOtros) Then
-                Me.txtInaemOtros.Text = .InaemOtros
+                Me.MtxtInaemOtros.Text = .InaemOtros
+            Else
+                Me.MtxtInaemOtros.Text = "00.00"
             End If
             If Not IsNothing(.InaemMujer) Then
-                Me.txtInaemMujer.Text = .InaemMujer
+                Me.MtxtInaemMujer.Text = .InaemMujer
+            Else
+                Me.MtxtInaemMujer.Text = "00.00"
             End If
             If Not IsNothing(.notaINAEM) Then
-                Me.txtInaemNOTA.Text = .notaINAEM
+                Me.MtxtInaemNOTA.Text = .notaINAEM
+            Else
+                Me.MtxtInaemNOTA.Text = "00.00"
             End If
             'y aqui meter lo de apto y no apto
         End With
@@ -348,19 +386,20 @@ Public Class FrmFichas
                 .Email = Me.txtEmail.Text
                 .Comentarios = Me.lblComentariosEscritos.Text
                 .Curso = idcur
-                For Each c As Control In Me.GbCalificacion.Controls
-                    If TypeOf (c) Is TextBox Then
-                        If c.Text = "" Then c.Text = "0.00"
-                    End If
-                Next
-                .EstecTest = Me.txtEstecTest.Text
-                .EstecDinam = Me.txtEstecDinam.Text
-                .EstecEntr = Me.txtEstecEntr.Text
-                .InaemMujer = Me.txtInaemMujer.Text
-                .InaemDiscap = Me.txtInaemDiscap.Text
-                .InaemJoven = Me.txtInaemJoven.Text
-                .InaemBajaCon = Me.txtInaemBajaContr.Text
-                .InaemOtros = Me.txtInaemOtros.Text
+                'For Each c As Control In Me.GbCalificacion.Controls
+                '    If TypeOf (c) Is MaskedTextBox Then
+                '        If c.Text = "00,00" Then c.Text = "00.00"
+                '    End If
+                'Next
+
+                .EstecTest = (Me.MtxtEstecTest.Text)
+                .EstecDinam = Me.MtxtEstecDinam.Text
+                .EstecEntr = Me.MtxtEstecEntr.Text
+                .InaemMujer = Me.MtxtInaemMujer.Text
+                .InaemDiscap = Me.MtxtInaemDiscap.Text
+                .InaemJoven = Me.MtxtInaemJoven.Text
+                .InaemBajaCon = Me.MtxtInaemBajaContr.Text
+                .InaemOtros = Me.MtxtInaemOtros.Text
                 .cargarlistas() 'Llamo al procedimiento de la clase que carga listadoNombres y listavalores
             End With
         Catch ex2 As miExcepcion
