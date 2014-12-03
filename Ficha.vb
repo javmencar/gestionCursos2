@@ -353,6 +353,10 @@ Public Class Ficha
         '  Dim lista As New List(Of String)
         mlistado = New List(Of String)
         'With lista
+
+
+
+
         With mlistado
             .Add("Id")
             .Add("DNI")

@@ -1,4 +1,4 @@
-﻿
+﻿Imports System.IO
 Imports System.Data.SqlClient
 Public Class FrmListado
     Public cn As SqlConnection
@@ -6,6 +6,8 @@ Public Class FrmListado
     Dim tipo As Integer
     Dim listaCursos As List(Of Integer)
     Private lvwColumnSorter As ListViewColumnSorter
+    Dim listaIDs As List(Of Integer)
+    Dim ListaRegistros As List(Of String)
     Public Sub New(ByVal ti As Integer)
         ' Llamada necesaria para el diseñador.
         InitializeComponent()
@@ -439,29 +441,20 @@ Public Class FrmListado
             End If
         End If
     End Sub
-    Private Sub CmdActivarExportar_Click(sender As Object, e As EventArgs) Handles CmdExportar.Click
-        MsgBox("Proximamente")
-        'Try
-        '    cn.Open()
-        '    Dim cmd As New SqlCommand
-        '    cmd.Connection = cn
-        '    '  cmd.CommandText = Me.cn.
-        'Catch ex2 As miExcepcion
-        '    MsgBox(ex2.ToString)
-        'Catch ex As Exception
-        '    MsgBox(ex.ToString)
-        'Finally
-        '    cn.Close()
-        'End Try
-
-    End Sub
+  
     Private Sub ChkExportar_Click(sender As Object, e As EventArgs) Handles ChkExportar.Click
         If ChkExportar.Checked = True Then
             Me.ListView1.MultiSelect = True
             Me.CmdExportar.Enabled = True
+            MsgBox("Clique una vez en el listado sobre la ficha quiera exportar" & vbCrLf &
+        "Cuando Cuando los haya seleccionado" & vbCrLf &
+        " pulse 'Exportar Datos'")
         Else
             Me.ListView1.MultiSelect = False
+            Me.ListView1.CheckBoxes = False
             Me.CmdExportar.Enabled = False
+            Me.listaIDs = Nothing
+            Me.ListaRegistros = Nothing
         End If
     End Sub
     Private Sub cmdFiltrar_Click(sender As Object, e As EventArgs) Handles cmdFiltrar.Click
@@ -471,6 +464,10 @@ Public Class FrmListado
     Private Sub cmdQuitarFiltro_Click(sender As Object, e As EventArgs) Handles cmdQuitarFiltro.Click
         Me.CboFiltroGordo.SelectedIndex = -1
         Call cargarDatosEnListview()
+    End Sub
+
+    Private Sub ListView1_Click(sender As Object, e As EventArgs) Handles ListView1.Click
+       
     End Sub
 
     Private Sub ListView1_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles ListView1.ColumnClick
@@ -493,5 +490,184 @@ Public Class FrmListado
     End Sub
     Private Sub ListView1_DoubleClick(sender As Object, e As EventArgs) Handles ListView1.DoubleClick
         Call AccederFicha()
+    End Sub
+    Private Sub ChkExportar_Validated(sender As Object, e As EventArgs) Handles ChkExportar.Validated
+        listaIDs = Nothing
+        listaIDs = New List(Of Integer)
+        ListaRegistros = Nothing
+        ListaRegistros = New List(Of String)
+
+        Me.ListView1.CheckBoxes = True
+
+    End Sub
+    Private Function encontrarLasId() As List(Of Integer)
+        Dim lId As New List(Of Integer)
+        Dim pos As Integer = 0
+        For Each it As ListViewItem In Me.ListView1.Items
+            If it.Checked = True Then
+                pos = CInt(it.Index.ToString)
+                lId.Add(CInt(Me.ListView1.Items(pos).Text))
+            End If
+        Next
+        Return lId
+    End Function
+    Private Function cargarencabezados() As String
+        Dim s As String = ""
+        Dim f As Ficha = New Ficha
+        f.cargarlistas()
+        Dim limite As Integer
+        Select Case tipo
+            Case 3
+                limite = 28
+
+            Case Else
+                limite = 38
+        End Select
+        For i As Integer = 0 To limite
+            s &= String.Format("; {0}", f.listadoNombres(i))
+        Next
+        s = s.Substring(2)
+        Return s
+    End Function
+
+    Private Sub CmdActivarExportar_Click(sender As Object, e As EventArgs) Handles CmdExportar.Click
+        listaIDs = encontrarLasId()
+        Dim listaerrores As New List(Of Integer)
+        Try
+            Dim encabezados As String = cargarEncabezados()
+
+            Dim reg As String = ""
+            ListaRegistros = New List(Of String)
+            ListaRegistros.Add(encabezados)
+            For i As Integer = 1 To listaIDs.Count
+                reg = recogerDatos(i)
+                If reg <> "" Then
+                    ListaRegistros.Add(reg)
+                Else
+                    listaerrores.Add(i)
+                End If
+                reg = ""
+            Next
+            Dim output1 As New StreamWriter("C:\Git\DatosExportados\RegistrosExportados.csv", False)
+            'escribo el array de autores con un simbolo distinto en cada tipo de dato
+            For Each str As String In ListaRegistros
+                output1.WriteLine(str)
+            Next
+            output1.Close()
+
+            Dim myStream As Stream
+
+            Dim openFileDialog1 As New OpenFileDialog()
+            openFileDialog1.InitialDirectory = "C:\Git\DatosExportados"
+            openFileDialog1.Filter = "csv files (*.csv)|*.csv|txt files (*.txt)|*.txt|All files (*.*)|*.*"
+            'openFileDialog1.FilterIndex = 2
+            'openFileDialog1.RestoreDirectory = True
+
+
+
+            Dim oDocument As Object
+            Dim sFileName As String
+            If openFileDialog1.ShowDialog() = DialogResult.OK Then
+                myStream = openFileDialog1.OpenFile()
+
+                If (myStream IsNot Nothing) Then
+                    ' Insert code to read the stream here.
+
+                    Dim LibroTrabajo As Object
+                    Dim Fichero As String
+
+                    Fichero = "C:\Git\DatosExportados\RegistrosExportados.csv" 'con el path correspondiente 
+                    LibroTrabajo = GetObject(Fichero)
+                    LibroTrabajo.Application.Windows("RegistrosExportados.csv").Visible = True
+                    MsgBox("A rezar")
+                End If
+            Else
+                MsgBox("y yo que sé")
+            End If
+
+
+            'Dim saveFileDialog1 As New SaveFileDialog()
+            'With saveFileDialog1
+            '    .InitialDirectory = "C:\Git\DatosExportados"
+            '    .Filter = "csv files (*.csv)|*.csv|txt files (*.txt)|*.txt|All files (*.*)|*.*"
+            '    .FilterIndex = 2
+            '    .RestoreDirectory = True
+            'End With
+            'If saveFileDialog1.ShowDialog() = DialogResult.OK Then
+            '    ' myStream = saveFileDialog1.OpenFile()
+            '    MsgBox("Guardado")
+            '    Dim CommonDialog2 As CommonDialog
+            '    CommonDialog2.ShowDialog()
+
+
+
+
+
+            'End If
+
+        Catch ex2 As miExcepcion
+            MsgBox(ex2.ToString)
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        Finally
+
+        End Try
+
+    End Sub
+    Private Function recogerDatos(ByVal id As Integer) As String
+        Dim registro As String = ""
+        Try
+            Dim sql As String = ""
+
+
+            Select Case tipo
+                Case 1
+                    sql = String.Format("SELECT D.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
+                                        "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
+                                        "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios " &
+                                        "FROM DatosPersonales as D INNER JOIN Alumnos ON D.id=Alumnos.IdDP WHERE Alumnos.Id={0}", id)
+                Case 2
+                    sql = String.Format("SELECT D.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
+                                        "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
+                                        "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios " &
+                                        "FROM DatosPersonales as D INNER JOIN Profesores ON D.id=Profesores.IdDP WHERE Profesores.Id={0}", id)
+                Case 3
+                    sql = String.Format("SELECT D.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
+                                        "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
+                                        "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios, " &
+                                        "C.EstecTest, C.EstecDinam, C.EstecEntr, C.InaemMujer, C.InaemDiscap, C.InaemBajaCon, C.InaemJoven, C.InaemOtros " &
+                                        "FROM DatosPersonales AS D INNER JOIN Candidatos as C ON D.Id=C.IdDP WHERE C.Id={0}", id)
+            End Select
+            cn.Open()
+            Dim cmd As New SqlCommand(sql, cn)
+            Dim dr As SqlDataReader
+            dr = cmd.ExecuteReader
+            If dr.Read Then
+                For i As Integer = 0 To dr.FieldCount - 1
+                    If Not IsDBNull(dr(i)) Then
+                        registro &= String.Format(";{0}", dr(i))
+                    Else
+                        registro &= String.Format(";{0}", "NULL")
+                    End If
+                Next
+            Else
+                Throw New miExcepcion("No hay datos")
+            End If
+            registro = registro.Substring(2)
+
+        Catch ex2 As miExcepcion
+            MsgBox(ex2.ToString)
+            registro = ""
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+            registro = ""
+        Finally
+            cn.Close()
+        End Try
+        Return registro
+    End Function
+
+    Private Sub ChkExportar_CheckedChanged(sender As Object, e As EventArgs) Handles ChkExportar.CheckedChanged
+
     End Sub
 End Class
