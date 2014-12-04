@@ -6,6 +6,7 @@ Public Class FrmFichas
     Public cat As String
     Public cn As SqlConnection
     Dim NuIdDP, idcur As Integer
+    Dim GuardaComentarios As String
     Sub New(ByVal Da As Ficha, ByVal ti As Integer, ByVal nw As Boolean)
         ' Llamada necesaria para el diseñador.
         InitializeComponent()
@@ -22,8 +23,11 @@ Public Class FrmFichas
                 cat = "Candidatos"
         End Select
     End Sub
+
     Private Sub FrmFichas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         cn = New SqlConnection(ConeStr)
+        Me.lblComentariosEscritos.Text = ""
+        Me.lblCurso.Text = ""
         Me.txtId.Enabled = False
         Me.LstExpSector.Items.Clear()
         Me.CboExpSector.SelectedIndex = -1
@@ -39,6 +43,7 @@ Public Class FrmFichas
         Call cargarcomboCursos()
         If nuevo = True Then
             DP = New Ficha
+            Me.cboCursos.Enabled = True
             Me.cmdModificar.Text = "CREAR NUEVA FICHA"
             Me.cmdCancelar.Text = "Cancelar La Creación"
             Me.cmdCambiarFoto.Text = "Insertar Foto"
@@ -51,13 +56,11 @@ Public Class FrmFichas
             Me.txtInFecha.Text = "01/01/1900"
             Me.OptAptoPendiente.Select()
             Me.cboCursos.Enabled = True
-            Me.txtCurso.Enabled = False
             Me.GbCalificacion.Enabled = False
             Me.GbCalificacion.Visible = False
         Else
             'Call desplegarfichaPasadaPorValor()
-            Me.txtCurso.Enabled = False
-            Me.cboCursos.Enabled = True
+            Me.cboCursos.Enabled = False
             Me.cmdModificar.Text = "GUARDAR LA FICHA"
             Me.cmdCancelar.Text = "Cancelar La Modificación"
             Me.cmdCambiarFoto.Text = "Cambiar Foto"
@@ -95,7 +98,7 @@ Public Class FrmFichas
                     Me.cboCursos.Items.Add(String.Format("{0}_{1}_{2}", dr(0), dr(1), dr(2)))
                     If dr(0) = DP.Curso Then
                         idcur = dr(0)
-                        Me.txtCurso.Text = dr(2)
+                        Me.lblNombreCurso.Text = dr(2)
                     End If
                 End While
 
@@ -202,15 +205,16 @@ Public Class FrmFichas
                 Me.lblComentarios.Text = "HAY COMENTARIOS"
                 Me.lblComentarios.BackColor = Color.Red
                 Me.cmdAñadirComentarios.Text = "Acceder a Comentarios"
-                Me.lblComentariosEscritos.Text = MeterSaltosDeLinea(.Comentarios)
+                GuardaComentarios = MeterSaltosDeLinea(.Comentarios)
+                '    Me.lblComentariosEscritos.Text = GuardaComentarios
             End If
             If Not IsNothing(.Curso) Then
-                Me.txtCurso.Text = .Curso
+                Me.lblNombreCurso.Text = .Curso
                 Dim aux(3) As String
                 For i As Integer = 0 To Me.cboCursos.Items.Count - 1
                     aux = Me.cboCursos.Items.Item(i).ToString.Split("_")
                     If aux(0) = .Curso Then
-                        Me.txtCurso.Text = aux(2)
+                        Me.lblNombreCurso.Text = aux(2)
                         Exit For
                     End If
                 Next
@@ -387,7 +391,7 @@ Public Class FrmFichas
                 End If
                 .PathFoto = Me.PicBx1.Tag
                 .Email = Me.txtEmail.Text
-                .Comentarios = QuitarSaltosDeLinea(Me.lblComentariosEscritos.Text)
+                .Comentarios = QuitarSaltosDeLinea(GuardaComentarios)
                 .Curso = idcur
                 'For Each c As Control In Me.GbCalificacion.Controls
                 '    If TypeOf (c) Is MaskedTextBox Then
@@ -427,6 +431,9 @@ Public Class FrmFichas
             If nuevo = True Then
                 fallos = camposvacios()
                 'ademas de campos vacios , quiero que compruebe el DNI y el NumSS
+                If tipo = 3 Then
+                    If Me.lblCurso.Text = "" Then Throw New miExcepcion("Debe elegir el curso al que se va a apuntar el alumno")
+                End If
                 Dim comprobado As Boolean
                 If Me.txtDNI.Text <> "" Then
                     comprobado = ValidaNif(Me.txtDNI.Text)
@@ -463,13 +470,18 @@ Public Class FrmFichas
                 If nuevo = True Then ' creo una ficha, porque es nuevo
                     Dim comprobacion As Boolean = CrearNuevoDPEnBaseDeDatos(FichaRellenada)
                     If comprobacion = False Then Throw New miExcepcion("Error al cargar los datos personales de la ficha")
-                    NuIdDP = cogerUltimaId()
+                    NuIdDP = cogerUltimaId("DatosPersonales")
                     If NuIdDP = -1 Then Throw New miExcepcion("Error al calcular la ultima ID")
                     'meto la id en el objeto ficha, porque luego lo voy a utilizar
                     FichaRellenada.Id = NuIdDP
                     ' con esto inserto en la tabla alumnos, profesores o candidatos
                     Dim comprob As Integer = insertarEnTablacategoria(NuIdDP)
                     If comprob = -1 Then Throw New miExcepcion(String.Format("Problema al insertar en {0}", cat))
+                    'y ahora inserto en la tabla cursos y secundarias
+                    Dim idt, idc As Integer
+                    idt = cogerUltimaId(cat)
+                    idc = FichaRellenada.Curso
+                    Dim comprobarcursos = insertarEnTablaSecundariaCursos(idt, idc)
                 Else    ' no hace falta insertar en BBDD, ya está en ambas tablas
                     'cargo los datos del objeto ya creado
                     Dim comprobacion As Boolean = cargarCambiosEnDPYaCreado(FichaRellenada)
@@ -494,13 +506,33 @@ Public Class FrmFichas
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
             'vuelvo a cargar los datos originales
-            Call rellenarCamposDesdeObjeto(DP)
+            If nuevo = False Then
+                Call rellenarCamposDesdeObjeto(DP)
+            End If
             Me.DialogResult = Windows.Forms.DialogResult.None
         Catch ex As Exception
             MsgBox(ex.ToString)
             Me.DialogResult = Windows.Forms.DialogResult.None
         End Try
     End Sub
+    Private Function insertarEnTablaSecundariaCursos(ByVal itab As Integer, ByVal icu As Integer) As Integer
+        Dim control As Integer = 0
+        Dim cortado As String = cat.Substring(0, 2)
+        Dim sql As String = String.Format("INSERT INTO {0}_Cursos (Id{1},IdCur) VALUES ({2},{3})", cat, cortado, itab, icu)
+        Try
+            cn.Open()
+            Dim cmd As New SqlCommand(sql, cn)
+            control = cmd.ExecuteNonQuery
+            If control < 0 Then Throw New miExcepcion
+        Catch ex2 As miExcepcion
+            MsgBox(ex2.ToString)
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        Finally
+            cn.Close()
+        End Try
+        Return control
+    End Function
     Private Function cargarNotas(ByRef fi As Ficha) As Integer
         Dim cn2 As New SqlConnection(ConeStr)
         Dim j As Integer = 0
@@ -535,6 +567,7 @@ Public Class FrmFichas
     End Function
     Private Function camposvacios() As List(Of String)
         Dim vacios As New List(Of String)
+       
         If Me.txtNombre.Text = "" Then vacios.Add("El campo 'Nombre' está vacío")
         If Me.txtApellido1.Text = "" Then vacios.Add("El campo 'Primer Apellido'  está vacío")
         If Me.txtApellido2.Text = "" Then vacios.Add("El campo 'Segundo Apellido' está vacío")
@@ -653,7 +686,7 @@ Public Class FrmFichas
             '   No debería dar distinto de 1, porque solo debería afectar a un registro
             If j <> 1 Then Throw New miExcepcion("error en la insercion")
             'recojo la nueva IdDP en la variable publica
-            NuIdDP = cogerUltimaId()
+            NuIdDP = cogerUltimaId("DatosPersonales")
             ' MsgBox("Datos personales introducidos en la base de datos")
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
@@ -712,12 +745,13 @@ Public Class FrmFichas
     Private Sub cmdSalir_Click(sender As Object, e As EventArgs) Handles cmdSalir.Click
         Me.DialogResult = Windows.Forms.DialogResult.Abort
     End Sub
-    Public Function cogerUltimaId() As Integer
+    Public Function cogerUltimaId(ByVal str As String) As Integer
         Dim i As Integer = 0
         cn = New SqlConnection(ConeStr)
         Try
             cn.Open()
-            Dim sql As String = "select top 1 DatosPersonales.id from DatosPersonales order by id desc"
+            Dim sql As String = "" ' "select top 1 DatosPersonales.id from DatosPersonales order by id desc"
+            sql = String.Format("SELECT TOP 1 {0}.Id FROM {0} ORDER BY Id DESC", str)
             Dim cmd As New SqlCommand(sql, cn)
             i = cmd.ExecuteScalar
         Catch ex As Exception
@@ -925,13 +959,82 @@ Public Class FrmFichas
         If Me.optAptoSi.Checked = False Then
             MsgBox("El candidato no está calificado como Apto")
         Else
-            cat = "Alumnos"
+            Dim cn2 As New SqlConnection(ConeStr)
             '####
             'TO DO:
             'Quitar de tabla candidatos y añadir a la tabla alumnos.
             '######
+            If Not IsNothing(DP.Curso) Then '   si hay DP.Curso es porque ya se han metido datos en la ficha
+                Try
+                    Dim sqlIdCand, sqlDelCandCur, sqlDelCand, sqlidal, sqlinsAl, sqlInsAlCur As String
+                    Dim idcand, idal, contr As Integer
+                    sqlIdCand = String.Format("SELECT C.Id FROM Candidatos c, DatosPersonales DP where  Dp.id=C.IdDP and DP.Id={0}", DP.Id)
+                    idcand = ejecutarConsultaScalar(sqlIdCand)
+                    sqlDelCandCur = String.Format("DELETE FROM Candidatos_Cursos WHERE idCa={0}", idCand)
+                    contr = ejecutarConsultaNonQuery(sqlDelCandCur)
+                    If contr <> 1 Then Throw New miExcepcion("Error al borrar de candidatos_cursos")
+                    contr = 0
+                    sqlDelCand = String.Format("DELETE FROM Candidatos WHERE id={0}", idCand)
+                    contr = ejecutarConsultaNonQuery(sqlDelCand)
+                    If contr <> 1 Then Throw New miExcepcion("Error al borrar de candidatos")
+                    contr = 0
+                    sqlinsAl = String.Format("INSERT INTO Alumnos (IdDP) VALUES ({0})", DP.Id)
+                    contr = ejecutarConsultaNonQuery(sqlinsAl)
+                    If contr <> 1 Then Throw New miExcepcion("Error al Insertar en Alumnos")
+                    contr = 0
+                    sqlidal = String.Format("SELECT Id FROM Alumnos WHERE IdDP={0}", DP.Id)
+                    idal = ejecutarConsultaScalar(sqlidal)
+                    If idal <= 0 Then Throw New miExcepcion("Error recuperar Ultima Id en Alumnos")
+                    sqlInsAlCur = String.Format("INSERT INTO Alumnos_Cursos (IdAl,IdCur) VALUES ({0},{1})", idal, DP.Curso)
+                    contr = ejecutarConsultaNonQuery(sqlInsAlCur)
+                    If contr <> 1 Then Throw New miExcepcion("Error al Insertar en Alumnos_Cursos")
+                    MsgBox(String.Format("{0} {1} Cambiado a Alumno del curso {2}", DP.Nombre, DP.Apellido1, Me.lblNombreCurso.Text))
+                Catch ex2 As miExcepcion
+
+                    MsgBox(ex2.ToString)
+                Catch ex As Exception
+
+                    MsgBox(ex.ToString)
+                Finally
+                    cn.Close()
+
+                End Try
+
+            End If
+
+
         End If
+
     End Sub
+    Private Function ejecutarConsultaScalar(ByVal str As String) As Integer
+        Dim control As Integer = 0
+        Try
+            cn.Open()
+            Dim cmd As New SqlCommand(str, cn)
+            control = cmd.ExecuteScalar
+            cn.Close()
+        Catch ex As Exception
+            control = -1
+        Finally
+            cn.Close()
+        End Try
+        Return control
+    End Function
+    Private Function ejecutarConsultaNonQuery(ByVal str As String) As Integer
+        Dim control As Integer = 0
+        Try
+            cn.Open()
+            Dim cmd As New SqlCommand(str, cn)
+            control = cmd.ExecuteNonQuery
+            cn.Close()
+        Catch ex As Exception
+            control = -1
+        Finally
+            cn.Close()
+        End Try
+        Return control
+    End Function
+
     Private Sub optAptoSi_Click(sender As Object, e As EventArgs) Handles optAptoSi.Click
         Me.cmdAñadirAAlumnos.Visible = True
         Me.cmdAñadirAAlumnos.Enabled = True
@@ -948,15 +1051,54 @@ Public Class FrmFichas
     Private Sub cmdAñadirComentarios_Click(sender As Object, e As EventArgs) Handles cmdAñadirComentarios.Click
         Dim frm As New FrmComentarios(DP)
         If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
-            Me.lblComentariosEscritos.Text = DP.Comentarios
+            GuardaComentarios = DP.Comentarios
+
         Else            '      MsgBox("No se ha guardado el comentario")
         End If
     End Sub
     Private Sub cboCursos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCursos.SelectedIndexChanged
-        Me.txtCurso.Text = ""
+        Me.lblNombreCurso.Text = ""
         Dim aux(3) As String
         aux = Split(Me.cboCursos.SelectedItem.ToString, "_")
         idcur = aux(0)
-        Me.txtCurso.Text = aux(2)
+        Me.lblNombreCurso.Text = aux(2)
+    End Sub
+
+    Private Sub recargarnotaEstecForm()
+        Dim num As Double = CDbl(Me.MtxtEstecTest.Text) + CDbl(Me.MtxtEstecDinam.Text) + CDbl(Me.MtxtEstecEntr.Text)
+        Me.MtxtEstecNOTA.Text = num.ToString("##,##0.00")
+
+    End Sub
+    Private Sub recargarnotaEstecINAEM()
+        Dim num As Double = CDbl(Me.MtxtInaemMujer.Text) + CDbl(Me.MtxtInaemDiscap.Text) + CDbl(Me.MtxtInaemBajaContr.Text) + CDbl(Me.MtxtInaemJoven.Text) + CDbl(Me.MtxtInaemOtros.Text)
+        Me.MtxtInaemNOTA.Text = num.ToString("##,##0.00")
+    End Sub
+    Private Sub MtxtEstecTest_MouseClick(sender As Object, e As MouseEventArgs) Handles MtxtEstecTest.MouseClick
+        Call recargarnotaEstecForm()
+    End Sub
+    Private Sub MtxtEstecDinam_MouseClick(sender As Object, e As MouseEventArgs) Handles MtxtEstecDinam.MouseClick
+        Call recargarnotaEstecForm()
+    End Sub
+    Private Sub MtxtEstecEntr_MouseClick(sender As Object, e As MouseEventArgs) Handles MtxtEstecEntr.MouseClick
+        Call recargarnotaEstecForm()
+    End Sub
+    Private Sub MtxtInaemOtros_MouseClick(sender As Object, e As MouseEventArgs) Handles MtxtInaemOtros.MouseClick
+        recargarnotaEstecINAEM()
+    End Sub
+    Private Sub MtxtInaemJoven_MouseClick(sender As Object, e As MouseEventArgs) Handles MtxtInaemJoven.MouseClick
+        recargarnotaEstecINAEM()
+    End Sub
+    Private Sub MtxtInaemBajaContr_MouseClick(sender As Object, e As MouseEventArgs) Handles MtxtInaemBajaContr.MouseClick
+        recargarnotaEstecINAEM()
+    End Sub
+    Private Sub MtxtInaemDiscap_MouseClick(sender As Object, e As MouseEventArgs) Handles MtxtInaemDiscap.MouseClick
+        recargarnotaEstecINAEM()
+    End Sub
+    Private Sub MtxtInaemMujer_MouseClick(sender As Object, e As MouseEventArgs) Handles MtxtInaemMujer.MouseClick
+        recargarnotaEstecINAEM()
+    End Sub
+
+    Private Sub optAptoSi_CheckedChanged(sender As Object, e As EventArgs) Handles optAptoSi.CheckedChanged
+
     End Sub
 End Class

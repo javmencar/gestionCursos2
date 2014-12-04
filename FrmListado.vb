@@ -27,14 +27,15 @@ Public Class FrmListado
             Case 1
                 cat = "Alumnos"
                 Me.GroupBox1.Text = "Listado de Alumnos"
-
             Case 2
                 cat = "Profesores"
                 Me.GroupBox1.Text = "Listado de Profesores"
+                Me.GbFiltros.Enabled = False
             Case 3
                 cat = "Candidatos"
                 Me.GroupBox1.Text = "Listado de candidatos"
         End Select
+        Me.LBLNombreFormulario.Text = cat
         Me.CboFiltroGordo.SelectedIndex = -1
         PrepararListView()
     End Sub
@@ -76,10 +77,20 @@ Public Class FrmListado
             .CheckBoxes = False
             .Items.Clear()
             'METER AQUI LOS CAMPOS QUE QUIERAN, POR AHORA LOS TELEFONOS
-            Dim camposListview() As String = {"Id", "DNI", "Nombre", "Apellido1", "Apellido2",
-                                        "Tel1", "tel2", "Inscrito en el INAEM", "", ""}
+            'Resulta que los quieren todos
+            Dim camposListview() As String = {"Id", "DNI", "Nombre", "Apellido1", "Apellido2", "Fecha Nacimiento", "Lugar de Nacimiento", "Edad",
+                                              "Domicilio", "C.P.", "Poblacion", "Telefono 1", "Telefono 2", "NumSS", "En el INAEM", "Fecha Inscrip. INAEM",
+                                              "Nivel de Estudios", "Sectores de Experiencia", "Talla Camiseta", "Talla Pantalon", "Talla Zapato",
+                                              "Entrevistado Por", "Fec entrevista", "Valoracion", "D.Apto", "D.PathFoto", "D.Email", "Comentarios Adicionales",
+                                              "Nota Test", "Nota Dinamica", "Nota Entrevista", "InaemMujer", "InaemDiscapacitado", "InaemBajaContrat.", "InaemJoven", "InaemOtros"}
             Dim s As String = ""
-            For i As Integer = 0 To camposListview.Length - 1
+            Dim limit As Integer = 0
+            If tipo = 3 Then
+                limit = 35
+            Else
+                limit = 27
+            End If
+            For i As Integer = 0 To limit
                 If i = 0 Then
                     s = camposListview(i).ToString.PadRight(5)
                 Else
@@ -101,63 +112,33 @@ Public Class FrmListado
         Try
             Me.ListView1.Items.Clear()
             Dim filtrado As Boolean
-            Dim sql As String = ""
+            Dim sql1 As String = ""
             Dim idcurso As Integer
             If Me.CboFiltroGordo.SelectedIndex <> -1 Then
                 filtrado = True
                 idcurso = Me.listaCursos.Item(Me.CboFiltroGordo.SelectedIndex)
             End If
-            Dim recorte As String = cat.Substring(0, 2)
-
-            Dim WhereFiltro As String = ""
-            Select Case tipo
-                Case 1
-                    If filtrado = True Then
-                        WhereFiltro = String.Format("  AND C.Id={0}", idcurso)
+            Dim sql As String = ""
+            sql = cargarSqlCorrecta(idcurso, filtrado)
+            'MsgBox(sql)
+            cn.Open()
+            Dim cmd As New SqlCommand(sql, cn)
+            Dim dr As SqlDataReader
+            dr = cmd.ExecuteReader
+            Dim i As Integer = 0
+            While dr.Read
+                Me.ListView1.Items.Add(dr(0))
+                For j As Integer = 1 To dr.FieldCount - 1
+                    If j = 7 Then
+                        If dr(j).ToString = "True" Then
+                            Me.ListView1.Items(i).SubItems.Add("Sí")
+                        End If
                     Else
-                        WhereFiltro = ""
+                        Me.ListView1.Items(i).SubItems.Add(dr(j).ToString)
                     End If
-                    sql = String.Format("SELECT A.Id,D.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
-                                                     "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
-                                                     "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios " &
-                                                     "FROM Alumnos AS A, DatosPersonales AS D, Alumnos_Cursos, Cursos AS C WHERE D.Id=A.IdDP AND A.Id=Alumnos_Cursos.IdAl AND C.Id=Alumnos_Cursos.IdCur{0}", WhereFiltro)
-                Case 2
-                    sql = String.Format("SELECT P.Id,D.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
-                                                        "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
-                                                        "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios " &
-                                                        "FROM Profesores AS P, DatosPersonales AS D WHERE D.Id=P.IdDP")
-                        Case 3
-                            If filtrado = True Then
-                                WhereFiltro = String.Format(" AND C.Id={0}", idcurso)
-                            Else
-                                WhereFiltro = ""
-                            End If
-                            sql = String.Format("SELECT CA.Id,D.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
-                                                                "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
-                                                                "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios, CA.EstecTest, " &
-                                                                "CA.EstecDinam, CA.EstecEntr, CA.InaemMujer,Ca.InaemDiscap, CA.InaemBajaCon, CA.InaemJoven, CA.InaemOtros " &
-                                                                "FROM Candidatos AS CA, DatosPersonales AS D, Candidatos_Cursos, Cursos AS C WHERE D.Id=CA.IdDP AND C.Id=Candidatos_Cursos.IdCur{0}", WhereFiltro)
-
-                    End Select
-                    MsgBox(sql)
-                    cn.Open()
-                    Dim cmd As New SqlCommand(sql, cn)
-                    Dim dr As SqlDataReader
-                    dr = cmd.ExecuteReader
-                    Dim i As Integer = 0
-                    While dr.Read
-                        Me.ListView1.Items.Add(dr(0))
-                        For j As Integer = 1 To dr.FieldCount - 1
-                            If j = 7 Then
-                                If dr(j).ToString = "True" Then
-                                    Me.ListView1.Items(i).SubItems.Add("Sí")
-                                End If
-                            Else
-                                Me.ListView1.Items(i).SubItems.Add(dr(j).ToString)
-                            End If
-                        Next
-                        i += 1
-                    End While
+                Next
+                i += 1
+            End While
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
         Catch ex As Exception
@@ -166,6 +147,47 @@ Public Class FrmListado
             cn.Close()
         End Try
     End Sub
+    Private Function cargarSqlCorrecta(ByVal idC As Integer, ByVal si As Boolean) As String
+        Dim sql1 As String
+        Dim SelectAComponer, FromAcomponer, WhereAcomponer, OrderAComponer As String
+        Select Case tipo
+            Case 1  'Alumnos
+                SelectAComponer = String.Format("SELECT A.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
+                                                     "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
+                                                     "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios ")
+                FromAcomponer = String.Format(" FROM Alumnos AS A, DatosPersonales AS D, Alumnos_Cursos, Cursos AS C ")
+                OrderAComponer = String.Format(" ORDER BY A.Id")
+                If si = True Then
+
+                    WhereAcomponer = String.Format(" WHERE D.Id=A.IdDP AND A.Id=Alumnos_Cursos.IdAl AND C.Id=Alumnos_Cursos.IdCur AND C.Id={0}", idC)
+                Else
+                    WhereAcomponer = String.Format(" WHERE D.Id=A.IdDP AND A.Id=Alumnos_Cursos.IdAl AND C.Id=Alumnos_Cursos.IdCur ")
+                End If
+
+            Case 2  'Profesores
+                SelectAComponer = String.Format("SELECT P.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
+                                                        "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
+                                                        "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios ")
+                'Los profesores no se filtran por cursos
+                FromAcomponer = String.Format(" FROM Profesores AS P, DatosPersonales AS D ")
+                WhereAcomponer = String.Format(" WHERE D.Id=P.IdDP ")
+                OrderAComponer = String.Format(" ORDER BY P.Id")
+            Case 3  'Candidatos
+                SelectAComponer = String.Format("SELECT  CA.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
+                                                        "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon," &
+                                                        "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios, " &
+                                                        "CA.EstecTest, CA.EstecDinam, CA.EstecEntr, CA.InaemMujer,Ca.InaemDiscap, CA.InaemBajaCon, CA.InaemJoven, CA.InaemOtros ")
+                FromAcomponer = String.Format(" FROM Candidatos AS CA, DatosPersonales AS D, Candidatos_Cursos, Cursos AS C ")
+                OrderAComponer = String.Format(" ORDER BY CA.Id")
+                If si = True Then
+                    WhereAcomponer = String.Format(" WHERE D.Id=CA.IdDP AND CA.Id=CAndidatos_Cursos.IdCa AND C.Id=Candidatos_Cursos.IdCur AND C.Id={0}", idC)
+                Else
+                    WhereAcomponer = String.Format(" WHERE D.Id=CA.IdDP AND CA.Id=CAndidatos_Cursos.IdCa AND C.Id=Candidatos_Cursos.IdCur ")
+                End If
+        End Select
+        sql1 = SelectAComponer & FromAcomponer & WhereAcomponer & OrderAComponer
+        Return sql1
+    End Function
     Private Sub cmdNuevo_Click(sender As Object, e As EventArgs) Handles cmdNuevo.Click
         Try
             If tipo = 1 Then
@@ -197,18 +219,18 @@ Public Class FrmListado
         Dim aviso As String = cat.Substring(0, cat.Length - 1)
         Try
             If Me.ListView1.SelectedIndices.Count = 0 Then Throw New miExcepcion("Debe seleccionar un elemento del listado")
-          
-                Dim DP As Ficha = RellenarDatosPersonales()
-                If Not IsNothing(DP) Then
-                    'en tipo llevo si es alumno, profesor o candidato; false porque es modificacion de uno existente
-                    Dim frm As New FrmFichas(DP, tipo, False)
 
-                    If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                        Call cargarDatosEnListview()
-                    Else
-                        Throw New miExcepcion("proceso cancelado")
-                    End If
+            Dim DP As Ficha = RellenarDatosPersonales()
+            If Not IsNothing(DP) Then
+                'en tipo llevo si es alumno, profesor o candidato; false porque es modificacion de uno existente
+                Dim frm As New FrmFichas(DP, tipo, False)
+
+                If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                    Call cargarDatosEnListview()
+                Else
+                    Throw New miExcepcion("proceso cancelado")
                 End If
+            End If
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
         Catch ex As Exception
@@ -219,7 +241,7 @@ Public Class FrmListado
         Dim cn2 As New SqlConnection(ConeStr)
         Try
             Dim subconsulta As String = String.Format("(SELECT Candidatos.Id FROM Candidatos, DatosPersonales WHERE Candidatos.IdDP=DatosPersonales.Id AND DatosPersonales.Id={0})", fi.Id)
-            Dim sql2 As String = String.Format("Select EstecTest, EstecDinam, EstecEntr, InaemMujer, InaemBajaCon, InaemJoven, InaemDiscap, InaemOtros FROM Candidatos WHERE Id={0}", subconsulta)
+            Dim sql2 As String = String.Format("SELECT Curso, EstecTest, EstecDinam, EstecEntr, InaemMujer, InaemBajaCon, InaemJoven, InaemDiscap, InaemOtros FROM Candidatos WHERE Id={0}", subconsulta)
 
             cn2.Open()
             Dim cmd2 As New SqlCommand(sql2, cn2)
@@ -227,14 +249,15 @@ Public Class FrmListado
             dr2 = cmd2.ExecuteReader
             If dr2.Read Then
                 With fi
-                    If Not IsDBNull(dr2(0)) Then .EstecTest = dr2(0)
-                    If Not IsDBNull(dr2(1)) Then .EstecDinam = dr2(1)
-                    If Not IsDBNull(dr2(2)) Then .EstecEntr = dr2(2)
-                    If Not IsDBNull(dr2(3)) Then .InaemMujer = dr2(3)
-                    If Not IsDBNull(dr2(4)) Then .InaemBajaCon = dr2(4)
-                    If Not IsDBNull(dr2(5)) Then .InaemJoven = dr2(5)
-                    If Not IsDBNull(dr2(6)) Then .InaemDiscap = dr2(6)
-                    If Not IsDBNull(dr2(7)) Then .InaemOtros = dr2(7)
+                    If Not IsDBNull(dr2(0)) Then .Curso = dr2(0)
+                    If Not IsDBNull(dr2(1)) Then .EstecTest = dr2(1)
+                    If Not IsDBNull(dr2(2)) Then .EstecDinam = dr2(2)
+                    If Not IsDBNull(dr2(3)) Then .EstecEntr = dr2(3)
+                    If Not IsDBNull(dr2(4)) Then .InaemMujer = dr2(4)
+                    If Not IsDBNull(dr2(5)) Then .InaemBajaCon = dr2(5)
+                    If Not IsDBNull(dr2(6)) Then .InaemJoven = dr2(6)
+                    If Not IsDBNull(dr2(7)) Then .InaemDiscap = dr2(7)
+                    If Not IsNothing(dr2(8)) Then .InaemOtros = dr2(8)
                 End With
             Else
                 '  MsgBox("no hay notas")
@@ -287,7 +310,7 @@ Public Class FrmListado
                     If Not IsDBNull(dr(21)) Then .Entrevistador = dr(21)
                     If Not IsDBNull(dr(22)) Then .FecEntr = dr(22)
                     If Not IsDBNull(dr(23)) Then .Valoracion = dr(23)
-                    '#### OJO Aqui con lode apto
+                    '#### OJO Aqui con lo de apto
                     If Not IsDBNull(dr(24)) Then .Apto = dr(24)
                     '#####
                     If Not IsDBNull(dr(25)) Then .PathFoto = dr(25)
@@ -309,30 +332,37 @@ Public Class FrmListado
         End Try
         Return FIC
     End Function
-  
+
     Private Sub cmdSalir_Click(sender As Object, e As EventArgs) Handles cmdSalir.Click
         Me.DialogResult = Windows.Forms.DialogResult.Cancel
     End Sub
     Public Function borrarDatosPersonales(ByVal i As Integer) As Integer
+        Dim cn3 As New SqlConnection(ConeStr)
         Dim num, idDP As Integer
+        Dim cort As String = cat.Substring(0, 2)
         Dim sqlIdDP As String = String.Format("SELECT DatosPersonales.Id FROM DatosPersonales, {0} WHERE DatosPersonales.Id={0}.IdDP AND {0}.id={1}", cat, CStr(i))
-        Dim sqlalumnos As String = String.Format("DELETE FROM {0} WHERE {0}.id={1}", cat, CStr(i))
+        Dim sqlCursos As String = String.Format("DELETE FROM {0}_Cursos WHERE Id{1}={2}", cat, cort, CStr(i))
+        Dim sqlTablas As String = String.Format("DELETE FROM {0} WHERE {0}.id={1}", cat, CStr(i))
         Dim sqlDatosPersonales As String = "DELETE FROM DatosPersonales WHERE DatosPersonales.Id="
         Dim cn2 As New SqlConnection(ConeStr)
         Try
             cn.Open()
-            Dim cmd1, cmd2, cmd3 As SqlCommand
+            Dim cmd1, cmd2, cmd3, cmd4 As SqlCommand
             cmd1 = New SqlCommand(sqlIdDP, cn)
             idDP = cmd1.ExecuteScalar
             cn.Close()
             cn.Open()
-            cmd2 = New SqlCommand(sqlalumnos, cn)
+            cmd2 = New SqlCommand(sqlCursos, cn)
             num = cmd2.ExecuteNonQuery
             If num <> 1 Then Throw New miExcepcion("error al borrar")
             cn2.Open()
-            sqlDatosPersonales &= CStr(idDP) ' Añado la Id obtenida al final de la consulta
-            cmd3 = New SqlCommand(sqlDatosPersonales, cn2)
+            cmd3 = New SqlCommand(sqlTablas, cn2)
             num = cmd3.ExecuteNonQuery
+            If num <> 1 Then Throw New miExcepcion("error al borrar")
+            cn3.Open()
+            sqlDatosPersonales &= CStr(idDP) ' Añado la IdDP obtenida al final de la consulta
+            cmd4 = New SqlCommand(sqlDatosPersonales, cn3)
+            num = cmd4.ExecuteNonQuery
             If num <> 1 Then Throw New miExcepcion("Error al borrar datos personales")
             'End If
         Catch ex2 As miExcepcion
@@ -343,6 +373,7 @@ Public Class FrmListado
         Finally
             cn.Close()
             cn2.Close()
+            cn3.Close()
         End Try
         Return num
     End Function
@@ -373,6 +404,7 @@ Public Class FrmListado
         End Try
     End Sub
     Private Sub cmdBuscar_Click(sender As Object, e As EventArgs) Handles cmdBuscar.Click
+        Me.ListView1.SelectedItems.Clear()
         If Me.CboFiltroBusquedaUnica.SelectedIndex = -1 Then
             MsgBox(" Seleccione un criterio de busqueda del combo")
         Else
@@ -403,7 +435,7 @@ Public Class FrmListado
             End If
         End If
     End Sub
-  
+
     Private Sub ChkExportar_Click(sender As Object, e As EventArgs) Handles ChkExportar.Click
         If ChkExportar.Checked = True Then
             Me.ListView1.MultiSelect = True
@@ -484,7 +516,7 @@ Public Class FrmListado
         Return s
     End Function
 
- 
+
     Private Function recogerDatos(ByVal id As Integer) As String
         Dim registro As String = ""
         Try
@@ -576,7 +608,7 @@ Public Class FrmListado
                                  "Podrá abrirlo desde el menú que se desplegará a continuación" & vbCrLf &
                                  "Se abre como solo lectura. Luego recuerde guardarlo en un formato excel " &
                                  vbCrLf & "como '.xls'", PathExportacion))
-           
+
             Dim openFileDialog1 As New OpenFileDialog()
             openFileDialog1.InitialDirectory = "C:\Git\DatosExportados"
             openFileDialog1.Filter = "csv files (*.csv)|*.csv|txt files (*.txt)|*.txt|All files (*.*)|*.*"

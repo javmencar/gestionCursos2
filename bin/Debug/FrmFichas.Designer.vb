@@ -112,7 +112,6 @@ Partial Class FrmFichas
         Me.LblFoto = New System.Windows.Forms.Label()
         Me.cmdBorrar = New System.Windows.Forms.Button()
         Me.cmdAñadirAAlumnos = New System.Windows.Forms.Button()
-        Me.txtCurso = New System.Windows.Forms.TextBox()
         Me.lblCurso = New System.Windows.Forms.Label()
         Me.cmdAñadirComentarios = New System.Windows.Forms.Button()
         Me.lblComentarios = New System.Windows.Forms.Label()
@@ -121,6 +120,7 @@ Partial Class FrmFichas
         Me.PicBx1 = New System.Windows.Forms.PictureBox()
         Me.lblComentariosEscritos = New System.Windows.Forms.Label()
         Me.cboCursos = New System.Windows.Forms.ComboBox()
+        Me.lblNombreCurso = New System.Windows.Forms.Label()
         Me.GbInaem.SuspendLayout()
         Me.GbExperiencia.SuspendLayout()
         Me.GbUniforme.SuspendLayout()
@@ -398,7 +398,7 @@ Partial Class FrmFichas
         Me.GbExperiencia.Controls.Add(Me.CboExpSector)
         Me.GbExperiencia.Location = New System.Drawing.Point(580, 251)
         Me.GbExperiencia.Name = "GbExperiencia"
-        Me.GbExperiencia.Size = New System.Drawing.Size(278, 130)
+        Me.GbExperiencia.Size = New System.Drawing.Size(278, 125)
         Me.GbExperiencia.TabIndex = 15
         Me.GbExperiencia.TabStop = False
         Me.GbExperiencia.Tag = "17"
@@ -519,7 +519,7 @@ Partial Class FrmFichas
         Me.GbEntrevista.Controls.Add(Me.txtValoracion)
         Me.GbEntrevista.Controls.Add(Me.txtEntrevistador)
         Me.GbEntrevista.Controls.Add(Me.lblEntrevistador)
-        Me.GbEntrevista.Location = New System.Drawing.Point(230, 378)
+        Me.GbEntrevista.Location = New System.Drawing.Point(230, 382)
         Me.GbEntrevista.Name = "GbEntrevista"
         Me.GbEntrevista.Size = New System.Drawing.Size(470, 147)
         Me.GbEntrevista.TabIndex = 17
@@ -604,7 +604,7 @@ Partial Class FrmFichas
         'lblId1
         '
         Me.lblId1.AutoSize = True
-        Me.lblId1.Location = New System.Drawing.Point(849, 20)
+        Me.lblId1.Location = New System.Drawing.Point(845, 9)
         Me.lblId1.Name = "lblId1"
         Me.lblId1.Size = New System.Drawing.Size(18, 13)
         Me.lblId1.TabIndex = 42
@@ -613,7 +613,7 @@ Partial Class FrmFichas
         'txtId
         '
         Me.txtId.Enabled = False
-        Me.txtId.Location = New System.Drawing.Point(881, 16)
+        Me.txtId.Location = New System.Drawing.Point(885, 6)
         Me.txtId.Name = "txtId"
         Me.txtId.Size = New System.Drawing.Size(56, 20)
         Me.txtId.TabIndex = 43
@@ -644,9 +644,9 @@ Partial Class FrmFichas
         Me.GbCalificacion.Controls.Add(Me.OptAptoPendiente)
         Me.GbCalificacion.Controls.Add(Me.OptAptoNo)
         Me.GbCalificacion.Controls.Add(Me.optAptoSi)
-        Me.GbCalificacion.Location = New System.Drawing.Point(230, 532)
+        Me.GbCalificacion.Location = New System.Drawing.Point(37, 532)
         Me.GbCalificacion.Name = "GbCalificacion"
-        Me.GbCalificacion.Size = New System.Drawing.Size(519, 197)
+        Me.GbCalificacion.Size = New System.Drawing.Size(663, 197)
         Me.GbCalificacion.TabIndex = 18
         Me.GbCalificacion.TabStop = False
         Me.GbCalificacion.Text = "Calificacion"
@@ -884,7 +884,7 @@ Partial Class FrmFichas
         'OptAptoPendiente
         '
         Me.OptAptoPendiente.AutoSize = True
-        Me.OptAptoPendiente.Location = New System.Drawing.Point(353, 174)
+        Me.OptAptoPendiente.Location = New System.Drawing.Point(514, 97)
         Me.OptAptoPendiente.Name = "OptAptoPendiente"
         Me.OptAptoPendiente.Size = New System.Drawing.Size(73, 17)
         Me.OptAptoPendiente.TabIndex = 2
@@ -896,7 +896,7 @@ Partial Class FrmFichas
         'OptAptoNo
         '
         Me.OptAptoNo.AutoSize = True
-        Me.OptAptoNo.Location = New System.Drawing.Point(220, 174)
+        Me.OptAptoNo.Location = New System.Drawing.Point(514, 65)
         Me.OptAptoNo.Name = "OptAptoNo"
         Me.OptAptoNo.Size = New System.Drawing.Size(64, 17)
         Me.OptAptoNo.TabIndex = 1
@@ -908,7 +908,7 @@ Partial Class FrmFichas
         'optAptoSi
         '
         Me.optAptoSi.AutoSize = True
-        Me.optAptoSi.Location = New System.Drawing.Point(98, 174)
+        Me.optAptoSi.Location = New System.Drawing.Point(514, 29)
         Me.optAptoSi.Name = "optAptoSi"
         Me.optAptoSi.Size = New System.Drawing.Size(47, 17)
         Me.optAptoSi.TabIndex = 0
@@ -980,18 +980,10 @@ Partial Class FrmFichas
         Me.cmdAñadirAAlumnos.Text = "Añadir  Como Alumno"
         Me.cmdAñadirAAlumnos.UseVisualStyleBackColor = True
         '
-        'txtCurso
-        '
-        Me.txtCurso.Location = New System.Drawing.Point(804, 95)
-        Me.txtCurso.Name = "txtCurso"
-        Me.txtCurso.Size = New System.Drawing.Size(197, 20)
-        Me.txtCurso.TabIndex = 50
-        Me.txtCurso.Tag = "0"
-        '
         'lblCurso
         '
         Me.lblCurso.AutoSize = True
-        Me.lblCurso.Location = New System.Drawing.Point(886, 55)
+        Me.lblCurso.Location = New System.Drawing.Point(866, 38)
         Me.lblCurso.Name = "lblCurso"
         Me.lblCurso.Size = New System.Drawing.Size(45, 13)
         Me.lblCurso.TabIndex = 49
@@ -1028,9 +1020,9 @@ Partial Class FrmFichas
         Me.lblEmail.AutoSize = True
         Me.lblEmail.Location = New System.Drawing.Point(24, 216)
         Me.lblEmail.Name = "lblEmail"
-        Me.lblEmail.Size = New System.Drawing.Size(49, 13)
+        Me.lblEmail.Size = New System.Drawing.Size(32, 13)
         Me.lblEmail.TabIndex = 54
-        Me.lblEmail.Text = "Domicilio"
+        Me.lblEmail.Text = "Email"
         '
         'PicBx1
         '
@@ -1058,23 +1050,33 @@ Partial Class FrmFichas
         'cboCursos
         '
         Me.cboCursos.FormattingEnabled = True
-        Me.cboCursos.Location = New System.Drawing.Point(804, 68)
+        Me.cboCursos.Location = New System.Drawing.Point(804, 54)
         Me.cboCursos.Name = "cboCursos"
         Me.cboCursos.Size = New System.Drawing.Size(197, 21)
         Me.cboCursos.TabIndex = 56
+        '
+        'lblNombreCurso
+        '
+        Me.lblNombreCurso.AutoSize = True
+        Me.lblNombreCurso.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblNombreCurso.Location = New System.Drawing.Point(814, 78)
+        Me.lblNombreCurso.Name = "lblNombreCurso"
+        Me.lblNombreCurso.Size = New System.Drawing.Size(63, 20)
+        Me.lblNombreCurso.TabIndex = 57
+        Me.lblNombreCurso.Text = "Label1"
         '
         'FrmFichas
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1013, 733)
+        Me.Controls.Add(Me.lblNombreCurso)
         Me.Controls.Add(Me.cboCursos)
         Me.Controls.Add(Me.lblComentariosEscritos)
         Me.Controls.Add(Me.txtEmail)
         Me.Controls.Add(Me.lblEmail)
         Me.Controls.Add(Me.lblComentarios)
         Me.Controls.Add(Me.cmdAñadirComentarios)
-        Me.Controls.Add(Me.txtCurso)
         Me.Controls.Add(Me.lblCurso)
         Me.Controls.Add(Me.cmdAñadirAAlumnos)
         Me.Controls.Add(Me.cmdBorrar)
@@ -1204,7 +1206,6 @@ Partial Class FrmFichas
     Friend WithEvents LblFoto As System.Windows.Forms.Label
     Friend WithEvents cmdBorrar As System.Windows.Forms.Button
     Friend WithEvents cmdAñadirAAlumnos As System.Windows.Forms.Button
-    Friend WithEvents txtCurso As System.Windows.Forms.TextBox
     Friend WithEvents lblCurso As System.Windows.Forms.Label
     Friend WithEvents cmdAñadirComentarios As System.Windows.Forms.Button
     Friend WithEvents lblComentarios As System.Windows.Forms.Label
@@ -1236,4 +1237,5 @@ Partial Class FrmFichas
     Friend WithEvents MtxtEstecEntr As System.Windows.Forms.MaskedTextBox
     Friend WithEvents MtxtEstecDinam As System.Windows.Forms.MaskedTextBox
     Friend WithEvents MtxtEstecTest As System.Windows.Forms.MaskedTextBox
+    Friend WithEvents lblNombreCurso As System.Windows.Forms.Label
 End Class

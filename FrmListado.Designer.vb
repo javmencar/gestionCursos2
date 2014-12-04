@@ -43,6 +43,7 @@ Partial Class FrmListado
         Me.lblFiltroGordo = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.ListView1 = New System.Windows.Forms.ListView()
+        Me.LBLNombreFormulario = New System.Windows.Forms.Label()
         Me.GbBusquedaUnica.SuspendLayout()
         CType(Me.GestionCursosDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GestionCursosDataSetBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -168,16 +169,16 @@ Partial Class FrmListado
         Me.GbFiltros.Controls.Add(Me.cmdFiltrar)
         Me.GbFiltros.Controls.Add(Me.CboFiltroGordo)
         Me.GbFiltros.Controls.Add(Me.lblFiltroGordo)
-        Me.GbFiltros.Location = New System.Drawing.Point(37, 27)
+        Me.GbFiltros.Location = New System.Drawing.Point(37, 42)
         Me.GbFiltros.Name = "GbFiltros"
-        Me.GbFiltros.Size = New System.Drawing.Size(668, 88)
+        Me.GbFiltros.Size = New System.Drawing.Size(668, 73)
         Me.GbFiltros.TabIndex = 9
         Me.GbFiltros.TabStop = False
         Me.GbFiltros.Text = "Filtrar"
         '
         'cmdQuitarFiltro
         '
-        Me.cmdQuitarFiltro.Location = New System.Drawing.Point(364, 37)
+        Me.cmdQuitarFiltro.Location = New System.Drawing.Point(364, 19)
         Me.cmdQuitarFiltro.Name = "cmdQuitarFiltro"
         Me.cmdQuitarFiltro.Size = New System.Drawing.Size(66, 41)
         Me.cmdQuitarFiltro.TabIndex = 18
@@ -186,7 +187,7 @@ Partial Class FrmListado
         '
         'cmdFiltrar
         '
-        Me.cmdFiltrar.Location = New System.Drawing.Point(272, 37)
+        Me.cmdFiltrar.Location = New System.Drawing.Point(272, 19)
         Me.cmdFiltrar.Name = "cmdFiltrar"
         Me.cmdFiltrar.Size = New System.Drawing.Size(66, 41)
         Me.cmdFiltrar.TabIndex = 17
@@ -196,7 +197,7 @@ Partial Class FrmListado
         'CboFiltroGordo
         '
         Me.CboFiltroGordo.FormattingEnabled = True
-        Me.CboFiltroGordo.Location = New System.Drawing.Point(27, 48)
+        Me.CboFiltroGordo.Location = New System.Drawing.Point(27, 40)
         Me.CboFiltroGordo.Name = "CboFiltroGordo"
         Me.CboFiltroGordo.Size = New System.Drawing.Size(187, 21)
         Me.CboFiltroGordo.TabIndex = 14
@@ -204,7 +205,7 @@ Partial Class FrmListado
         'lblFiltroGordo
         '
         Me.lblFiltroGordo.AutoSize = True
-        Me.lblFiltroGordo.Location = New System.Drawing.Point(40, 32)
+        Me.lblFiltroGordo.Location = New System.Drawing.Point(40, 24)
         Me.lblFiltroGordo.Name = "lblFiltroGordo"
         Me.lblFiltroGordo.Size = New System.Drawing.Size(171, 13)
         Me.lblFiltroGordo.TabIndex = 13
@@ -228,11 +229,22 @@ Partial Class FrmListado
         Me.ListView1.TabIndex = 1
         Me.ListView1.UseCompatibleStateImageBehavior = False
         '
+        'LBLNombreFormulario
+        '
+        Me.LBLNombreFormulario.AutoSize = True
+        Me.LBLNombreFormulario.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LBLNombreFormulario.Location = New System.Drawing.Point(309, 8)
+        Me.LBLNombreFormulario.Name = "LBLNombreFormulario"
+        Me.LBLNombreFormulario.Size = New System.Drawing.Size(101, 31)
+        Me.LBLNombreFormulario.TabIndex = 11
+        Me.LBLNombreFormulario.Text = "Label1"
+        '
         'FrmListado
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1274, 620)
+        Me.Controls.Add(Me.LBLNombreFormulario)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GbFiltros)
         Me.Controls.Add(Me.ChkExportar)
@@ -275,4 +287,5 @@ Partial Class FrmListado
     Friend WithEvents cmdQuitarFiltro As System.Windows.Forms.Button
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents ListView1 As System.Windows.Forms.ListView
+    Friend WithEvents LBLNombreFormulario As System.Windows.Forms.Label
 End Class
