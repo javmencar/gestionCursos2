@@ -3,5 +3,6 @@
 
     'Public ConeStr As String = "Data Source=JAVIPORTATIL;Initial Catalog=BBDD_02;Integrated Security=True"
     Public ConeStr As String = "Data Source=JAVIPORTATIL;Initial Catalog=GestionCursos;Integrated Security=True"
+    Public PathExportacion As String = "C:\Git\DatosExportados\RegistrosExportados.csv"
 
 End Module

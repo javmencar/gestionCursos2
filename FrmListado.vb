@@ -22,6 +22,7 @@ Public Class FrmListado
         Me.CmdExportar.Enabled = False
         Call cargarBusquedaUnica()
         Call cargarComboGordo()
+        Me.cmdModificar.Text = "Ver / Modificar Ficha"
         Select Case tipo
             Case 1
                 cat = "Alumnos"
@@ -72,6 +73,7 @@ Public Class FrmListado
             .FullRowSelect = True
             .GridLines = True
             .Sorting = SortOrder.Ascending
+            .CheckBoxes = False
             .Items.Clear()
             'METER AQUI LOS CAMPOS QUE QUIERAN, POR AHORA LOS TELEFONOS
             Dim camposListview() As String = {"Id", "DNI", "Nombre", "Apellido1", "Apellido2",
@@ -107,32 +109,55 @@ Public Class FrmListado
             End If
             Dim recorte As String = cat.Substring(0, 2)
 
-            If filtrado = True Then
-                Dim aux1 As String = String.Format(", {0}_Cursos, Cursos", cat)
-                Dim aux2 As String = String.Format("AND {0}.Id={0}_Cursos.Id{1} AND Cursos.Id={0}_Cursos.IdCur AND Cursos.Id={2}", cat, recorte, idcurso)
-                sql = String.Format("SELECT {0}.Id, DatosPersonales.DNI, DatosPersonales.Nombre, DatosPersonales.Apellido1, DatosPersonales.Apellido2, DatosPersonales.Tel1, DatosPersonales.Tel2, DatosPersonales.InInaem FROM {0}, DatosPersonales {1} WHERE DatosPersonales.Id={0}.IdDP {2}", cat, aux1, aux2)
-            Else
-                sql = String.Format("SELECT {0}.Id, DatosPersonales.DNI, DatosPersonales.Nombre, DatosPersonales.Apellido1, DatosPersonales.Apellido2, DatosPersonales.Tel1, DatosPersonales.Tel2, DatosPersonales.InInaem FROM {0}, DatosPersonales WHERE DatosPersonales.Id={0}.IdDP", cat)
-            End If
-            ' MsgBox(sql)
-            cn.Open()
-            Dim cmd As New SqlCommand(sql, cn)
-            Dim dr As SqlDataReader
-            dr = cmd.ExecuteReader
-            Dim i As Integer = 0
-            While dr.Read
-                Me.ListView1.Items.Add(dr(0))
-                For j As Integer = 1 To dr.FieldCount - 1
-                    If j = 7 Then
-                        If dr(j).ToString = "True" Then
-                            Me.ListView1.Items(i).SubItems.Add("Sí")
-                        End If
+            Dim WhereFiltro As String = ""
+            Select Case tipo
+                Case 1
+                    If filtrado = True Then
+                        WhereFiltro = String.Format("  AND C.Id={0}", idcurso)
                     Else
-                        Me.ListView1.Items(i).SubItems.Add(dr(j).ToString)
+                        WhereFiltro = ""
                     End If
-                Next
-                i += 1
-            End While
+                    sql = String.Format("SELECT A.Id,D.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
+                                                     "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
+                                                     "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios " &
+                                                     "FROM Alumnos AS A, DatosPersonales AS D, Alumnos_Cursos, Cursos AS C WHERE D.Id=A.IdDP AND A.Id=Alumnos_Cursos.IdAl AND C.Id=Alumnos_Cursos.IdCur{0}", WhereFiltro)
+                Case 2
+                    sql = String.Format("SELECT P.Id,D.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
+                                                        "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
+                                                        "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios " &
+                                                        "FROM Profesores AS P, DatosPersonales AS D WHERE D.Id=P.IdDP")
+                        Case 3
+                            If filtrado = True Then
+                                WhereFiltro = String.Format(" AND C.Id={0}", idcurso)
+                            Else
+                                WhereFiltro = ""
+                            End If
+                            sql = String.Format("SELECT CA.Id,D.Id, D.DNI, D.Nombre, D.Apellido1, D.Apellido2, D.Fnac, D.LugNac, D.Edad, D.Domicilio,D.CP, D.Poblacion, " &
+                                                                "D.Tel1, D.Tel2, D.NumSS, D.InInaem, D.InFecha, D.NivelEstudios, D.ExpSector, D.TallaCamiseta, D.TallaPantalon, " &
+                                                                "D.TallaZapato, D.Entrevistador, D.FecEntr, D.Valoracion, D.Apto, D.PathFoto, D.Email, D.Comentarios, CA.EstecTest, " &
+                                                                "CA.EstecDinam, CA.EstecEntr, CA.InaemMujer,Ca.InaemDiscap, CA.InaemBajaCon, CA.InaemJoven, CA.InaemOtros " &
+                                                                "FROM Candidatos AS CA, DatosPersonales AS D, Candidatos_Cursos, Cursos AS C WHERE D.Id=CA.IdDP AND C.Id=Candidatos_Cursos.IdCur{0}", WhereFiltro)
+
+                    End Select
+                    MsgBox(sql)
+                    cn.Open()
+                    Dim cmd As New SqlCommand(sql, cn)
+                    Dim dr As SqlDataReader
+                    dr = cmd.ExecuteReader
+                    Dim i As Integer = 0
+                    While dr.Read
+                        Me.ListView1.Items.Add(dr(0))
+                        For j As Integer = 1 To dr.FieldCount - 1
+                            If j = 7 Then
+                                If dr(j).ToString = "True" Then
+                                    Me.ListView1.Items(i).SubItems.Add("Sí")
+                                End If
+                            Else
+                                Me.ListView1.Items(i).SubItems.Add(dr(j).ToString)
+                            End If
+                        Next
+                        i += 1
+                    End While
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
         Catch ex As Exception
@@ -202,17 +227,17 @@ Public Class FrmListado
             dr2 = cmd2.ExecuteReader
             If dr2.Read Then
                 With fi
-                    .EstecTest = dr2(0)
-                    .EstecDinam = dr2(1)
-                    .EstecEntr = dr2(2)
-                    .InaemMujer = dr2(3)
-                    .InaemBajaCon = dr2(4)
-                    .InaemJoven = dr2(5)
-                    .InaemDiscap = dr2(6)
-                    .InaemOtros = dr2(7)
+                    If Not IsDBNull(dr2(0)) Then .EstecTest = dr2(0)
+                    If Not IsDBNull(dr2(1)) Then .EstecDinam = dr2(1)
+                    If Not IsDBNull(dr2(2)) Then .EstecEntr = dr2(2)
+                    If Not IsDBNull(dr2(3)) Then .InaemMujer = dr2(3)
+                    If Not IsDBNull(dr2(4)) Then .InaemBajaCon = dr2(4)
+                    If Not IsDBNull(dr2(5)) Then .InaemJoven = dr2(5)
+                    If Not IsDBNull(dr2(6)) Then .InaemDiscap = dr2(6)
+                    If Not IsDBNull(dr2(7)) Then .InaemOtros = dr2(7)
                 End With
             Else
-                MsgBox("no hay notas")
+                '  MsgBox("no hay notas")
             End If
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
@@ -223,7 +248,7 @@ Public Class FrmListado
         End Try
     End Sub
     Private Function RellenarDatosPersonales() As Ficha
-        Dim DP As New Ficha
+        Dim FIC As New Ficha
         Try
             cn = New SqlConnection(ConeStr)
             'recupero el id del elemento que quiero modificar a traves del listview
@@ -237,108 +262,52 @@ Public Class FrmListado
             Dim dr As SqlDataReader
             dr = cmd.ExecuteReader
             If dr.Read Then
-                With DP
-                    If Not IsNothing(dr(0)) Then
-                        .Id = dr(0)
-                    End If
-                    If Not IsDBNull(dr(1)) Then
-                        .DNI = dr(1)
-                    End If
-                    If Not IsDBNull(dr(2)) Then
-                        .Nombre = dr(2)
-                    End If
-                    If Not IsDBNull(dr(3)) Then
-                        .Apellido1 = dr(3)
-                    End If
-                    If Not IsDBNull(dr(4)) Then
-                        .Apellido2 = dr(4)
-                    End If
-                    If Not IsDBNull(dr(5)) Then
-                        .Fnac = dr(5)
-                    End If
-                    If Not IsDBNull(dr(6)) Then
-                        .LugNac = dr(6)
-                    End If
-                    If Not IsDBNull(dr(7)) Then
-                        .Edad = dr(7)
-                    End If
-                    If Not IsDBNull(dr(8)) Then
-                        .Domicilio = dr(8)
-                    End If
-                    If Not IsDBNull(dr(9)) Then
-                        .CP = dr(9)
-                    End If
-                    If Not IsDBNull(dr(10)) Then
-                        .Poblacion = dr(10)
-                    End If
-                    If Not IsDBNull(dr(11)) Then
-                        .Tel1 = dr(11)
-                    End If
-                    If Not IsDBNull(dr(12)) Then
-                        .Tel2 = dr(12)
-                    End If
-                    If Not IsDBNull(dr(13)) Then
-                        .NumSS = dr(13)
-                    End If
-                    If Not IsDBNull(dr(14)) Then
-                        .InInaem = dr(14)
-                    End If
-                    If Not IsDBNull(dr(15)) Then
-                        .InFecha = dr(15)
-                    End If
-                    If Not IsDBNull(dr(16)) Then
-                        .NivelEstudios = dr(16)
-                    End If
-                    If Not IsDBNull(dr(17)) Then
-                        .ExpSector = dr(17)
-                    End If
-                    If Not IsDBNull(dr(18)) Then
-                        .TallaCamiseta = dr(18)
-                    End If
-                    If Not IsDBNull(dr(19)) Then
-                        .TallaPantalon = dr(19)
-                    End If
-                    If Not IsDBNull(dr(20)) Then
-                        .TallaZapato = dr(20)
-                    End If
-                    If Not IsDBNull(dr(21)) Then
-                        .Entrevistador = dr(21)
-                    End If
-                    If Not IsDBNull(dr(22)) Then
-                        .FecEntr = dr(22)
-                    End If
-                    If Not IsDBNull(dr(23)) Then
-                        .Valoracion = dr(23)
-                    End If
-                    If Not IsDBNull(dr(24)) Then
-                        .Apto = dr(24)
-                    End If
-                    If Not IsDBNull(dr(25)) Then
-                        .PathFoto = dr(25)
-                    End If
-                    If Not IsDBNull(dr(26)) Then
-                        .Email = dr(26)
-                    End If
-                    If Not IsDBNull(dr(27)) Then
-                        .Comentarios = dr(27)
-                    End If
-                    If Not IsNothing(dr(28)) Then
-                        .Curso = dr(28)
-                    End If
-                    Call CargarNotas(DP)
+                With FIC
+                    If Not IsNothing(dr(0)) Then .Id = dr(0)
+                    If Not IsDBNull(dr(1)) Then .DNI = dr(1)
+                    If Not IsDBNull(dr(2)) Then .Nombre = dr(2)
+                    If Not IsDBNull(dr(3)) Then .Apellido1 = dr(3)
+                    If Not IsDBNull(dr(4)) Then .Apellido2 = dr(4)
+                    If Not IsDBNull(dr(5)) Then .Fnac = dr(5)
+                    If Not IsDBNull(dr(6)) Then .LugNac = dr(6)
+                    If Not IsDBNull(dr(7)) Then .Edad = dr(7)
+                    If Not IsDBNull(dr(8)) Then .Domicilio = dr(8)
+                    If Not IsDBNull(dr(9)) Then .CP = dr(9)
+                    If Not IsDBNull(dr(10)) Then .Poblacion = dr(10)
+                    If Not IsDBNull(dr(11)) Then .Tel1 = dr(11)
+                    If Not IsDBNull(dr(12)) Then .Tel2 = dr(12)
+                    If Not IsDBNull(dr(13)) Then .NumSS = dr(13)
+                    If Not IsDBNull(dr(14)) Then .InInaem = dr(14)
+                    If Not IsDBNull(dr(15)) Then .InFecha = dr(15)
+                    If Not IsDBNull(dr(16)) Then .NivelEstudios = dr(16)
+                    If Not IsDBNull(dr(17)) Then .ExpSector = dr(17)
+                    If Not IsDBNull(dr(18)) Then .TallaCamiseta = dr(18)
+                    If Not IsDBNull(dr(19)) Then .TallaPantalon = dr(19)
+                    If Not IsDBNull(dr(20)) Then .TallaZapato = dr(20)
+                    If Not IsDBNull(dr(21)) Then .Entrevistador = dr(21)
+                    If Not IsDBNull(dr(22)) Then .FecEntr = dr(22)
+                    If Not IsDBNull(dr(23)) Then .Valoracion = dr(23)
+                    '#### OJO Aqui con lode apto
+                    If Not IsDBNull(dr(24)) Then .Apto = dr(24)
+                    '#####
+                    If Not IsDBNull(dr(25)) Then .PathFoto = dr(25)
+                    If Not IsDBNull(dr(26)) Then .Email = dr(26)
+                    If Not IsDBNull(dr(27)) Then .Comentarios = dr(27)
+                    If Not IsNothing(dr(28)) Then .Curso = dr(28)
+                    Call CargarNotas(FIC)
                     .cargarlistas()
                 End With
             End If
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
-            DP = Nothing
+            FIC = Nothing
         Catch ex As Exception
             MsgBox(ex.ToString)
-            DP = Nothing
+            FIC = Nothing
         Finally
             cn.Close()
         End Try
-        Return DP
+        Return FIC
     End Function
   
     Private Sub cmdSalir_Click(sender As Object, e As EventArgs) Handles cmdSalir.Click
@@ -346,19 +315,12 @@ Public Class FrmListado
     End Sub
     Public Function borrarDatosPersonales(ByVal i As Integer) As Integer
         Dim num, idDP As Integer
-        Dim sqlIdDP As String = String.Format("Select DatosPersonales.Id from DatosPersonales, {0} where DatosPersonales.Id={0}.IdDP and {0}.id={1}", cat, CStr(i))
-        Dim sqlalumnos As String = String.Format("delete from {0} where {0}.id={1}", cat, CStr(i))
+        Dim sqlIdDP As String = String.Format("SELECT DatosPersonales.Id FROM DatosPersonales, {0} WHERE DatosPersonales.Id={0}.IdDP AND {0}.id={1}", cat, CStr(i))
+        Dim sqlalumnos As String = String.Format("DELETE FROM {0} WHERE {0}.id={1}", cat, CStr(i))
         Dim sqlDatosPersonales As String = "DELETE FROM DatosPersonales WHERE DatosPersonales.Id="
         Dim cn2 As New SqlConnection(ConeStr)
         Try
-            'If cat = "Candidatos" Then
-            '    cn.Open()
-            '    Dim cmd1 As SqlCommand
-            '    sqlDatosPersonales &= CStr(i)
-            '    cmd1 = New SqlCommand(sqlDatosPersonales, cn)
-            '    num = cmd1.ExecuteNonQuery
-            '    If num < 0 Then Throw New miExcepcion(String.Format("Error al borrar datos personales en {0}", cat))
-            'Else ' Para alumnos y profesores primero busco la ID
+            cn.Open()
             Dim cmd1, cmd2, cmd3 As SqlCommand
             cmd1 = New SqlCommand(sqlIdDP, cn)
             idDP = cmd1.ExecuteScalar
@@ -371,7 +333,7 @@ Public Class FrmListado
             sqlDatosPersonales &= CStr(idDP) ' Añado la Id obtenida al final de la consulta
             cmd3 = New SqlCommand(sqlDatosPersonales, cn2)
             num = cmd3.ExecuteNonQuery
-            If num <> 1 Then Throw New miExcepcion("Error al borrar datos personales en")
+            If num <> 1 Then Throw New miExcepcion("Error al borrar datos personales")
             'End If
         Catch ex2 As miExcepcion
             num = -1
@@ -465,11 +427,6 @@ Public Class FrmListado
         Me.CboFiltroGordo.SelectedIndex = -1
         Call cargarDatosEnListview()
     End Sub
-
-    Private Sub ListView1_Click(sender As Object, e As EventArgs) Handles ListView1.Click
-       
-    End Sub
-
     Private Sub ListView1_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles ListView1.ColumnClick
         ' Determinar si la columna en la que se hizo clic ya es la que se está ordenando. 
         If (e.Column = lvwColumnSorter.SortColumn) Then
@@ -486,7 +443,6 @@ Public Class FrmListado
         End If
         ' Realizar la ordenación con estas nuevas opciones de ordenación. 
         Me.ListView1.Sort()
-
     End Sub
     Private Sub ListView1_DoubleClick(sender As Object, e As EventArgs) Handles ListView1.DoubleClick
         Call AccederFicha()
@@ -496,9 +452,7 @@ Public Class FrmListado
         listaIDs = New List(Of Integer)
         ListaRegistros = Nothing
         ListaRegistros = New List(Of String)
-
         Me.ListView1.CheckBoxes = True
-
     End Sub
     Private Function encontrarLasId() As List(Of Integer)
         Dim lId As New List(Of Integer)
@@ -506,7 +460,7 @@ Public Class FrmListado
         For Each it As ListViewItem In Me.ListView1.Items
             If it.Checked = True Then
                 pos = CInt(it.Index.ToString)
-                lId.Add(CInt(Me.ListView1.Items(pos).Text))
+                lId.Add(CInt(Me.ListView1.Items(pos).SubItems(0).Text))
             End If
         Next
         Return lId
@@ -518,10 +472,10 @@ Public Class FrmListado
         Dim limite As Integer
         Select Case tipo
             Case 3
-                limite = 28
+                limite = 38
 
             Case Else
-                limite = 38
+                limite = 28
         End Select
         For i As Integer = 0 To limite
             s &= String.Format("; {0}", f.listadoNombres(i))
@@ -530,90 +484,7 @@ Public Class FrmListado
         Return s
     End Function
 
-    Private Sub CmdActivarExportar_Click(sender As Object, e As EventArgs) Handles CmdExportar.Click
-        listaIDs = encontrarLasId()
-        Dim listaerrores As New List(Of Integer)
-        Try
-            Dim encabezados As String = cargarEncabezados()
-
-            Dim reg As String = ""
-            ListaRegistros = New List(Of String)
-            ListaRegistros.Add(encabezados)
-            For i As Integer = 1 To listaIDs.Count
-                reg = recogerDatos(i)
-                If reg <> "" Then
-                    ListaRegistros.Add(reg)
-                Else
-                    listaerrores.Add(i)
-                End If
-                reg = ""
-            Next
-            Dim output1 As New StreamWriter("C:\Git\DatosExportados\RegistrosExportados.csv", False)
-            'escribo el array de autores con un simbolo distinto en cada tipo de dato
-            For Each str As String In ListaRegistros
-                output1.WriteLine(str)
-            Next
-            output1.Close()
-
-            Dim myStream As Stream
-
-            Dim openFileDialog1 As New OpenFileDialog()
-            openFileDialog1.InitialDirectory = "C:\Git\DatosExportados"
-            openFileDialog1.Filter = "csv files (*.csv)|*.csv|txt files (*.txt)|*.txt|All files (*.*)|*.*"
-            'openFileDialog1.FilterIndex = 2
-            'openFileDialog1.RestoreDirectory = True
-
-
-
-            Dim oDocument As Object
-            Dim sFileName As String
-            If openFileDialog1.ShowDialog() = DialogResult.OK Then
-                myStream = openFileDialog1.OpenFile()
-
-                If (myStream IsNot Nothing) Then
-                    ' Insert code to read the stream here.
-
-                    Dim LibroTrabajo As Object
-                    Dim Fichero As String
-
-                    Fichero = "C:\Git\DatosExportados\RegistrosExportados.csv" 'con el path correspondiente 
-                    LibroTrabajo = GetObject(Fichero)
-                    LibroTrabajo.Application.Windows("RegistrosExportados.csv").Visible = True
-                    MsgBox("A rezar")
-                End If
-            Else
-                MsgBox("y yo que sé")
-            End If
-
-
-            'Dim saveFileDialog1 As New SaveFileDialog()
-            'With saveFileDialog1
-            '    .InitialDirectory = "C:\Git\DatosExportados"
-            '    .Filter = "csv files (*.csv)|*.csv|txt files (*.txt)|*.txt|All files (*.*)|*.*"
-            '    .FilterIndex = 2
-            '    .RestoreDirectory = True
-            'End With
-            'If saveFileDialog1.ShowDialog() = DialogResult.OK Then
-            '    ' myStream = saveFileDialog1.OpenFile()
-            '    MsgBox("Guardado")
-            '    Dim CommonDialog2 As CommonDialog
-            '    CommonDialog2.ShowDialog()
-
-
-
-
-
-            'End If
-
-        Catch ex2 As miExcepcion
-            MsgBox(ex2.ToString)
-        Catch ex As Exception
-            MsgBox(ex.ToString)
-        Finally
-
-        End Try
-
-    End Sub
+ 
     Private Function recogerDatos(ByVal id As Integer) As String
         Dim registro As String = ""
         Try
@@ -643,6 +514,7 @@ Public Class FrmListado
             Dim dr As SqlDataReader
             dr = cmd.ExecuteReader
             If dr.Read Then
+
                 For i As Integer = 0 To dr.FieldCount - 1
                     If Not IsDBNull(dr(i)) Then
                         registro &= String.Format(";{0}", dr(i))
@@ -651,7 +523,7 @@ Public Class FrmListado
                     End If
                 Next
             Else
-                Throw New miExcepcion("No hay datos")
+                Throw New miExcepcion(String.Format("La ficha '{0}' no se puede cargar", CStr(id)))
             End If
             registro = registro.Substring(2)
 
@@ -669,5 +541,72 @@ Public Class FrmListado
 
     Private Sub ChkExportar_CheckedChanged(sender As Object, e As EventArgs) Handles ChkExportar.CheckedChanged
 
+    End Sub
+
+    Private Sub CmdExportar_Click(sender As Object, e As EventArgs) Handles CmdExportar.Click
+        listaIDs = encontrarLasId()
+        Dim listaerrores As New List(Of Integer)
+        Try
+            Dim res As MsgBoxResult
+
+            Dim encabezados As String = cargarencabezados()
+
+            Dim reg As String = ""
+            ListaRegistros = New List(Of String)
+            ListaRegistros.Add(encabezados)
+            For i As Integer = 0 To listaIDs.Count - 1
+                'la i no, capullo listaIDs(i)
+                reg = recogerDatos(listaIDs(i))
+                If reg <> "" Then
+                    ListaRegistros.Add(reg)
+                Else
+                    listaerrores.Add(i)
+                End If
+                reg = ""
+            Next
+
+            Dim output1 As New StreamWriter(PathExportacion, False)
+            'escribo el array de autores con un simbolo distinto en cada tipo de dato
+            For Each str As String In ListaRegistros
+                output1.WriteLine(str)
+            Next
+            output1.Close()
+            Dim myStream As Stream
+            MsgBox(String.Format("Archivo creado en '{0}'" & vbCrLf &
+                                 "Podrá abrirlo desde el menú que se desplegará a continuación" & vbCrLf &
+                                 "Se abre como solo lectura. Luego recuerde guardarlo en un formato excel " &
+                                 vbCrLf & "como '.xls'", PathExportacion))
+           
+            Dim openFileDialog1 As New OpenFileDialog()
+            openFileDialog1.InitialDirectory = "C:\Git\DatosExportados"
+            openFileDialog1.Filter = "csv files (*.csv)|*.csv|txt files (*.txt)|*.txt|All files (*.*)|*.*"
+            'openFileDialog1.FilterIndex = 2
+            'openFileDialog1.RestoreDirectory = True
+
+            'Dim oDocument As Object
+            'Dim sFileName As String
+            If openFileDialog1.ShowDialog() = DialogResult.OK Then
+                myStream = openFileDialog1.OpenFile()
+                If (myStream IsNot Nothing) Then
+                    ' Insert code to read the stream here.
+                    Dim LibroTrabajo As Object
+                    Dim Fichero As String
+                    Fichero = "C:\Git\DatosExportados\RegistrosExportados.csv" 'con el path correspondiente 
+                    LibroTrabajo = GetObject(Fichero)
+                    LibroTrabajo.Application.Windows("RegistrosExportados.csv").Visible = True
+                    '  MsgBox("A rezar")
+                End If
+            Else
+                '  MsgBox("y yo que sé")
+            End If
+        Catch ex2 As miExcepcion
+            MsgBox(ex2.ToString)
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        Finally
+            Me.ChkExportar.Checked = False
+            Me.CmdExportar.Enabled = False
+            Call PrepararListView()
+        End Try
     End Sub
 End Class

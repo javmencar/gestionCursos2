@@ -4,23 +4,18 @@ Public Class FrmCursos
     Dim EsCurso As Boolean
     Dim cont As Integer
     Dim cn As SqlConnection
-    Sub New()
-
-        ' Llamada necesaria para el diseñador.
-        InitializeComponent()
-
-        ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
-
-    End Sub
-    Sub New(ByVal EsC As Boolean) ' comento este constructor porque no lo necesito
+    Dim cur As Curso
+    'Sub New()  ' comento este constructor porque no lo necesito
+    '    ' Llamada necesaria para el diseñador.
+    '    InitializeComponent()
+    '    ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
+    'End Sub
+    Sub New(ByVal EsC As Boolean)
         ' Llamada necesaria para el diseñador.
         InitializeComponent()
         EsCurso = EsC
         ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
     End Sub
-
-
-    Dim cur As Curso
     Private Sub FrmCursos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         cn = New SqlConnection(ConeStr)
         Dim cat As String = ""
@@ -30,7 +25,7 @@ Public Class FrmCursos
             cat = "Modulo"
         End If
         Me.cmdNuevoCurso.Text = String.Format("Crear un nuevo {0}", cat)
-        Me.cmdModificar.Text = String.Format("Modificar El {0} Seleccionado", cat)
+        Me.cmdModificar.Text = String.Format("Ver o Modificar El {0} Seleccionado", cat)
         Me.cmdBorrarCurso.Text = String.Format("Borrar El {0} Seleccionado", cat)
         Me.lblLstCursos.Text = String.Format("Listado De {0}s Existentes", cat)
         'y ahora cargo los datos
@@ -77,20 +72,16 @@ Public Class FrmCursos
                 cont = CInt(aux(0))
                 If EsCurso = True Then 'cargamos cursos
                     'si estamos en cursos debo buscar el idcurso
-
                     Dim c As Curso
                     c = cargarElCurso(cont)
                     If Not IsNothing(c) Then
                         ' le paso el objeto curso cargado con todos los datos
                         Dim frm As New FrmModificarCursos(False, c)
                         If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                            MsgBox("Curso insertado" & vbCrLf & Me.Name.ToString)
+                            ' MsgBox("Curso insertado" & vbCrLf & Me.Name.ToString)
                             Call cargarlistbox()
-                        ElseIf Windows.Forms.DialogResult.Cancel Then
-                            Throw New miExcepcion("Modificacion cancelada")
                         Else
-                            Dim errorEnModif As String = "error al intentar modificar el curso al volver de FrmModificarCursos(" & cont & ")"
-                            Throw New miExcepcion(errorEnModif)
+                            Throw New miExcepcion("Modificacion cancelada")
                         End If
                     Else
                         Throw New miExcepcion("Error al intentar modificar un curso")
@@ -101,7 +92,7 @@ Public Class FrmCursos
                     If Not IsNothing(m) Then
                         Dim frm As New FrmModificarModulos(False, m)
                         If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                            MsgBox("Modulo insertado" & vbCrLf & Me.Name.ToString)
+                            '  MsgBox("Modulo insertado" & vbCrLf & Me.Name.ToString)
                             Call cargarlistbox()
                         Else
                             Dim errorEnModif As String = "error al intentar modificar el modulo al volver de FrmModificarModulos(" & cont & ")"
@@ -109,7 +100,6 @@ Public Class FrmCursos
                         End If
                     End If
                 End If
-
             End If
         Catch ex As miExcepcion
             MsgBox(ex.ToString)
@@ -157,7 +147,6 @@ Public Class FrmCursos
 
     Private Sub cmdCancelar_Click(sender As Object, e As EventArgs) Handles cmdCancelar.Click
         Me.DialogResult = Windows.Forms.DialogResult.OK
-
     End Sub
 
     Private Sub cmdBorrarCurso_Click(sender As Object, e As EventArgs) Handles cmdBorrarCurso.Click
@@ -165,8 +154,6 @@ Public Class FrmCursos
             cont = Me.LstCursosOModulos.SelectedIndex
             If cont = -1 Then Throw New miExcepcion("No se ha seleccionado nada del listado")
             Dim categoria As String = ""
-            
-
             Dim aux() As String = Split(Me.LstCursosOModulos.SelectedItem.ToString, "_")
             cont = CInt(aux(0))
             If EsCurso = True Then
@@ -268,7 +255,7 @@ Public Class FrmCursos
     Public Function cargarElCurso(ByVal i As Integer) As Curso
         Dim cu As New Curso
 
-        Try
+        Try ' selecciono los datos del curso
             Dim sql As String = "SELECT * FROM Cursos WHERE Cursos.Id=" & i
             cn.Open()
             Dim dr As SqlDataReader
@@ -280,6 +267,7 @@ Public Class FrmCursos
                 cu.Nombre = dr(2)
                 cu.horas = dr(3)
             End If
+            'Ahora le meto los datos de los modulos que pueda tener el curso
             Dim cn2 As New SqlConnection(ConeStr)
             cn2.Open()
             Dim sql2 As String = "SELECT Modulos.Id, Modulos.Nombre, Modulos.Horas FROM Modulos," &
@@ -287,9 +275,10 @@ Public Class FrmCursos
             Dim dr2 As SqlDataReader
             Dim cmd2 As New SqlCommand(sql2, cn2)
             dr2 = cmd2.ExecuteReader
-            'creo el modulo vacío y lo instancio y lo borro dentro del bucle
+            'creo el modulo vacío
             Dim m As Modulo
             While dr2.Read
+                ' y lo instancio y lo borro dentro del bucle
                 m = New Modulo
                 m.Id = dr2(0)
                 m.Nombre = dr2(1)
@@ -322,12 +311,12 @@ Public Class FrmCursos
             Dim cmd As New SqlCommand(sql, cn)
             dr = cmd.ExecuteReader
             If dr.Read Then
-                Mo.Id = dr(0)
-                Mo.Nombre = dr(1)
-                Mo.horas = dr(2)
-                Mo.Contenidos = dr(3)
+                If Not IsDBNull(dr(0)) Then Mo.Id = dr(0)
+                If Not IsDBNull(dr(1)) Then Mo.Nombre = dr(1)
+                If Not IsDBNull(dr(2)) Then Mo.horas = dr(2)
+                If Not IsDBNull(dr(3)) Then Mo.Contenidos = dr(3) Else MsgBox("No hay contenidos todavia")
             End If
-          
+
         Catch ex2 As miExcepcion
             Mo = Nothing
             MsgBox(ex2.ToString)

@@ -87,7 +87,7 @@ Partial Class FrmModificarModulos
         '
         Me.CmdModificar.Location = New System.Drawing.Point(139, 311)
         Me.CmdModificar.Name = "CmdModificar"
-        Me.CmdModificar.Size = New System.Drawing.Size(88, 23)
+        Me.CmdModificar.Size = New System.Drawing.Size(92, 41)
         Me.CmdModificar.TabIndex = 12
         Me.CmdModificar.Text = "modificar/crear"
         Me.CmdModificar.UseVisualStyleBackColor = True
@@ -96,7 +96,7 @@ Partial Class FrmModificarModulos
         '
         Me.cmdCancelar.Location = New System.Drawing.Point(288, 311)
         Me.cmdCancelar.Name = "cmdCancelar"
-        Me.cmdCancelar.Size = New System.Drawing.Size(75, 23)
+        Me.cmdCancelar.Size = New System.Drawing.Size(103, 41)
         Me.cmdCancelar.TabIndex = 13
         Me.cmdCancelar.Text = "Cancelar"
         Me.cmdCancelar.UseVisualStyleBackColor = True

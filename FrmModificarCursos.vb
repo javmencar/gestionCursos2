@@ -12,12 +12,7 @@ Public Class FrmModificarCursos
         ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
 
     End Sub
-    'Sub New(ByVal id As Integer)
-    '    ' Llamada necesaria para el diseñador.
-    '    InitializeComponent()
-    '    pos = id
-    '    ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
-    'End Sub
+
     Sub New(ByVal nue As Boolean, Optional ByVal cu As Curso = Nothing)
         ' Llamada necesaria para el diseñador.
         InitializeComponent()
@@ -41,8 +36,8 @@ Public Class FrmModificarCursos
                 Me.cmdModificar.Text = "crear el curso"
                 Me.cmdCancelar.Text = "cancelar la creacion"
             Else  'el curso ya existe
-                Me.cmdModificar.Text = "modificar este curso"
-                Me.cmdCancelar.Text = "cancelar la modificacion"
+                Me.cmdModificar.Text = "Guardar este curso"
+                Me.cmdCancelar.Text = "Salir sin guardar Cambios"
                 If IsNothing(c1) Then Throw New miExcepcion("Error al cargar formulario. Por favor vuelva al formulario anterior")
                 Call cargarformulario()
                 ' al ser modificacion, bloqueo el código para que no se pueda tocar
@@ -96,16 +91,14 @@ Public Class FrmModificarCursos
 
     Private Sub cmdModificar_Click(sender As Object, e As EventArgs) Handles cmdModificar.Click
         '# VALE IGUAL PARA MODIFICAR QUE PARA CREAR
-
         Try
-            'CREAMOS UN CURSO NUEVO
-            If IsNothing(c1) Then
+
+            If IsNothing(c1) Then       'CREAMOS UN CURSO NUEVO
                 'Primero comprobamos si el código es correcto 
                 Dim preguntaCodigo As MsgBoxResult
                 preguntaCodigo = MsgBox("¿Seguro que el código es correcto?" & vbCrLf &
                                         "Una vez creado el curso, no se podrá cambiar", MsgBoxStyle.YesNo)
                 If preguntaCodigo = MsgBoxResult.No Then
-
                     'paralizamos la creacion
                     Me.DialogResult = Windows.Forms.DialogResult.None
                     Throw New miExcepcion("Creacion cancelada a instancia del usuario")
@@ -124,7 +117,6 @@ Public Class FrmModificarCursos
                     ' si hay modulos, metemos los modulos
                     If Me.LstModulos.Items.Count > 0 Then
                         'Dim ultcur As Integer = averiguarUltimoIndice("Cursos")
-
                         Dim ListaDeModuloEnListbox As New List(Of String)
                         '   y vuelco en el array los id modulos, que saco con una funcion 
                         ListaDeModuloEnListbox = localizarIdModulosEnListbox()
@@ -136,13 +128,12 @@ Public Class FrmModificarCursos
                             modEnBD = False
                         Next
                     End If
-                    MsgBox("Curso creado con exito" & vbCrLf & "aviso1")
-                    'volvemos a cursos
+                    '    MsgBox("Curso creado con exito" & vbCrLf & "aviso1")
+                    'volvemos a FrmCursos
                     Me.DialogResult = Windows.Forms.DialogResult.OK
                 End If
-            Else
-                ' MODIFICAMOS UN CURSO EXISTENTE
-                ' he bloqueado el código para que no se pueda cambiar, al menos desde aquí
+            Else        ' MODIFICAMOS UN CURSO EXISTENTE
+                ' he bloqueado el código para que no se pueda cambiar
                 Dim cambioHoras, cambioNombre, nomrep As Boolean
                 'comprobamos si queremos seguro el nuevo nombre
                 cambioNombre = QuieroCambiosEnCampos(c1.Nombre.ToString, " como nombre de curso ", Me.txtNombreCurso.Text)
@@ -206,7 +197,7 @@ Public Class FrmModificarCursos
             Dim sql2 As String
             sql2 = String.Format("INSERT INTO Cursos (Cursos.CodCur,Cursos.Nombre, Cursos.Horas) VALUES ('{0}', '{1}', {2})",
                                 Me.txtCodcur.Text, Me.txtNombreCurso.Text, CInt(Me.txtHorasCurso.Text))
-            MsgBox(sql2)
+            '  MsgBox(sql2)
             Dim cmd2 As New SqlCommand(sql2, cn)
             Dim i2 As Integer = cmd2.ExecuteNonQuery
             If i2 < 0 Then Throw New miExcepcion("el cmd.ExecuteNonQuery devuelve menos de 0 lineas afectadas", 219, Me.Name.ToString)
@@ -267,7 +258,7 @@ Public Class FrmModificarCursos
         cn = New SqlConnection(ConeStr)
         Try
             Dim insercionHecha As Boolean = modif()
-            If insercionHecha = False Then Throw New miExcepcion
+            If insercionHecha = False Then Throw New miExcepcion()
             'Una vez hecha la insercion, vuelco los datos en el objeto, para que esté actualizado
             c1.CodCur = Me.txtCodcur.Text
             c1.Nombre = Me.txtNombreCurso.Text

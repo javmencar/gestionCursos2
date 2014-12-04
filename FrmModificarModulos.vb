@@ -32,7 +32,7 @@ Public Class FrmModificarModulos
                 Me.txtIdModulos.Enabled = False
             Else
                 'modificar: "modificar este curso" , "cancelar la modificacion"
-                Me.CmdModificar.Text = "modificar este Modulo"
+                Me.CmdModificar.Text = "Guardar este Modulo"
                 Me.cmdCancelar.Text = "cancelar la modificacion"
 
                 Call cargarformulario(modu)
@@ -104,7 +104,7 @@ Public Class FrmModificarModulos
             Dim val As Integer = 0
             val = cmd.ExecuteNonQuery()
             If val > 0 Then
-                MsgBox("Modulo añadido")
+                MsgBox("Modulo Guardado")
             Else
                 Throw New miExcepcion("al introducir el registro. cmd.ExecuteNonQuery da <= 0", 109, Me.Name.ToString)
             End If

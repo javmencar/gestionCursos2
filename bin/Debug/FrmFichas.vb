@@ -55,9 +55,10 @@ Public Class FrmFichas
             Me.GbCalificacion.Enabled = False
             Me.GbCalificacion.Visible = False
         Else
+            'Call desplegarfichaPasadaPorValor()
             Me.txtCurso.Enabled = False
             Me.cboCursos.Enabled = True
-            Me.cmdModificar.Text = "GUARDAR CAMBIOS EN LA FICHA"
+            Me.cmdModificar.Text = "GUARDAR LA FICHA"
             Me.cmdCancelar.Text = "Cancelar La Modificación"
             Me.cmdCambiarFoto.Text = "Cambiar Foto"
             Me.cmdBorrar.Visible = True
@@ -66,15 +67,16 @@ Public Class FrmFichas
             Me.GbCalificacion.Visible = True
             Call rellenarCamposDesdeObjeto(DP)
         End If
-        Call desplegarficha()
     End Sub
-    Private Sub desplegarficha()
+    Private Sub desplegarfichaPasadaPorValor()
+        'sirve para ver los datos del objeto que se ha pasado como valor desde frmListado en un msgbox
         Dim acum As String = ""
         With DP
             For i As Integer = 1 To DP.listaValores.Count
                 acum &= String.Format("{0}=  {1}" & vbCrLf, .listadoNombres(i - 1), .listaValores(i))
             Next
         End With
+        MsgBox(acum)
     End Sub
     Private Sub cargarcomboCursos()
         Try
@@ -138,7 +140,7 @@ Public Class FrmFichas
                 Me.txtInFecha.Text = "1/1/1900"
             End If
             ' Me.txtInFecha.Text = CStr(.InFecha)
-            Me.txtNivelEstudios.Text = .NivelEstudios
+            Me.txtNivelEstudios.Text = MeterSaltosDeLinea(.NivelEstudios)
             'hago una matriz con la string de experiencia y la vuelco en el listbox
             'controlo si hay algo en el string
             Me.LstExpSector.Items.Clear()
@@ -158,7 +160,7 @@ Public Class FrmFichas
                 Me.txtFecEntr.Text = "1/1/1900"
             End If
             ' Me.txtFecEntr.Text = CStr(.FecEntr)
-            Me.txtValoracion.Text = .Valoracion
+            Me.txtValoracion.Text = MeterSaltosDeLinea(.Valoracion)
 
             '######
             'Posiblemente tenga que sacar esto de aqui a un sub para tener en cuenta las notas
@@ -200,7 +202,7 @@ Public Class FrmFichas
                 Me.lblComentarios.Text = "HAY COMENTARIOS"
                 Me.lblComentarios.BackColor = Color.Red
                 Me.cmdAñadirComentarios.Text = "Acceder a Comentarios"
-                Me.lblComentariosEscritos.Text = .Comentarios
+                Me.lblComentariosEscritos.Text = MeterSaltosDeLinea(.Comentarios)
             End If
             If Not IsNothing(.Curso) Then
                 Me.txtCurso.Text = .Curso
@@ -291,6 +293,14 @@ Public Class FrmFichas
         End Try
         Return False
     End Function
+    Private Function QuitarSaltosDeLinea(ByVal str As String) As String
+        str = str.Replace(vbCrLf, "#")
+        Return str
+    End Function
+    Private Function MeterSaltosDeLinea(ByVal str As String) As String
+        str = str.Replace("#", vbCrLf)
+        Return str
+    End Function
     Private Function rellenarObjetoDesdeCampos() As Ficha
         Dim D1 As New Ficha
         Try
@@ -336,7 +346,7 @@ Public Class FrmFichas
                 Else
                     .InInaem = "False"
                 End If
-                .NivelEstudios = Me.txtNivelEstudios.Text
+                .NivelEstudios = QuitarSaltosDeLinea(Me.txtNivelEstudios.Text)
                 Dim expSect1 As String = ""
                 If Me.LstExpSector.Items.Count > 0 Then
                     For Each l As String In Me.LstExpSector.Items
@@ -362,7 +372,7 @@ Public Class FrmFichas
                     Else
                         .FecEntr = Me.txtFecEntr.Text
                     End If
-                    .Valoracion = Me.txtValoracion.Text
+                    .Valoracion = QuitarSaltosDeLinea(Me.txtValoracion.Text)
                     '###
                     'Esto habrá que tocarlo
                     If Me.optAptoSi.Checked = True Then
@@ -377,22 +387,24 @@ Public Class FrmFichas
                 End If
                 .PathFoto = Me.PicBx1.Tag
                 .Email = Me.txtEmail.Text
-                .Comentarios = Me.lblComentariosEscritos.Text
+                .Comentarios = QuitarSaltosDeLinea(Me.lblComentariosEscritos.Text)
                 .Curso = idcur
                 'For Each c As Control In Me.GbCalificacion.Controls
                 '    If TypeOf (c) Is MaskedTextBox Then
                 '        If c.Text = "00,00" Then c.Text = "00.00"
                 '    End If
                 'Next
+                If nuevo = False Then
+                    .EstecTest = Me.MtxtEstecTest.Text
+                    .EstecDinam = Me.MtxtEstecDinam.Text
+                    .EstecEntr = Me.MtxtEstecEntr.Text
+                    .InaemMujer = Me.MtxtInaemMujer.Text
+                    .InaemDiscap = Me.MtxtInaemDiscap.Text
+                    .InaemJoven = Me.MtxtInaemJoven.Text
+                    .InaemBajaCon = Me.MtxtInaemBajaContr.Text
+                    .InaemOtros = Me.MtxtInaemOtros.Text
+                End If
 
-                .EstecTest = (Me.MtxtEstecTest.Text)
-                .EstecDinam = Me.MtxtEstecDinam.Text
-                .EstecEntr = Me.MtxtEstecEntr.Text
-                .InaemMujer = Me.MtxtInaemMujer.Text
-                .InaemDiscap = Me.MtxtInaemDiscap.Text
-                .InaemJoven = Me.MtxtInaemJoven.Text
-                .InaemBajaCon = Me.MtxtInaemBajaContr.Text
-                .InaemOtros = Me.MtxtInaemOtros.Text
                 .cargarlistas() 'Llamo al procedimiento de la clase que carga listadoNombres y listavalores
             End With
         Catch ex2 As miExcepcion
@@ -466,8 +478,8 @@ Public Class FrmFichas
                 'con la ficha creada o modificada, meto las notas , si las hay y el curso
                 If FichaRellenada.notaEstecform <> "0.00" Or FichaRellenada.notaINAEM <> "0.00" Then
                     Dim comprobaNotas As Integer = cargarNotas(FichaRellenada)
-                    If comprobaNotas = 0 Then Throw New miExcepcion("Error al meter las notas")
-                    'hay un msgbox en la funcion. Quitarlo cuando funcione
+                    'que solo compruebe errores en los candidatos
+                    If tipo = 3 AndAlso comprobaNotas = 0 Then Throw New miExcepcion("Error al meter las notas")
                 End If
             Else ' si no hay nada en el objeto es que ha habido error al crearlo
                 If nuevo = True Then
@@ -586,6 +598,7 @@ Public Class FrmFichas
             '   le quito la primera coma
             Datos = Datos.Substring(1)
             Dim sql As String = String.Format("UPDATE DatosPersonales SET {0} Where DatosPersonales.Id={1}", Datos, CInt(dat.Id))
+            MsgBox(sql)
             cn.Open()
             Dim cmd As New SqlCommand(sql, cn)
             Dim j As Integer = cmd.ExecuteNonQuery()
@@ -868,41 +881,34 @@ Public Class FrmFichas
         End If
     End Sub
     Public Function borrarDatosPersonales(ByVal i As String) As Boolean
-        Dim num, idAl_Pr As Integer
-        Dim sqlIdAl, sqlalumnos, sqlDatosPersonales As String
-        sqlIdAl = String.Format("Select {0}.Id from DatosPersonales, {0} where DatosPersonales.Id={0}.IdDP and DatosPersonales.Id={1}", cat, i)
-        ' MsgBox(sqlIdAl)
+        Dim num, idtabla As Integer
+        Dim sqlidtabla, sqlborratabla, sqlDatosPersonales As String
+        sqlidtabla = String.Format("Select {0}.Id from DatosPersonales, {0} where DatosPersonales.Id={0}.IdDP and DatosPersonales.Id={1}", cat, i)
+        MsgBox(sqlidtabla)
         sqlDatosPersonales = String.Format("DELETE FROM DatosPersonales WHERE DatosPersonales.Id={0}", DP.Id)
         ' MsgBox(sqlDatosPersonales)
         Dim cn2 As New SqlConnection(ConeStr)
         Try
-            Dim cmdDelDP As SqlCommand
-            If cat = "Candidatos" Then
-                cn.Open()
-                cmdDelDP = New SqlCommand(sqlDatosPersonales, cn)
-                num = cmdDelDP.ExecuteNonQuery
-                If num < 0 Then Throw New miExcepcion(String.Format("Error al borrar datos personales en {0}", cat))
-            Else
-                Dim cmdIdAl, cmdDelTablaAl_PR As SqlCommand
-                cn.Open()
-                'hago la consulta para obtener la ID del Alumno
-                cmdIdAl = New SqlCommand(sqlIdAl, cn)
-                idAl_Pr = cmdIdAl.ExecuteScalar
-                If idAl_Pr < 0 Then Throw New miExcepcion(String.Format("Error al obtener la Id de {0}", cat))
-                cn.Close()
-                'con el Id correcto, lo cargo en la sql de borrado
-                sqlalumnos = String.Format("delete from {0} where {0}.id={1}", cat, idAl_Pr)
-                'MsgBox(sqlalumnos)
-                'Abro otra vez para borrar en tabla Alumnos o profesores
-                cn.Open()
-                cmdDelTablaAl_PR = New SqlCommand(sqlalumnos, cn)
-                num = cmdDelTablaAl_PR.ExecuteNonQuery
-                If num < 0 Then Throw New miExcepcion(String.Format("Error al borrar de {0}", cat))
-                cn2.Open()
-                cmdDelDP = New SqlCommand(sqlDatosPersonales, cn2)
-                num = cmdDelDP.ExecuteNonQuery
-                If num < 0 Then Throw New miExcepcion(String.Format("Error al borrar datos personales en {0}", cat))
-            End If
+            Dim cmdIdtabla, cmdDelTabla, cmdDelDP As SqlCommand
+            cn.Open()
+            'hago la consulta para obtener la ID del Alumno
+            cmdIdtabla = New SqlCommand(sqlidtabla, cn)
+            idtabla = cmdIdtabla.ExecuteScalar
+            If idtabla < 0 Then Throw New miExcepcion(String.Format("Error al obtener la Id de {0}", cat))
+            cn.Close()
+            'con el Id correcto, lo cargo en la sql de borrado
+            sqlborratabla = String.Format("delete from {0} where {0}.id={1}", cat, idtabla)
+            'MsgBox(sqlalumnos)
+            'Abro otra vez para borrar en tabla Alumnos o profesores
+            cn.Open()
+            cmdDelTabla = New SqlCommand(sqlborratabla, cn)
+            num = cmdDelTabla.ExecuteNonQuery
+            If num < 0 Then Throw New miExcepcion(String.Format("Error al borrar de {0}", cat))
+            cn2.Open()
+            cmdDelDP = New SqlCommand(sqlDatosPersonales, cn2)
+            num = cmdDelDP.ExecuteNonQuery
+            If num < 0 Then Throw New miExcepcion(String.Format("Error al borrar datos personales en {0}", cat))
+
         Catch ex2 As miExcepcion
             Return False
             MsgBox(ex2.ToString)
