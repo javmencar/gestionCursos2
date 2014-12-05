@@ -27,14 +27,29 @@ Public Class Form1
         frm.ShowDialog()
     End Sub
 
-    Private Sub CmdGestionar_Click(sender As Object, e As EventArgs) Handles CmdGestionar.Click
-        Dim frm As New FrmGestionar
-        frm.ShowDialog()
+    'Private Sub CmdGestionar_Click(sender As Object, e As EventArgs) Handles CmdGestionar.Click
+    '    Dim frm As New FrmGestionar
+    '    frm.ShowDialog()
+    'End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles cmdAjustes.Click
+        Dim resp As MsgBoxResult
+        resp = MsgBox(String.Format("No es recomendable que entre aqui" & vbCrLf &
+                                    "Esto es para cambiar la base de datos " & vbCrLf &
+                                    "¿Está seguro de querer continuar?"), MsgBoxStyle.YesNo)
+        If resp = MsgBoxResult.Yes Then
+            Dim frm As New Form2
+            frm.ShowDialog()
+        Else
+            MsgBox("No se entra a realizar cambios")
+        End If
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        'boton de acceso al formulario de pruebas
-        Dim frm As New Form2
-        frm.ShowDialog()
+    Private Sub CheckBox1_Click(sender As Object, e As EventArgs) Handles CheckBox1.Click
+        If Me.CheckBox1.Checked = True Then
+            Me.cmdAjustes.Enabled = True
+        Else
+            Me.cmdAjustes.Enabled = False
+        End If
     End Sub
 End Class

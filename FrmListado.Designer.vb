@@ -32,7 +32,7 @@ Partial Class FrmListado
         Me.TxtCampo = New System.Windows.Forms.TextBox()
         Me.LblCampo = New System.Windows.Forms.Label()
         Me.CboFiltroBusquedaUnica = New System.Windows.Forms.ComboBox()
-        Me.GestionCursosDataSet = New GestionCursos_0._1.GestionCursosDataSet()
+        '  Me.GestionCursosDataSet = New GestionCursos_0._1.GestionCursosDataSet()
         Me.GestionCursosDataSetBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.CmdExportar = New System.Windows.Forms.Button()
         Me.ChkExportar = New System.Windows.Forms.CheckBox()
@@ -45,7 +45,7 @@ Partial Class FrmListado
         Me.ListView1 = New System.Windows.Forms.ListView()
         Me.LBLNombreFormulario = New System.Windows.Forms.Label()
         Me.GbBusquedaUnica.SuspendLayout()
-        CType(Me.GestionCursosDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
+        '  CType(Me.GestionCursosDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.GestionCursosDataSetBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GbFiltros.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -127,7 +127,7 @@ Partial Class FrmListado
         '
         'CboFiltroBusquedaUnica
         '
-        Me.CboFiltroBusquedaUnica.DataBindings.Add(New System.Windows.Forms.Binding("SelectedValue", Me.GestionCursosDataSet, "DatosPersonales.Id", True))
+        '   Me.CboFiltroBusquedaUnica.DataBindings.Add(New System.Windows.Forms.Binding("SelectedValue", Me.GestionCursosDataSet, "DatosPersonales.Id", True))
         Me.CboFiltroBusquedaUnica.FormattingEnabled = True
         Me.CboFiltroBusquedaUnica.Location = New System.Drawing.Point(16, 20)
         Me.CboFiltroBusquedaUnica.Name = "CboFiltroBusquedaUnica"
@@ -136,12 +136,12 @@ Partial Class FrmListado
         '
         'GestionCursosDataSet
         '
-        Me.GestionCursosDataSet.DataSetName = "GestionCursosDataSet"
-        Me.GestionCursosDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
+        'Me.GestionCursosDataSet.DataSetName = "GestionCursosDataSet"
+        ' Me.GestionCursosDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
         '
         'GestionCursosDataSetBindingSource
         '
-        Me.GestionCursosDataSetBindingSource.DataSource = Me.GestionCursosDataSet
+        '   Me.GestionCursosDataSetBindingSource.DataSource = Me.GestionCursosDataSet
         Me.GestionCursosDataSetBindingSource.Position = 0
         '
         'CmdExportar
@@ -258,7 +258,7 @@ Partial Class FrmListado
         Me.Text = "FrmListado"
         Me.GbBusquedaUnica.ResumeLayout(False)
         Me.GbBusquedaUnica.PerformLayout()
-        CType(Me.GestionCursosDataSet, System.ComponentModel.ISupportInitialize).EndInit()
+        '  CType(Me.GestionCursosDataSet, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.GestionCursosDataSetBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GbFiltros.ResumeLayout(False)
         Me.GbFiltros.PerformLayout()
@@ -277,7 +277,7 @@ Partial Class FrmListado
     Friend WithEvents CboFiltroBusquedaUnica As System.Windows.Forms.ComboBox
     Friend WithEvents cmdBuscar As System.Windows.Forms.Button
     Friend WithEvents GestionCursosDataSetBindingSource As System.Windows.Forms.BindingSource
-    Friend WithEvents GestionCursosDataSet As GestionCursos_0._1.GestionCursosDataSet
+    '  Friend WithEvents GestionCursosDataSet As GestionCursos_0._1.GestionCursosDataSet
     Friend WithEvents CmdExportar As System.Windows.Forms.Button
     Friend WithEvents ChkExportar As System.Windows.Forms.CheckBox
     Friend WithEvents GbFiltros As System.Windows.Forms.GroupBox

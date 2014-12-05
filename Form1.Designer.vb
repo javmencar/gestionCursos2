@@ -24,8 +24,8 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.cmdCrear = New System.Windows.Forms.Button()
         Me.CmdGestionar = New System.Windows.Forms.Button()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.cmdAjustes = New System.Windows.Forms.Button()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'cmdCrear
@@ -46,31 +46,33 @@ Partial Class Form1
         Me.CmdGestionar.Text = "GESTIONAR LOS CURSOS" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Y" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "LOS ALUMNOS Y PROFESORES"
         Me.CmdGestionar.UseVisualStyleBackColor = True
         '
-        'Button1
+        'cmdAjustes
         '
-        Me.Button1.Location = New System.Drawing.Point(231, 51)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 2
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.cmdAjustes.Enabled = False
+        Me.cmdAjustes.Location = New System.Drawing.Point(339, 43)
+        Me.cmdAjustes.Name = "cmdAjustes"
+        Me.cmdAjustes.Size = New System.Drawing.Size(84, 41)
+        Me.cmdAjustes.TabIndex = 2
+        Me.cmdAjustes.Text = "Entrar en Ajustes"
+        Me.cmdAjustes.UseVisualStyleBackColor = True
         '
-        'Label1
+        'CheckBox1
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 56)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(202, 13)
-        Me.Label1.TabIndex = 3
-        Me.Label1.Text = "boton de acceso al formulario de pruebas"
+        Me.CheckBox1.AutoSize = True
+        Me.CheckBox1.Location = New System.Drawing.Point(125, 56)
+        Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(208, 17)
+        Me.CheckBox1.TabIndex = 3
+        Me.CheckBox1.Text = "Entrar en ajustes de La Base de Datos"
+        Me.CheckBox1.UseVisualStyleBackColor = True
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(651, 449)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.CheckBox1)
+        Me.Controls.Add(Me.cmdAjustes)
         Me.Controls.Add(Me.CmdGestionar)
         Me.Controls.Add(Me.cmdCrear)
         Me.Name = "Form1"
@@ -81,7 +83,7 @@ Partial Class Form1
     End Sub
     Friend WithEvents cmdCrear As System.Windows.Forms.Button
     Friend WithEvents CmdGestionar As System.Windows.Forms.Button
-    Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents cmdAjustes As System.Windows.Forms.Button
+    Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
 
 End Class

@@ -53,10 +53,8 @@ C:\GIT\GestionCursos1\bin\Debug\GestionCursos_0.1.xml
 C:\GIT\GestionCursos1\obj\Debug\GestionCursos_0.1.vbprojResolveAssemblyReference.cache
 C:\GIT\GestionCursos1\obj\Debug\GestionCursos_0._1.Form1.resources
 C:\GIT\GestionCursos1\obj\Debug\GestionCursos_0._1.Form2.resources
-C:\GIT\GestionCursos1\obj\Debug\GestionCursos_0._1.FrmAlumnos.resources
 C:\GIT\GestionCursos1\obj\Debug\GestionCursos_0._1.FrmCrear.resources
 C:\GIT\GestionCursos1\obj\Debug\GestionCursos_0._1.FrmCursos.resources
-C:\GIT\GestionCursos1\obj\Debug\GestionCursos_0._1.FrmGestionar.resources
 C:\GIT\GestionCursos1\obj\Debug\GestionCursos_0._1.FrmModificarCursos.resources
 C:\GIT\GestionCursos1\obj\Debug\GestionCursos_0._1.FrmModificarModulos.resources
 C:\GIT\GestionCursos1\obj\Debug\GestionCursos_0._1.Resources.resources

@@ -22,129 +22,119 @@ Partial Class Form2
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.TextBox3 = New System.Windows.Forms.TextBox()
-        Me.TextBox4 = New System.Windows.Forms.TextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
-        Me.ListView1 = New System.Windows.Forms.ListView()
+        Me.lblConectionString = New System.Windows.Forms.Label()
+        Me.txtConexion = New System.Windows.Forms.TextBox()
+        Me.cmdCambiarConexion = New System.Windows.Forms.Button()
+        Me.cmdCambiarPathFoto = New System.Windows.Forms.Button()
+        Me.txtPathFotos = New System.Windows.Forms.TextBox()
+        Me.lblPathFoto = New System.Windows.Forms.Label()
+        Me.cmdCambiarPathExportacion = New System.Windows.Forms.Button()
+        Me.txtPathExportacion = New System.Windows.Forms.TextBox()
+        Me.LblPathExportacion = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
-        'TextBox1
+        'lblConectionString
         '
-        Me.TextBox1.Location = New System.Drawing.Point(29, 13)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(100, 20)
-        Me.TextBox1.TabIndex = 0
+        Me.lblConectionString.AutoSize = True
+        Me.lblConectionString.Location = New System.Drawing.Point(62, 37)
+        Me.lblConectionString.Name = "lblConectionString"
+        Me.lblConectionString.Size = New System.Drawing.Size(141, 13)
+        Me.lblConectionString.TabIndex = 0
+        Me.lblConectionString.Text = "conexion con base de datos"
         '
-        'Button1
+        'txtConexion
         '
-        Me.Button1.Location = New System.Drawing.Point(57, 50)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 1
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.txtConexion.Location = New System.Drawing.Point(211, 34)
+        Me.txtConexion.Name = "txtConexion"
+        Me.txtConexion.Size = New System.Drawing.Size(403, 20)
+        Me.txtConexion.TabIndex = 1
         '
-        'TextBox2
+        'cmdCambiarConexion
         '
-        Me.TextBox2.Location = New System.Drawing.Point(13, 120)
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(611, 20)
-        Me.TextBox2.TabIndex = 2
+        Me.cmdCambiarConexion.Location = New System.Drawing.Point(620, 31)
+        Me.cmdCambiarConexion.Name = "cmdCambiarConexion"
+        Me.cmdCambiarConexion.Size = New System.Drawing.Size(75, 23)
+        Me.cmdCambiarConexion.TabIndex = 2
+        Me.cmdCambiarConexion.Text = "Guardar"
+        Me.cmdCambiarConexion.UseVisualStyleBackColor = True
         '
-        'Button2
+        'cmdCambiarPathFoto
         '
-        Me.Button2.Location = New System.Drawing.Point(215, 76)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 23)
-        Me.Button2.TabIndex = 6
-        Me.Button2.Text = "Button2"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.cmdCambiarPathFoto.Location = New System.Drawing.Point(620, 78)
+        Me.cmdCambiarPathFoto.Name = "cmdCambiarPathFoto"
+        Me.cmdCambiarPathFoto.Size = New System.Drawing.Size(75, 23)
+        Me.cmdCambiarPathFoto.TabIndex = 5
+        Me.cmdCambiarPathFoto.Text = "Guardar"
+        Me.cmdCambiarPathFoto.UseVisualStyleBackColor = True
         '
-        'TextBox3
+        'txtPathFotos
         '
-        Me.TextBox3.Location = New System.Drawing.Point(215, 13)
-        Me.TextBox3.Name = "TextBox3"
-        Me.TextBox3.Size = New System.Drawing.Size(92, 20)
-        Me.TextBox3.TabIndex = 7
+        Me.txtPathFotos.Location = New System.Drawing.Point(211, 80)
+        Me.txtPathFotos.Name = "txtPathFotos"
+        Me.txtPathFotos.Size = New System.Drawing.Size(403, 20)
+        Me.txtPathFotos.TabIndex = 4
         '
-        'TextBox4
+        'lblPathFoto
         '
-        Me.TextBox4.Location = New System.Drawing.Point(215, 50)
-        Me.TextBox4.Name = "TextBox4"
-        Me.TextBox4.Size = New System.Drawing.Size(92, 20)
-        Me.TextBox4.TabIndex = 8
+        Me.lblPathFoto.AutoSize = True
+        Me.lblPathFoto.Location = New System.Drawing.Point(62, 84)
+        Me.lblPathFoto.Name = "lblPathFoto"
+        Me.lblPathFoto.Size = New System.Drawing.Size(89, 13)
+        Me.lblPathFoto.TabIndex = 3
+        Me.lblPathFoto.Text = "Path de las Fotos"
         '
-        'Label1
+        'cmdCambiarPathExportacion
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(168, 19)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(24, 13)
-        Me.Label1.TabIndex = 9
-        Me.Label1.Text = "tipo"
+        Me.cmdCambiarPathExportacion.Location = New System.Drawing.Point(620, 129)
+        Me.cmdCambiarPathExportacion.Name = "cmdCambiarPathExportacion"
+        Me.cmdCambiarPathExportacion.Size = New System.Drawing.Size(75, 23)
+        Me.cmdCambiarPathExportacion.TabIndex = 8
+        Me.cmdCambiarPathExportacion.Text = "Guardar"
+        Me.cmdCambiarPathExportacion.UseVisualStyleBackColor = True
         '
-        'Label2
+        'txtPathExportacion
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(168, 57)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(15, 13)
-        Me.Label2.TabIndex = 10
-        Me.Label2.Text = "id"
+        Me.txtPathExportacion.Location = New System.Drawing.Point(211, 128)
+        Me.txtPathExportacion.Name = "txtPathExportacion"
+        Me.txtPathExportacion.Size = New System.Drawing.Size(403, 20)
+        Me.txtPathExportacion.TabIndex = 7
         '
-        'CheckBox1
+        'LblPathExportacion
         '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(332, 32)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(66, 17)
-        Me.CheckBox1.TabIndex = 11
-        Me.CheckBox1.Text = "con filtro"
-        Me.CheckBox1.UseVisualStyleBackColor = True
-        '
-        'ListView1
-        '
-        Me.ListView1.Location = New System.Drawing.Point(85, 157)
-        Me.ListView1.Name = "ListView1"
-        Me.ListView1.Size = New System.Drawing.Size(519, 97)
-        Me.ListView1.TabIndex = 12
-        Me.ListView1.UseCompatibleStateImageBehavior = False
+        Me.LblPathExportacion.AutoSize = True
+        Me.LblPathExportacion.Location = New System.Drawing.Point(62, 135)
+        Me.LblPathExportacion.Name = "LblPathExportacion"
+        Me.LblPathExportacion.Size = New System.Drawing.Size(103, 13)
+        Me.LblPathExportacion.TabIndex = 6
+        Me.LblPathExportacion.Text = "Path de Exportacion"
         '
         'Form2
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(675, 294)
-        Me.Controls.Add(Me.ListView1)
-        Me.Controls.Add(Me.CheckBox1)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.TextBox4)
-        Me.Controls.Add(Me.TextBox3)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.TextBox2)
-        Me.Controls.Add(Me.Button1)
-        Me.Controls.Add(Me.TextBox1)
+        Me.ClientSize = New System.Drawing.Size(819, 417)
+        Me.Controls.Add(Me.cmdCambiarPathExportacion)
+        Me.Controls.Add(Me.txtPathExportacion)
+        Me.Controls.Add(Me.LblPathExportacion)
+        Me.Controls.Add(Me.cmdCambiarPathFoto)
+        Me.Controls.Add(Me.txtPathFotos)
+        Me.Controls.Add(Me.lblPathFoto)
+        Me.Controls.Add(Me.cmdCambiarConexion)
+        Me.Controls.Add(Me.txtConexion)
+        Me.Controls.Add(Me.lblConectionString)
         Me.Name = "Form2"
         Me.Text = "Form2"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
-    Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents TextBox2 As System.Windows.Forms.TextBox
-    Friend WithEvents Button2 As System.Windows.Forms.Button
-    Friend WithEvents TextBox3 As System.Windows.Forms.TextBox
-    Friend WithEvents TextBox4 As System.Windows.Forms.TextBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
-    Friend WithEvents ListView1 As System.Windows.Forms.ListView
+    Friend WithEvents lblConectionString As System.Windows.Forms.Label
+    Friend WithEvents txtConexion As System.Windows.Forms.TextBox
+    Friend WithEvents cmdCambiarConexion As System.Windows.Forms.Button
+    Friend WithEvents cmdCambiarPathFoto As System.Windows.Forms.Button
+    Friend WithEvents txtPathFotos As System.Windows.Forms.TextBox
+    Friend WithEvents lblPathFoto As System.Windows.Forms.Label
+    Friend WithEvents cmdCambiarPathExportacion As System.Windows.Forms.Button
+    Friend WithEvents txtPathExportacion As System.Windows.Forms.TextBox
+    Friend WithEvents LblPathExportacion As System.Windows.Forms.Label
 End Class

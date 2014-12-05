@@ -129,9 +129,11 @@ Public Class FrmListado
             While dr.Read
                 Me.ListView1.Items.Add(dr(0))
                 For j As Integer = 1 To dr.FieldCount - 1
-                    If j = 7 Then
+                    If j = 14 Then
                         If dr(j).ToString = "True" Then
                             Me.ListView1.Items(i).SubItems.Add("Sí")
+                        Else
+                            Me.ListView1.Items(i).SubItems.Add(" ")
                         End If
                     Else
                         Me.ListView1.Items(i).SubItems.Add(dr(j).ToString)

@@ -326,7 +326,6 @@ Public Class FrmFichas
                 Else
                     .Fnac = Me.txtFNac.Text
                 End If
-                .Fnac = Me.txtFNac.Text
                 .LugNac = Me.txtLugNac.Text
                 If Me.txtEdad.Text = "" Then Me.txtEdad.Text = "0"
                 .Edad = CInt(Me.txtEdad.Text)
@@ -631,7 +630,7 @@ Public Class FrmFichas
             '   le quito la primera coma
             Datos = Datos.Substring(1)
             Dim sql As String = String.Format("UPDATE DatosPersonales SET {0} Where DatosPersonales.Id={1}", Datos, CInt(dat.Id))
-            MsgBox(sql)
+            ' MsgBox(sql)
             cn.Open()
             Dim cmd As New SqlCommand(sql, cn)
             Dim j As Integer = cmd.ExecuteNonQuery()
@@ -816,10 +815,10 @@ Public Class FrmFichas
             If nuevo = False Then
                 'por ahora es en GIT,pero lo más seguro es que sea en S:\
                 'Que es donde guardan las cosas en el servidor.
-                Path = (String.Format("C:\GIT\Fotos\Ficha{0}.bmp", DP.Id))
+                Path = (String.Format("{0}Ficha{1}.bmp", PathFotos, DP.Id))
                 PicBx1.Image.Save(Path)
             Else
-                Path = "C:\GIT\Fotos\FichaNew.bmp"
+                Path = String.Format("{0}FichaNew.bmp", PathFotos)
             End If
             ' PicBx1.Image.Save(Path)
             ' MsgBox(String.Format("Imagen guardada en {0}", Path))
@@ -1096,9 +1095,5 @@ Public Class FrmFichas
     End Sub
     Private Sub MtxtInaemMujer_MouseClick(sender As Object, e As MouseEventArgs) Handles MtxtInaemMujer.MouseClick
         recargarnotaEstecINAEM()
-    End Sub
-
-    Private Sub optAptoSi_CheckedChanged(sender As Object, e As EventArgs) Handles optAptoSi.CheckedChanged
-
     End Sub
 End Class
