@@ -9,8 +9,8 @@ Imports System.Runtime.InteropServices
 ' Revisar los valores de los atributos del ensamblado
 
 <Assembly: AssemblyTitle("GestionCursos_0.1")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyDescription("Proyecto desarrollado en periodo de practicas")> 
+<Assembly: AssemblyCompany("Javier Mendiz para ESTECFORM S.L.")> 
 <Assembly: AssemblyProduct("GestionCursos_0.1")> 
 <Assembly: AssemblyCopyright("Copyright ©  2014")> 
 <Assembly: AssemblyTrademark("")> 
