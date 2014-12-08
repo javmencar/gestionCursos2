@@ -7,6 +7,7 @@ Public Class FrmFichas
     Public cn As SqlConnection
     Dim NuIdDP, idcur As Integer
     Dim GuardaComentarios As String
+    Dim Funciones1 As Funciones
     Sub New(ByVal Da As Ficha, ByVal ti As Integer, ByVal nw As Boolean)
         ' Llamada necesaria para el diseñador.
         InitializeComponent()
@@ -25,6 +26,7 @@ Public Class FrmFichas
     End Sub
 
     Private Sub FrmFichas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Funciones1 = New Funciones(cn)
         cn = New SqlConnection(ConeStr)
         Me.lblComentariosEscritos.Text = ""
         Me.lblCurso.Text = ""
@@ -142,8 +144,7 @@ Public Class FrmFichas
             Else
                 Me.txtInFecha.Text = "1/1/1900"
             End If
-            ' Me.txtInFecha.Text = CStr(.InFecha)
-            Me.txtNivelEstudios.Text = MeterSaltosDeLinea(.NivelEstudios)
+            If Not IsNothing(.NivelEstudios) Then Me.txtNivelEstudios.Text = MeterSaltosDeLinea(.NivelEstudios)
             'hago una matriz con la string de experiencia y la vuelco en el listbox
             'controlo si hay algo en el string
             Me.LstExpSector.Items.Clear()
@@ -163,8 +164,7 @@ Public Class FrmFichas
                 Me.txtFecEntr.Text = "1/1/1900"
             End If
             ' Me.txtFecEntr.Text = CStr(.FecEntr)
-            Me.txtValoracion.Text = MeterSaltosDeLinea(.Valoracion)
-
+            If Not IsNothing(.Valoracion) Then Me.txtValoracion.Text = MeterSaltosDeLinea(.Valoracion)
             '######
             'Posiblemente tenga que sacar esto de aqui a un sub para tener en cuenta las notas
             If Not IsNothing(.Apto) Then
@@ -319,7 +319,8 @@ Public Class FrmFichas
                 .DNI = Me.txtDNI.Text
                 .NumSS = Me.txtNumSS.Text.Replace("/", "")
                 Dim err As Integer = 0
-                err = comprobarformatofecha(Me.txtFNac.Text)
+                err = Funciones1.comprobarformatofecha(Me.txtFNac.Text)
+                ' err = comprobarformatofecha(Me.txtFNac.Text)
                 If err <> 0 Then
                     MsgBox("Fecha de nacimiento incorrecta." & vbCrLf & "Se cargará 01/01/1900")
                     .Fnac = "01/01/1900"
@@ -339,7 +340,8 @@ Public Class FrmFichas
                 If Me.optInaemSi.Checked = True Then
                     'ojo, la propiedad alumno.Ininaem es un string
                     .InInaem = "True"
-                    err = comprobarformatofecha(Me.txtInFecha.Text)
+                    err = Funciones1.comprobarformatofecha(Me.txtInFecha.Text)
+                    ' err = comprobarformatofecha(Me.txtInFecha.Text)
                     If err <> 0 Then
                         MsgBox("Fecha de nacimiento incorrecta." & vbCrLf & "Se cargará 01/01/1900")
                         .Fnac = "01/01/1900"
@@ -349,33 +351,34 @@ Public Class FrmFichas
                 Else
                     .InInaem = "False"
                 End If
-                .NivelEstudios = QuitarSaltosDeLinea(Me.txtNivelEstudios.Text)
-                Dim expSect1 As String = ""
-                If Me.LstExpSector.Items.Count > 0 Then
-                    For Each l As String In Me.LstExpSector.Items
-                        expSect1 &= String.Format("/{0}", l)
-                    Next
-                    expSect1 = expSect1.Substring(1)
-                End If
-                .ExpSector = expSect1
-                If Me.CboTallaCamiseta.SelectedIndex <> -1 Then
-                    .TallaCamiseta = Me.CboTallaCamiseta.SelectedItem.ToString
-                End If
-                If Me.CboTallaPantalon.SelectedIndex <> -1 Then
-                    .TallaPantalon = Me.CboTallaPantalon.SelectedItem.ToString
-                End If
-                If Me.txtTallaCalzado.Text = "" Then Me.txtTallaCalzado.Text = "0"
-                .TallaZapato = CInt(Me.txtTallaCalzado.Text)
-                .Entrevistador = Me.txtEntrevistador.Text
+                If Me.txtNivelEstudios.Text <> "" Then .NivelEstudios = QuitarSaltosDeLinea(Me.txtNivelEstudios.Text)
+                    Dim expSect1 As String = ""
+                    If Me.LstExpSector.Items.Count > 0 Then
+                        For Each l As String In Me.LstExpSector.Items
+                            expSect1 &= String.Format("/{0}", l)
+                        Next
+                        expSect1 = expSect1.Substring(1)
+                    End If
+                    .ExpSector = expSect1
+                    If Me.CboTallaCamiseta.SelectedIndex <> -1 Then
+                        .TallaCamiseta = Me.CboTallaCamiseta.SelectedItem.ToString
+                    End If
+                    If Me.CboTallaPantalon.SelectedIndex <> -1 Then
+                        .TallaPantalon = Me.CboTallaPantalon.SelectedItem.ToString
+                    End If
+                    If Me.txtTallaCalzado.Text = "" Then Me.txtTallaCalzado.Text = "0"
+                    .TallaZapato = CInt(Me.txtTallaCalzado.Text)
+                    .Entrevistador = Me.txtEntrevistador.Text
                 If Me.txtEntrevistador.Text <> "" Or Me.txtValoracion.Text <> "" Then
-                    err = comprobarformatofecha(Me.txtFecEntr.Text)
+                    err = Funciones1.comprobarformatofecha(Me.txtFecEntr.Text)
+                    ' err = comprobarformatofecha(Me.txtFecEntr.Text)
                     If err <> 0 Then
                         MsgBox("Fecha de nacimiento incorrecta." & vbCrLf & "Se cargará 01/01/1900")
                         .Fnac = "01/01/1900"
                     Else
                         .FecEntr = Me.txtFecEntr.Text
                     End If
-                    .Valoracion = QuitarSaltosDeLinea(Me.txtValoracion.Text)
+                    If Not IsNothing(.Valoracion) Then .Valoracion = QuitarSaltosDeLinea(Me.txtValoracion.Text)
                     '###
                     'Esto habrá que tocarlo
                     If Me.optAptoSi.Checked = True Then
@@ -388,27 +391,22 @@ Public Class FrmFichas
                     '####
                 Else
                 End If
-                .PathFoto = Me.PicBx1.Tag
+                    .PathFoto = Me.PicBx1.Tag
                 .Email = Me.txtEmail.Text
-                .Comentarios = QuitarSaltosDeLinea(GuardaComentarios)
-                .Curso = idcur
-                'For Each c As Control In Me.GbCalificacion.Controls
-                '    If TypeOf (c) Is MaskedTextBox Then
-                '        If c.Text = "00,00" Then c.Text = "00.00"
-                '    End If
-                'Next
-                If nuevo = False Then
-                    .EstecTest = Me.MtxtEstecTest.Text
-                    .EstecDinam = Me.MtxtEstecDinam.Text
-                    .EstecEntr = Me.MtxtEstecEntr.Text
-                    .InaemMujer = Me.MtxtInaemMujer.Text
-                    .InaemDiscap = Me.MtxtInaemDiscap.Text
-                    .InaemJoven = Me.MtxtInaemJoven.Text
-                    .InaemBajaCon = Me.MtxtInaemBajaContr.Text
-                    .InaemOtros = Me.MtxtInaemOtros.Text
-                End If
+                If GuardaComentarios <> "" Then .Comentarios = QuitarSaltosDeLinea(GuardaComentarios)
+                    .Curso = idcur
+                    If nuevo = False Then
+                        .EstecTest = Me.MtxtEstecTest.Text
+                        .EstecDinam = Me.MtxtEstecDinam.Text
+                        .EstecEntr = Me.MtxtEstecEntr.Text
+                        .InaemMujer = Me.MtxtInaemMujer.Text
+                        .InaemDiscap = Me.MtxtInaemDiscap.Text
+                        .InaemJoven = Me.MtxtInaemJoven.Text
+                        .InaemBajaCon = Me.MtxtInaemBajaContr.Text
+                        .InaemOtros = Me.MtxtInaemOtros.Text
+                    End If
 
-                .cargarlistas() 'Llamo al procedimiento de la clase que carga listadoNombres y listavalores
+                    .cargarlistas() 'Llamo al procedimiento de la clase que carga listadoNombres y listavalores
             End With
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
@@ -431,18 +429,31 @@ Public Class FrmFichas
                 fallos = camposvacios()
                 'ademas de campos vacios , quiero que compruebe el DNI y el NumSS
                 If tipo = 3 Then
-                    If Me.lblCurso.Text = "" Then Throw New miExcepcion("Debe elegir el curso al que se va a apuntar el alumno")
+                    Dim cursoElegido As Boolean
+                    If Me.cboCursos.SelectedIndex = -1 Then
+                        cursoElegido = False
+                        Throw New miExcepcion("Debe elegir el curso al que se va a apuntar el alumno")
+                    Else
+
+                    End If
+                End If
+                If Me.lblCurso.Text = "" Then
                 End If
                 Dim comprobado As Boolean
                 If Me.txtDNI.Text <> "" Then
-                    comprobado = ValidaNif(Me.txtDNI.Text)
+
+                    comprobado = Funciones1.ValidaNif(Me.txtDNI.Text)
+
+                    ' comprobado = ValidaNif(Me.txtDNI.Text)
                     If comprobado = False Then
                         fallos.Add("El DNI introducido NO es válido.")
                     End If
                 End If
                 Dim numSSSinBarras As String = Me.txtNumSS.Text.Replace("/", "")
                 If numSSSinBarras <> "" Then
-                    comprobado = ValidaNumSS(numSSSinBarras)
+                    comprobado = Funciones1.ValidaNumSS(numSSSinBarras)
+
+                    ' comprobado = ValidaNumSS(numSSSinBarras)
                     If comprobado = False Then
                         fallos.Add("El Numero de la Seguridad Social NO es válido")
                     End If
@@ -469,18 +480,24 @@ Public Class FrmFichas
                 If nuevo = True Then ' creo una ficha, porque es nuevo
                     Dim comprobacion As Boolean = CrearNuevoDPEnBaseDeDatos(FichaRellenada)
                     If comprobacion = False Then Throw New miExcepcion("Error al cargar los datos personales de la ficha")
-                    NuIdDP = cogerUltimaId("DatosPersonales")
+                    NuIdDP = Funciones1.ejecutarConsultaScalar("SELECT TOP 1 DatosPersonales.Id FROM DatosPersonales ORDER BY Id DESC")
+                    ' NuIdDP = ejecutarConsultaScalar("SELECT TOP 1 DatosPersonales.Id FROM DatosPersonales ORDER BY Id DESC")
                     If NuIdDP = -1 Then Throw New miExcepcion("Error al calcular la ultima ID")
                     'meto la id en el objeto ficha, porque luego lo voy a utilizar
                     FichaRellenada.Id = NuIdDP
                     ' con esto inserto en la tabla alumnos, profesores o candidatos
-                    Dim comprob As Integer = insertarEnTablacategoria(NuIdDP)
+                    Dim comprob As Integer = Funciones1.ejecutarConsultaNonQuery(String.Format("INSERT INTO {0} ({0}.idDP) VALUES ({1})", cat, NuIdDP))
+                    '  Dim comprob As Integer =  comprob = ejecutarConsultaNonQuery(String.Format("INSERT INTO {0} ({0}.idDP) VALUES ({1})", cat, NuIdDP))
                     If comprob = -1 Then Throw New miExcepcion(String.Format("Problema al insertar en {0}", cat))
                     'y ahora inserto en la tabla cursos y secundarias
                     Dim idt, idc As Integer
-                    idt = cogerUltimaId(cat)
+                    idt = Funciones1.ejecutarConsultaScalar(String.Format("SELECT TOP 1 {0}.Id FROM {0} ORDER BY Id DESC", cat))
+                    ' idt = ejecutarConsultaScalar(String.Format("SELECT TOP 1 {0}.Id FROM {0} ORDER BY Id DESC", cat))
                     idc = FichaRellenada.Curso
-                    Dim comprobarcursos = insertarEnTablaSecundariaCursos(idt, idc)
+                    comprob = 0
+                    Dim cortado As String = cat.Substring(0, 2)
+                    comprob = Funciones1.ejecutarConsultaNonQuery(String.Format("INSERT INTO {0}_Cursos (Id{1},IdCur) VALUES ({2},{3})", cat, cortado, idt, idc))
+                    '  comprob = ejecutarConsultaNonQuery(String.Format("INSERT INTO {0}_Cursos (Id{1},IdCur) VALUES ({2},{3})", cat, cortado, idt, idc))
                 Else    ' no hace falta insertar en BBDD, ya está en ambas tablas
                     'cargo los datos del objeto ya creado
                     Dim comprobacion As Boolean = cargarCambiosEnDPYaCreado(FichaRellenada)
@@ -514,27 +531,9 @@ Public Class FrmFichas
             Me.DialogResult = Windows.Forms.DialogResult.None
         End Try
     End Sub
-    Private Function insertarEnTablaSecundariaCursos(ByVal itab As Integer, ByVal icu As Integer) As Integer
-        Dim control As Integer = 0
-        Dim cortado As String = cat.Substring(0, 2)
-        Dim sql As String = String.Format("INSERT INTO {0}_Cursos (Id{1},IdCur) VALUES ({2},{3})", cat, cortado, itab, icu)
-        Try
-            cn.Open()
-            Dim cmd As New SqlCommand(sql, cn)
-            control = cmd.ExecuteNonQuery
-            If control < 0 Then Throw New miExcepcion
-        Catch ex2 As miExcepcion
-            MsgBox(ex2.ToString)
-        Catch ex As Exception
-            MsgBox(ex.ToString)
-        Finally
-            cn.Close()
-        End Try
-        Return control
-    End Function
     Private Function cargarNotas(ByRef fi As Ficha) As Integer
         Dim cn2 As New SqlConnection(ConeStr)
-        Dim j As Integer = 0
+        Dim comp As Integer = 0
         Try
             If Not IsNothing(fi.notaEstecform) Or Not IsNothing(fi.notaINAEM) Then
                 Dim NotasAcumuladas As String = ""
@@ -548,21 +547,19 @@ Public Class FrmFichas
                 Next
                 NotasAcumuladas = NotasAcumuladas.Substring(2)
                 'saco la idDP con 1 subconsulta y asi me ahorro una busqueda. Lo pongo asi para que sea mas legible
-                Dim subconsulta As String = String.Format("(SELECT Candidatos.Id FROM Candidatos, DatosPersonales WHERE Candidatos.IdDP=DatosPersonales.Id AND DatosPersonales.Id={0})", fi.Id)                ' MsgBox(subconsulta)
-                Dim sql As String = String.Format("UPDATE Candidatos SET {0} WHERE Candidatos.id={1}", NotasAcumuladas, subconsulta)                ' MsgBox(sql)
-                cn2.Open()
-                Dim cmd As New SqlCommand(sql, cn2)
-                j = cmd.ExecuteNonQuery                '  If j > 0 Then MsgBox("notas cargadas")
+                Dim subconsulta As String = String.Format("(SELECT {0}.Id FROM {0}, DatosPersonales WHERE {0}.IdDP=DatosPersonales.Id AND DatosPersonales.Id={1})", cat, fi.Id)                ' MsgBox(subconsulta)
+                Dim sql As String = String.Format("UPDATE {0} SET {1} WHERE Candidatos.id={2}", cat, NotasAcumuladas, subconsulta)                ' MsgBox(sql)
+                comp = Funciones1.ejecutarConsultaNonQuery(sql)
+                '  comp = ejecutarConsultaNonQuery(sql)
+                If comp <= 0 Then Throw New miExcepcion("No se han podido cargar las notas")
             End If
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
         Catch ex As Exception
             MsgBox(ex.ToString)
         Finally
-            cn.Close()
-            cn2.Close()
         End Try
-        Return j
+        Return comp
     End Function
     Private Function camposvacios() As List(Of String)
         Dim vacios As New List(Of String)
@@ -587,7 +584,9 @@ Public Class FrmFichas
 
         '   If DP.DNI <> Me.txtDNI.Text Then cambios.Add(String.Format("El campo 'DNI' va a ser cambiado de '{0}' a '{1}", DP.DNI, Me.txtDNI.Text))
         If DP.DNI <> Me.txtDNI.Text Then
-            comprobado = ValidaNif(Me.txtDNI.Text)
+            comprobado = Funciones1.ValidaNif(Me.txtDNI.Text)
+
+            ' comprobado = ValidaNif(Me.txtDNI.Text)
             If comprobado = False Then
                 cambios.Add("El DNI introducido no es válido.")
             Else
@@ -596,7 +595,9 @@ Public Class FrmFichas
         End If
         '  If DP.NumSS <> numSSSinBarras Then cambios.Add(String.Format("El campo 'Numero de la Seguridad Social' va a ser cambiado de '{0}' a '{1}", DP.NumSS, Me.txtNumSS.Text))
         If DP.NumSS <> numSSSinBarras Then
-            comprobado = ValidaNumSS(numSSSinBarras)
+
+            comprobado = Funciones1.ValidaNumSS(numSSSinBarras)
+            '  comprobado = ValidaNumSS(numSSSinBarras)
             If comprobado = False Then
                 cambios.Add("El Numero de la Seguridad Social introducido no es válido.")
             Else
@@ -607,7 +608,6 @@ Public Class FrmFichas
         Return cambios
     End Function
     Public Function cargarCambiosEnDPYaCreado(ByVal dat As Ficha) As Boolean
-
         Try
             Dim Datos As String = ""
             For i As Integer = 2 To 28  ' i=2 porque listavalores empieza en 1,
@@ -627,30 +627,25 @@ Public Class FrmFichas
                     End Select
                 End If
             Next
-            '   le quito la primera coma
             Datos = Datos.Substring(1)
             Dim sql As String = String.Format("UPDATE DatosPersonales SET {0} Where DatosPersonales.Id={1}", Datos, CInt(dat.Id))
             ' MsgBox(sql)
-            cn.Open()
-            Dim cmd As New SqlCommand(sql, cn)
-            Dim j As Integer = cmd.ExecuteNonQuery()
-            '   No debería dar distinto de 1, porque solo debería afectar a un registro
-            If j <> 1 Then Throw New miExcepcion("error en la insercion")
-            'Aqui meto las notas
-            
+            Dim comp As Integer = Funciones1.ejecutarConsultaNonQuery(sql)
+            If comp <= 0 Then Throw New miExcepcion("error en la insercion")
+            comp = 0
+            ''Aqui meto las notas
+            comp = cargarNotas(dat)
+            If comp <= 0 Then Throw New miExcepcion
         Catch ex2 As miExcepcion
             Return False
         Catch ex As Exception
             Return False
         Finally
-            cn.Close()
-
         End Try
         Return True
     End Function
     Public Function CrearNuevoDPEnBaseDeDatos(ByVal Dat As Ficha) As Boolean
         'INSERT INTO 
-        'ojo que aqui hay que hacer dos consultas distintas, una por datos personales y otra po candidatos
         Try
             Dim tablas As String = ""
             Dim valores As String = ""
@@ -680,13 +675,8 @@ Public Class FrmFichas
             Dim sql As String = String.Format("INSERT INTO DatosPersonales ({0}) VALUES ({1})", tablas, valores)
             '  MsgBox(sql)
             cn.Open()
-            Dim cmd As New SqlCommand(sql, cn)
-            Dim j As Integer = cmd.ExecuteNonQuery()
-            '   No debería dar distinto de 1, porque solo debería afectar a un registro
-            If j <> 1 Then Throw New miExcepcion("error en la insercion")
-            'recojo la nueva IdDP en la variable publica
-            NuIdDP = cogerUltimaId("DatosPersonales")
-            ' MsgBox("Datos personales introducidos en la base de datos")
+            Dim comp As Integer = Funciones1.ejecutarConsultaNonQuery(sql)
+            If comp <= 0 Then Throw New miExcepcion("error al crear la ficha")
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
             Return False
@@ -694,24 +684,23 @@ Public Class FrmFichas
             MsgBox(ex.ToString)
             Return False
         Finally
-            cn.Close()
         End Try
         Return True
     End Function
-    Public Function comprobarformatofecha(ByVal s As String) As Integer
-        Try
-            Dim fechacorrecta As Date = DateTime.Parse(s)
-        Catch ex1 As FormatException
-            Return 1
-        Catch ex2 As InvalidCastException
-            Return 2
-        Catch ex3 As ArgumentException
-            Return 3
-        Catch ex4 As Exception
-            Return 4
-        End Try
-        Return 0
-    End Function
+    'Public Function comprobarformatofecha(ByVal s As String) As Integer
+    '    Try
+    '        Dim fechacorrecta As Date = DateTime.Parse(s)
+    '    Catch ex1 As FormatException
+    '        Return 1
+    '    Catch ex2 As InvalidCastException
+    '        Return 2
+    '    Catch ex3 As ArgumentException
+    '        Return 3
+    '    Catch ex4 As Exception
+    '        Return 4
+    '    End Try
+    '    Return 0
+    'End Function
     Private Sub cmdExperiencia_Click(sender As Object, e As EventArgs) Handles cmdExperiencia.Click
         If Me.CboExpSector.SelectedIndex = -1 Then
             MsgBox("seleccione un sector de experiencia laboral a añadir al listado")
@@ -744,37 +733,6 @@ Public Class FrmFichas
     Private Sub cmdSalir_Click(sender As Object, e As EventArgs) Handles cmdSalir.Click
         Me.DialogResult = Windows.Forms.DialogResult.Abort
     End Sub
-    Public Function cogerUltimaId(ByVal str As String) As Integer
-        Dim i As Integer = 0
-        cn = New SqlConnection(ConeStr)
-        Try
-            cn.Open()
-            Dim sql As String = "" ' "select top 1 DatosPersonales.id from DatosPersonales order by id desc"
-            sql = String.Format("SELECT TOP 1 {0}.Id FROM {0} ORDER BY Id DESC", str)
-            Dim cmd As New SqlCommand(sql, cn)
-            i = cmd.ExecuteScalar
-        Catch ex As Exception
-            i = -1
-        Finally
-            cn.Close()
-        End Try
-        Return i
-    End Function
-    Public Function insertarEnTablacategoria(ByVal nid As Integer) As Integer
-        Dim i As Integer
-        cn = New SqlConnection(ConeStr)
-        Try
-            cn.Open()
-            Dim sql As String = String.Format("INSERT INTO {0} ({0}.idDP) VALUES ({1})", cat, nid)         
-            Dim cmd As New SqlCommand(sql, cn)
-            i = cmd.ExecuteNonQuery
-        Catch ex As Exception
-            i = -1
-        Finally
-            cn.Close()
-        End Try
-        Return i
-    End Function
     Private Sub cmdCambiarFoto_Click(sender As Object, e As EventArgs) Handles cmdCambiarFoto.Click
         Call CambiarFoto()
     End Sub
@@ -826,72 +784,7 @@ Public Class FrmFichas
             PicBx1.Tag = Path
         End If
     End Sub
-    Function ValidaNif(ByVal nif As String) As Boolean
-        Dim n As Long
-        Dim letras() As String = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"}
-        If (Len(nif) = 9 AndAlso IsNumeric(nif.Substring(0, 8))) Then
-            n = CLng(nif.Substring(0, 8))
-            n = n Mod 23
-            If (UCase(nif.Substring(8)) = letras(CInt(n))) Then
-                Return True
-            End If
-        End If
-        Return False
-    End Function
-    Public Function GetDCNumSegSocial(ByVal numSegSocial As String, _
-                                  ByVal esNumEmpresa As Boolean) As String
-        If (numSegSocial.Length > 10) OrElse (numSegSocial.Length = 0) Then _
-            Throw New System.ArgumentException()
-        Dim regex As New System.Text.RegularExpressions.Regex("[^0-9]")
-        If (regex.IsMatch(numSegSocial)) Then _
-            Throw New System.ArgumentException()
-        Try
-            Dim dcProv As String = numSegSocial.Substring(0, 2)
-            Dim numero As String = numSegSocial.Substring(2, numSegSocial.Length - 2)
-            Select Case numero.Length
-                Case 8
-                    If (esNumEmpresa) Then
-                        Return String.Empty
-                    Else
-                        If (numero.Chars(0) = "0"c) Then
-                            numero = numero.Remove(0, 1)
-                        End If
-                    End If
-                Case 7
-                    If (esNumEmpresa) Then
-                        If (numero.Chars(0) = "0"c) Then
-                            numero = numero.Remove(0, 1)
-                        End If
-                    End If
-                Case 6
-                    If (Not (esNumEmpresa)) Then
-                        numero = numero.PadLeft(7, "0"c)
-                    End If
-                Case Else
-                    If (esNumEmpresa) Then
-                        numero = numero.PadLeft(6, "0"c)
-                    Else
-                        numero = numero.PadLeft(7, "0"c)
-                    End If
-            End Select
-            Dim naf As Int64 = Convert.ToInt64(dcProv & numero)
-            naf = naf - (naf \ 97) * 97
-            Return String.Format("{0:00}", naf)
-        Catch
-            Return String.Empty
-        End Try
-    End Function
-    Public Function ValidaNumSS(ByVal NSS As String) As Boolean
-
-        Dim CP As String = NSS.Substring(0, 2)
-        If CP = "  " Then Return False
-        If Not IsNumeric(CP) AndAlso (CInt(CP) < 1 Or CInt(CP) > 50) Then Return False
-        Dim NssSCC As String = NSS.Substring(0, NSS.Length - 2)
-        Dim dc As String = GetDCNumSegSocial(NssSCC, False)
-        Dim s As String = NSS.Substring(NSS.Length - 2, 2)
-        If s = dc Then Return True
-        Return False
-    End Function
+   
     Private Sub cmdBorrar_Click(sender As Object, e As EventArgs) Handles cmdBorrar.Click
         Dim respuesta1, respuesta2 As MsgBoxResult
         'Dim nombre As String = DP.Nombre & DP.Apellido1 & DP.Apellido2
@@ -914,34 +807,19 @@ Public Class FrmFichas
         End If
     End Sub
     Public Function borrarDatosPersonales(ByVal i As String) As Boolean
-        Dim num, idtabla As Integer
-        Dim sqlidtabla, sqlborratabla, sqlDatosPersonales As String
-        sqlidtabla = String.Format("Select {0}.Id from DatosPersonales, {0} where DatosPersonales.Id={0}.IdDP and DatosPersonales.Id={1}", cat, i)
-        MsgBox(sqlidtabla)
-        sqlDatosPersonales = String.Format("DELETE FROM DatosPersonales WHERE DatosPersonales.Id={0}", DP.Id)
-        ' MsgBox(sqlDatosPersonales)
-        Dim cn2 As New SqlConnection(ConeStr)
         Try
-            Dim cmdIdtabla, cmdDelTabla, cmdDelDP As SqlCommand
-            cn.Open()
-            'hago la consulta para obtener la ID del Alumno
-            cmdIdtabla = New SqlCommand(sqlidtabla, cn)
-            idtabla = cmdIdtabla.ExecuteScalar
+            Dim idtabla, comp As Integer
+            Dim sqlidtabla, sqlborratabla, sqlDatosPersonales As String
+            sqlidtabla = String.Format("Select {0}.Id from DatosPersonales, {0} where DatosPersonales.Id={0}.IdDP and DatosPersonales.Id={1}", cat, i)
+            sqlDatosPersonales = String.Format("DELETE FROM DatosPersonales WHERE DatosPersonales.Id={0}", DP.Id)
+            idtabla = ejecutarConsultaScalar(sqlIdtabla)
             If idtabla < 0 Then Throw New miExcepcion(String.Format("Error al obtener la Id de {0}", cat))
-            cn.Close()
-            'con el Id correcto, lo cargo en la sql de borrado
             sqlborratabla = String.Format("delete from {0} where {0}.id={1}", cat, idtabla)
-            'MsgBox(sqlalumnos)
-            'Abro otra vez para borrar en tabla Alumnos o profesores
-            cn.Open()
-            cmdDelTabla = New SqlCommand(sqlborratabla, cn)
-            num = cmdDelTabla.ExecuteNonQuery
-            If num < 0 Then Throw New miExcepcion(String.Format("Error al borrar de {0}", cat))
-            cn2.Open()
-            cmdDelDP = New SqlCommand(sqlDatosPersonales, cn2)
-            num = cmdDelDP.ExecuteNonQuery
-            If num < 0 Then Throw New miExcepcion(String.Format("Error al borrar datos personales en {0}", cat))
-
+            comp = ejecutarConsultaNonQuery(sqlborratabla)
+            If comp < 0 Then Throw New miExcepcion(String.Format("Error al borrar de {0}", cat))
+            comp = 0
+            comp = ejecutarConsultaNonQuery(sqlDatosPersonales)
+            If comp < 0 Then Throw New miExcepcion(String.Format("Error al borrar datos personales en {0}", cat))
         Catch ex2 As miExcepcion
             Return False
             MsgBox(ex2.ToString)
@@ -949,8 +827,6 @@ Public Class FrmFichas
             Return False
             MsgBox(ex.ToString)
         Finally
-            cn2.Close()
-            cn.Close()
         End Try
         Return True
     End Function
@@ -958,11 +834,6 @@ Public Class FrmFichas
         If Me.optAptoSi.Checked = False Then
             MsgBox("El candidato no está calificado como Apto")
         Else
-            Dim cn2 As New SqlConnection(ConeStr)
-            '####
-            'TO DO:
-            'Quitar de tabla candidatos y añadir a la tabla alumnos.
-            '######
             If Not IsNothing(DP.Curso) Then '   si hay DP.Curso es porque ya se han metido datos en la ficha
                 Try
                     Dim sqlIdCand, sqlDelCandCur, sqlDelCand, sqlidal, sqlinsAl, sqlInsAlCur As String
@@ -989,23 +860,15 @@ Public Class FrmFichas
                     If contr <> 1 Then Throw New miExcepcion("Error al Insertar en Alumnos_Cursos")
                     MsgBox(String.Format("{0} {1} Cambiado a Alumno del curso {2}", DP.Nombre, DP.Apellido1, Me.lblNombreCurso.Text))
                 Catch ex2 As miExcepcion
-
                     MsgBox(ex2.ToString)
                 Catch ex As Exception
-
                     MsgBox(ex.ToString)
                 Finally
-                    cn.Close()
-
                 End Try
-
             End If
-
-
         End If
-
     End Sub
-    Private Function ejecutarConsultaScalar(ByVal str As String) As Integer
+    Public Function ejecutarConsultaScalar(ByVal str As String) As Integer
         Dim control As Integer = 0
         Try
             cn.Open()
@@ -1019,7 +882,7 @@ Public Class FrmFichas
         End Try
         Return control
     End Function
-    Private Function ejecutarConsultaNonQuery(ByVal str As String) As Integer
+    Public Function ejecutarConsultaNonQuery(ByVal str As String) As Integer
         Dim control As Integer = 0
         Try
             cn.Open()
@@ -1051,10 +914,11 @@ Public Class FrmFichas
         Dim frm As New FrmComentarios(DP)
         If frm.ShowDialog = Windows.Forms.DialogResult.OK Then
             GuardaComentarios = DP.Comentarios
-
-        Else            '      MsgBox("No se ha guardado el comentario")
+        Else
+            ' MsgBox("No se ha guardado el comentario")
         End If
     End Sub
+
     Private Sub cboCursos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCursos.SelectedIndexChanged
         Me.lblNombreCurso.Text = ""
         Dim aux(3) As String

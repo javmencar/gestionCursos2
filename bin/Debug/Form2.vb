@@ -4,7 +4,7 @@ Public Class Form2
  
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.txtConexion.Text = ConeStr
-        Me.txtPathExportacion.Text = PathExportacion
+        Me.txtPathExportacion.Text = PathExportacionInicial
         Me.txtPathFotos.Text = PathFotos
     End Sub
 
@@ -24,7 +24,7 @@ Public Class Form2
         Dim resp As MsgBoxResult
         resp = MsgBox(String.Format("Va a cambiar la ubicacion de las fotos de las fichas de:" & vbCrLf &
                                   "'{0}' a '{1}'" & vbCrLf &
-                                  "¿Está seguro?", ConeStr, Me.txtConexion.Text), MsgBoxStyle.YesNo)
+                                  "¿Está seguro?", lblPathFoto, Me.txtPathFotos.Text), MsgBoxStyle.YesNo)
         If resp = MsgBoxResult.Yes Then
             PathFotos = Me.txtPathFotos.Text
         Else
@@ -36,9 +36,9 @@ Public Class Form2
         Dim resp As MsgBoxResult
         resp = MsgBox(String.Format("Va a cambiar el destino de los datos exportados  de:" & vbCrLf &
                                   "'{0}' a '{1}'" & vbCrLf &
-                                  "¿Está seguro?", ConeStr, Me.txtConexion.Text), MsgBoxStyle.YesNo)
+                                  "¿Está seguro?", PathExportacionInicial, Me.txtPathExportacion.Text), MsgBoxStyle.YesNo)
         If resp = MsgBoxResult.Yes Then
-            PathExportacion = Me.txtPathExportacion.Text
+            PathExportacionInicial = Me.txtPathExportacion.Text
         Else
             MsgBox("Cambio abortado a peticion del usuario")
         End If

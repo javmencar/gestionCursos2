@@ -612,23 +612,17 @@ Public Class FrmListado
                                  vbCrLf & "como '.xls'", PathExportacion))
 
             Dim openFileDialog1 As New OpenFileDialog()
-            openFileDialog1.InitialDirectory = "C:\Git\DatosExportados"
+            openFileDialog1.InitialDirectory = PathExportacionInicial
             openFileDialog1.Filter = "csv files (*.csv)|*.csv|txt files (*.txt)|*.txt|All files (*.*)|*.*"
-            'openFileDialog1.FilterIndex = 2
-            'openFileDialog1.RestoreDirectory = True
-
-            'Dim oDocument As Object
-            'Dim sFileName As String
             If openFileDialog1.ShowDialog() = DialogResult.OK Then
                 myStream = openFileDialog1.OpenFile()
                 If (myStream IsNot Nothing) Then
                     ' Insert code to read the stream here.
                     Dim LibroTrabajo As Object
                     Dim Fichero As String
-                    Fichero = "C:\Git\DatosExportados\RegistrosExportados.csv" 'con el path correspondiente 
+                    Fichero = String.Format(PathExportacion)
                     LibroTrabajo = GetObject(Fichero)
                     LibroTrabajo.Application.Windows("RegistrosExportados.csv").Visible = True
-                    '  MsgBox("A rezar")
                 End If
             Else
                 '  MsgBox("y yo que sé")

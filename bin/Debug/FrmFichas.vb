@@ -7,6 +7,7 @@ Public Class FrmFichas
     Public cn As SqlConnection
     Dim NuIdDP, idcur As Integer
     Dim GuardaComentarios As String
+    Dim comprobaciones1 As Comprobaciones
     Sub New(ByVal Da As Ficha, ByVal ti As Integer, ByVal nw As Boolean)
         ' Llamada necesaria para el diseñador.
         InitializeComponent()
@@ -25,6 +26,7 @@ Public Class FrmFichas
     End Sub
 
     Private Sub FrmFichas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        comprobaciones1 = New Comprobaciones
         cn = New SqlConnection(ConeStr)
         Me.lblComentariosEscritos.Text = ""
         Me.lblCurso.Text = ""
@@ -142,8 +144,7 @@ Public Class FrmFichas
             Else
                 Me.txtInFecha.Text = "1/1/1900"
             End If
-            ' Me.txtInFecha.Text = CStr(.InFecha)
-            Me.txtNivelEstudios.Text = MeterSaltosDeLinea(.NivelEstudios)
+            If Not IsNothing(.NivelEstudios) Then Me.txtNivelEstudios.Text = MeterSaltosDeLinea(.NivelEstudios)
             'hago una matriz con la string de experiencia y la vuelco en el listbox
             'controlo si hay algo en el string
             Me.LstExpSector.Items.Clear()
@@ -163,8 +164,7 @@ Public Class FrmFichas
                 Me.txtFecEntr.Text = "1/1/1900"
             End If
             ' Me.txtFecEntr.Text = CStr(.FecEntr)
-            Me.txtValoracion.Text = MeterSaltosDeLinea(.Valoracion)
-
+            If Not IsNothing(.Valoracion) Then Me.txtValoracion.Text = MeterSaltosDeLinea(.Valoracion)
             '######
             'Posiblemente tenga que sacar esto de aqui a un sub para tener en cuenta las notas
             If Not IsNothing(.Apto) Then
@@ -431,18 +431,31 @@ Public Class FrmFichas
                 fallos = camposvacios()
                 'ademas de campos vacios , quiero que compruebe el DNI y el NumSS
                 If tipo = 3 Then
-                    If Me.lblCurso.Text = "" Then Throw New miExcepcion("Debe elegir el curso al que se va a apuntar el alumno")
+                    Dim cursoElegido As Boolean
+                    If Me.cboCursos.SelectedIndex = -1 Then
+                        cursoElegido = False
+                        Throw New miExcepcion("Debe elegir el curso al que se va a apuntar el alumno")
+                    Else
+
+                    End If
+                End If
+                If Me.lblCurso.Text = "" Then
                 End If
                 Dim comprobado As Boolean
                 If Me.txtDNI.Text <> "" Then
-                    comprobado = ValidaNif(Me.txtDNI.Text)
+
+                    comprobado = comprobaciones1.ValidaNif(Me.txtDNI.Text)
+
+                    ' comprobado = ValidaNif(Me.txtDNI.Text)
                     If comprobado = False Then
                         fallos.Add("El DNI introducido NO es válido.")
                     End If
                 End If
                 Dim numSSSinBarras As String = Me.txtNumSS.Text.Replace("/", "")
                 If numSSSinBarras <> "" Then
-                    comprobado = ValidaNumSS(numSSSinBarras)
+                    comprobado = comprobaciones1.ValidaNumSS(numSSSinBarras)
+
+                    ' comprobado = ValidaNumSS(numSSSinBarras)
                     If comprobado = False Then
                         fallos.Add("El Numero de la Seguridad Social NO es válido")
                     End If
@@ -587,7 +600,9 @@ Public Class FrmFichas
 
         '   If DP.DNI <> Me.txtDNI.Text Then cambios.Add(String.Format("El campo 'DNI' va a ser cambiado de '{0}' a '{1}", DP.DNI, Me.txtDNI.Text))
         If DP.DNI <> Me.txtDNI.Text Then
-            comprobado = ValidaNif(Me.txtDNI.Text)
+            comprobado = comprobaciones1.ValidaNif(Me.txtDNI.Text)
+
+            ' comprobado = ValidaNif(Me.txtDNI.Text)
             If comprobado = False Then
                 cambios.Add("El DNI introducido no es válido.")
             Else
@@ -596,7 +611,9 @@ Public Class FrmFichas
         End If
         '  If DP.NumSS <> numSSSinBarras Then cambios.Add(String.Format("El campo 'Numero de la Seguridad Social' va a ser cambiado de '{0}' a '{1}", DP.NumSS, Me.txtNumSS.Text))
         If DP.NumSS <> numSSSinBarras Then
-            comprobado = ValidaNumSS(numSSSinBarras)
+
+            comprobado = comprobaciones1.ValidaNumSS(numSSSinBarras)
+            '  comprobado = ValidaNumSS(numSSSinBarras)
             If comprobado = False Then
                 cambios.Add("El Numero de la Seguridad Social introducido no es válido.")
             Else
@@ -826,72 +843,72 @@ Public Class FrmFichas
             PicBx1.Tag = Path
         End If
     End Sub
-    Function ValidaNif(ByVal nif As String) As Boolean
-        Dim n As Long
-        Dim letras() As String = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"}
-        If (Len(nif) = 9 AndAlso IsNumeric(nif.Substring(0, 8))) Then
-            n = CLng(nif.Substring(0, 8))
-            n = n Mod 23
-            If (UCase(nif.Substring(8)) = letras(CInt(n))) Then
-                Return True
-            End If
-        End If
-        Return False
-    End Function
-    Public Function GetDCNumSegSocial(ByVal numSegSocial As String, _
-                                  ByVal esNumEmpresa As Boolean) As String
-        If (numSegSocial.Length > 10) OrElse (numSegSocial.Length = 0) Then _
-            Throw New System.ArgumentException()
-        Dim regex As New System.Text.RegularExpressions.Regex("[^0-9]")
-        If (regex.IsMatch(numSegSocial)) Then _
-            Throw New System.ArgumentException()
-        Try
-            Dim dcProv As String = numSegSocial.Substring(0, 2)
-            Dim numero As String = numSegSocial.Substring(2, numSegSocial.Length - 2)
-            Select Case numero.Length
-                Case 8
-                    If (esNumEmpresa) Then
-                        Return String.Empty
-                    Else
-                        If (numero.Chars(0) = "0"c) Then
-                            numero = numero.Remove(0, 1)
-                        End If
-                    End If
-                Case 7
-                    If (esNumEmpresa) Then
-                        If (numero.Chars(0) = "0"c) Then
-                            numero = numero.Remove(0, 1)
-                        End If
-                    End If
-                Case 6
-                    If (Not (esNumEmpresa)) Then
-                        numero = numero.PadLeft(7, "0"c)
-                    End If
-                Case Else
-                    If (esNumEmpresa) Then
-                        numero = numero.PadLeft(6, "0"c)
-                    Else
-                        numero = numero.PadLeft(7, "0"c)
-                    End If
-            End Select
-            Dim naf As Int64 = Convert.ToInt64(dcProv & numero)
-            naf = naf - (naf \ 97) * 97
-            Return String.Format("{0:00}", naf)
-        Catch
-            Return String.Empty
-        End Try
-    End Function
-    Public Function ValidaNumSS(ByVal NSS As String) As Boolean
+    'Function ValidaNif(ByVal nif As String) As Boolean
+    '    Dim n As Long
+    '    Dim letras() As String = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"}
+    '    If (Len(nif) = 9 AndAlso IsNumeric(nif.Substring(0, 8))) Then
+    '        n = CLng(nif.Substring(0, 8))
+    '        n = n Mod 23
+    '        If (UCase(nif.Substring(8)) = letras(CInt(n))) Then
+    '            Return True
+    '        End If
+    '    End If
+    '    Return False
+    'End Function
+    'Public Function GetDCNumSegSocial(ByVal numSegSocial As String, _
+    '                              ByVal esNumEmpresa As Boolean) As String
+    '    If (numSegSocial.Length > 10) OrElse (numSegSocial.Length = 0) Then _
+    '        Throw New System.ArgumentException()
+    '    Dim regex As New System.Text.RegularExpressions.Regex("[^0-9]")
+    '    If (regex.IsMatch(numSegSocial)) Then _
+    '        Throw New System.ArgumentException()
+    '    Try
+    '        Dim dcProv As String = numSegSocial.Substring(0, 2)
+    '        Dim numero As String = numSegSocial.Substring(2, numSegSocial.Length - 2)
+    '        Select Case numero.Length
+    '            Case 8
+    '                If (esNumEmpresa) Then
+    '                    Return String.Empty
+    '                Else
+    '                    If (numero.Chars(0) = "0"c) Then
+    '                        numero = numero.Remove(0, 1)
+    '                    End If
+    '                End If
+    '            Case 7
+    '                If (esNumEmpresa) Then
+    '                    If (numero.Chars(0) = "0"c) Then
+    '                        numero = numero.Remove(0, 1)
+    '                    End If
+    '                End If
+    '            Case 6
+    '                If (Not (esNumEmpresa)) Then
+    '                    numero = numero.PadLeft(7, "0"c)
+    '                End If
+    '            Case Else
+    '                If (esNumEmpresa) Then
+    '                    numero = numero.PadLeft(6, "0"c)
+    '                Else
+    '                    numero = numero.PadLeft(7, "0"c)
+    '                End If
+    '        End Select
+    '        Dim naf As Int64 = Convert.ToInt64(dcProv & numero)
+    '        naf = naf - (naf \ 97) * 97
+    '        Return String.Format("{0:00}", naf)
+    '    Catch
+    '        Return String.Empty
+    '    End Try
+    'End Function
+    'Public Function ValidaNumSS(ByVal NSS As String) As Boolean
 
-        Dim CP As String = NSS.Substring(0, 2)
-        If CP = "  " Then Return False
-        If Not IsNumeric(CP) AndAlso (CInt(CP) < 1 Or CInt(CP) > 50) Then Return False
-        Dim NssSCC As String = NSS.Substring(0, NSS.Length - 2)
-        Dim dc As String = GetDCNumSegSocial(NssSCC, False)
-        Dim s As String = NSS.Substring(NSS.Length - 2, 2)
-        If s = dc Then Return True
-        Return False
-    End Function
+    '    Dim CP As String = NSS.Substring(0, 2)
+    '    If CP = "  " Then Return False
+    '    If Not IsNumeric(CP) AndAlso (CInt(CP) < 1 Or CInt(CP) > 50) Then Return False
+    '    Dim NssSCC As String = NSS.Substring(0, NSS.Length - 2)
+    '    Dim dc As String = GetDCNumSegSocial(NssSCC, False)
+    '    Dim s As String = NSS.Substring(NSS.Length - 2, 2)
+    '    If s = dc Then Return True
+    '    Return False
+    'End Function
     Private Sub cmdBorrar_Click(sender As Object, e As EventArgs) Handles cmdBorrar.Click
         Dim respuesta1, respuesta2 As MsgBoxResult
         'Dim nombre As String = DP.Nombre & DP.Apellido1 & DP.Apellido2
@@ -1055,6 +1072,14 @@ Public Class FrmFichas
         Else            '      MsgBox("No se ha guardado el comentario")
         End If
     End Sub
+
+    'Private Sub cboCursos_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles cboCursos.MouseDoubleClick
+    '    Me.lblNombreCurso.Text = ""
+    '    Dim aux(3) As String
+    '    aux = Split(Me.cboCursos.SelectedItem.ToString, "_")
+    '    idcur = aux(0)
+    '    Me.lblNombreCurso.Text = aux(2)
+    'End Sub
     Private Sub cboCursos_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboCursos.SelectedIndexChanged
         Me.lblNombreCurso.Text = ""
         Dim aux(3) As String

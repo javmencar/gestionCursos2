@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="Alumno.vb" />
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="Funciones.vb" />
     <Compile Include="ListViewColumnSorter.vb" />
     <Compile Include="Ficha.vb" />
     <Compile Include="Curso.vb" />
