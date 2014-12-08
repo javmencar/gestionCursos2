@@ -609,20 +609,24 @@ Public Class FrmFichas
     End Sub
     Private Sub cargarFotoEnFormulario(ByVal I As Integer)
         Try
-            'Dim id As String = "22"
             Dim sql As String = String.Format("select FotoPath from DatosPersonales WHERE Id={0})", I)
-            cn.Open()
-            Dim cmd As New SqlCommand(sql, cn)
-            Dim str As String = ""
-            Dim dr As SqlDataReader = cmd.ExecuteReader
-            If dr.Read Then
-                Me.PicBx1.ImageLocation = dr(0)
-                Me.PicBx1.Show()
-                'Me.PicBx1.Load(str)
-                Me.LblFoto.Tag = dr(1)
-            Else
-                Throw New miExcepcion("No hay foto cargada")
-            End If
+            Dim s As String = Funciones1.ejecutarConsultaScalarString(Sql)
+            If s = "NULL" Then Throw New miExcepcion("No hay Foto Cargada")
+            Me.PicBx1.ImageLocation = s
+            Me.PicBx1.Show()
+            Me.LblFoto.Tag = s
+            'cn.Open()
+            'Dim cmd As New SqlCommand(sql, cn)
+            'Dim str As String = ""
+            'Dim dr As SqlDataReader = cmd.ExecuteReader
+            'If dr.Read Then
+            '    Me.PicBx1.ImageLocation = dr(0)
+            '    Me.PicBx1.Show()
+            '    'Me.PicBx1.Load(str)
+            '    Me.LblFoto.Tag = dr(1)
+            'Else
+            '    Throw New miExcepcion("No hay foto cargada")
+            'End If
         Catch ex2 As miExcepcion
             MsgBox(ex2.ToString)
         Catch ex As Exception
@@ -637,13 +641,12 @@ Public Class FrmFichas
     Private Sub CambiarFoto()
         fotoCambiada = True
         ' PicBx1.Tag = ""
+        OFGSelectImage.InitialDirectory = PathFotos
+        OFGSelectImage.Filter = "jpg files (*.jpg)|*.jpg|bmp files (*.bmp)|*.bmp|All files (*.*)|*.*"
         If OFGSelectImage.ShowDialog = Windows.Forms.DialogResult.OK Then
             PicBx1.Image = Image.FromFile(OFGSelectImage.FileName)
-            Dim Path As String = ""
-            'El Path lo deberé ajustar una vez sepa donde se guardarán los archivos del programa
+            Dim Path As String = "" 'El Path por ahora es en GIT,pero lo más seguro es que sea en S:\ 'Que es donde guardan las cosas en el servidor.
             If nuevo = False Then
-                'por ahora es en GIT,pero lo más seguro es que sea en S:\
-                'Que es donde guardan las cosas en el servidor.
                 Path = (String.Format("{0}Ficha{1}.bmp", PathFotos, DP.Id))
                 PicBx1.Image.Save(Path)
             Else
@@ -656,11 +659,7 @@ Public Class FrmFichas
    
     Private Sub cmdBorrar_Click(sender As Object, e As EventArgs) Handles cmdBorrar.Click
         Dim respuesta1, respuesta2 As MsgBoxResult
-        'Dim nombre As String = DP.Nombre & DP.Apellido1 & DP.Apellido2
-
-        respuesta1 = MsgBox(String.Format("Ha seleccionado la ficha:" & vbCrLf &
-                                          " ' {0} {1} {2} '" & vbCrLf &
-                                          " para ser borrada" & vbCrLf &
+        respuesta1 = MsgBox(String.Format("Ha seleccionado la ficha:" & vbCrLf & " ' {0} {1} {2} '" & vbCrLf & " para ser borrada" & vbCrLf &
                                           "¿Está seguro?", DP.Nombre, DP.Apellido1, DP.Apellido2), MsgBoxStyle.YesNo)
         If respuesta1 = MsgBoxResult.No Then Throw New miExcepcion("Borrado cancelado a peticion del usuario")
         respuesta2 = MsgBox("¿Seguro que desea continuar?" & vbCrLf & "Una vez borrado no se puede recuperar", MsgBoxStyle.YesNo)

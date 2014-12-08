@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GestionCursos_0.1.exe" size="283608">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GestionCursos_0.1.exe" size="284120">
       <assemblyIdentity name="GestionCursos_0.1" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>7WoJd6IdLMWh+OMO4iVG8/HPLCwVDkPLVwE+BHNjfS0=</dsig:DigestValue>
+        <dsig:DigestValue>jOQEDWcEm4hJccv32wwI/zpHK/ly5EehaziEX58ZlpU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

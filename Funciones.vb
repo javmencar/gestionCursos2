@@ -86,6 +86,20 @@ Public Class Funciones
         End Try
         Return control
     End Function
+    Public Function ejecutarConsultaScalarString(ByVal str As String) As String
+        cn = New SqlConnection(ConeStr)
+        Dim texto As String
+        Try
+            cn.Open()
+            Dim cmd As New SqlCommand(str, cn)
+            texto = cmd.ExecuteScalar
+        Catch ex As Exception
+            texto = "NULL"
+        Finally
+            cn.Close()
+        End Try
+        Return texto
+    End Function
     Public Function ejecutarConsultaNonQuery(ByVal str As String) As Integer
         cn = New SqlConnection(ConeStr)
         Dim control As Integer = 0
