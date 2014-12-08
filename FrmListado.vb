@@ -413,7 +413,7 @@ Public Class FrmListado
             Dim pos As Integer = -1
             Dim encontrado As Boolean = False
             For i As Integer = 0 To Me.ListView1.Items.Count - 1
-                If Me.ListView1.Items(i).SubItems(Me.CboFiltroBusquedaUnica.SelectedIndex + 1).Text = Me.TxtCampo.Text Then
+                If Me.ListView1.Items(i).SubItems(Me.CboFiltroBusquedaUnica.SelectedIndex + 1).Text.ToLower = Me.TxtCampo.Text.ToLower Then
                     encontrado = True
                     pos = i
                     Exit For
