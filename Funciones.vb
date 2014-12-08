@@ -1,9 +1,8 @@
 ﻿Imports System.Data.SqlClient
 Public Class Funciones
     Dim cn As SqlConnection
-    Public Sub New(ByVal c As SqlConnection)
-        cn = c
-        cn = New SqlConnection
+    Public Sub New()
+       
     End Sub
 
     Function ValidaNif(ByVal nif As String) As Boolean
@@ -74,13 +73,12 @@ Public Class Funciones
         Return False
     End Function
     Public Function ejecutarConsultaScalar(ByVal str As String) As Integer
-
+        cn = New SqlConnection(ConeStr)
         Dim control As Integer = 0
         Try
             cn.Open()
             Dim cmd As New SqlCommand(str, cn)
             control = cmd.ExecuteScalar
-            cn.Close()
         Catch ex As Exception
             control = -1
         Finally
@@ -89,12 +87,12 @@ Public Class Funciones
         Return control
     End Function
     Public Function ejecutarConsultaNonQuery(ByVal str As String) As Integer
+        cn = New SqlConnection(ConeStr)
         Dim control As Integer = 0
         Try
             cn.Open()
             Dim cmd As New SqlCommand(str, cn)
             control = cmd.ExecuteNonQuery
-            cn.Close()
         Catch ex As Exception
             control = -1
         Finally
@@ -115,5 +113,13 @@ Public Class Funciones
             Return 4
         End Try
         Return 0
+    End Function
+    Public Function QuitarSaltosDeLinea(ByVal str As String) As String
+        str = str.Replace(vbCrLf, "#")
+        Return str
+    End Function
+    Public Function MeterSaltosDeLinea(ByVal str As String) As String
+        str = str.Replace("#", vbCrLf)
+        Return str
     End Function
 End Class

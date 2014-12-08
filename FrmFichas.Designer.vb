@@ -101,9 +101,6 @@ Partial Class FrmFichas
         Me.lblEstecEntr = New System.Windows.Forms.Label()
         Me.lblEstecDinam = New System.Windows.Forms.Label()
         Me.lblEstecTest = New System.Windows.Forms.Label()
-        Me.OptAptoPendiente = New System.Windows.Forms.RadioButton()
-        Me.OptAptoNo = New System.Windows.Forms.RadioButton()
-        Me.optAptoSi = New System.Windows.Forms.RadioButton()
         Me.cmdSalir = New System.Windows.Forms.Button()
         Me.txtEdad = New System.Windows.Forms.MaskedTextBox()
         Me.SFDSelectedImage = New System.Windows.Forms.SaveFileDialog()
@@ -121,6 +118,10 @@ Partial Class FrmFichas
         Me.lblComentariosEscritos = New System.Windows.Forms.Label()
         Me.cboCursos = New System.Windows.Forms.ComboBox()
         Me.lblNombreCurso = New System.Windows.Forms.Label()
+        Me.GbRdBtCalificaciones = New System.Windows.Forms.GroupBox()
+        Me.OptAptoPendiente = New System.Windows.Forms.RadioButton()
+        Me.OptAptoNo = New System.Windows.Forms.RadioButton()
+        Me.optAptoSi = New System.Windows.Forms.RadioButton()
         Me.GbInaem.SuspendLayout()
         Me.GbExperiencia.SuspendLayout()
         Me.GbUniforme.SuspendLayout()
@@ -129,6 +130,7 @@ Partial Class FrmFichas
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         CType(Me.PicBx1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GbRdBtCalificaciones.SuspendLayout()
         Me.SuspendLayout()
         '
         'LblApellido1
@@ -639,17 +641,15 @@ Partial Class FrmFichas
         '
         'GbCalificacion
         '
+        Me.GbCalificacion.Controls.Add(Me.GbRdBtCalificaciones)
         Me.GbCalificacion.Controls.Add(Me.GroupBox2)
         Me.GbCalificacion.Controls.Add(Me.GroupBox1)
-        Me.GbCalificacion.Controls.Add(Me.OptAptoPendiente)
-        Me.GbCalificacion.Controls.Add(Me.OptAptoNo)
-        Me.GbCalificacion.Controls.Add(Me.optAptoSi)
         Me.GbCalificacion.Location = New System.Drawing.Point(37, 532)
         Me.GbCalificacion.Name = "GbCalificacion"
         Me.GbCalificacion.Size = New System.Drawing.Size(663, 197)
         Me.GbCalificacion.TabIndex = 18
         Me.GbCalificacion.TabStop = False
-        Me.GbCalificacion.Text = "Calificacion"
+        Me.GbCalificacion.Text = "Notas"
         '
         'GroupBox2
         '
@@ -881,42 +881,6 @@ Partial Class FrmFichas
         Me.lblEstecTest.TabIndex = 33
         Me.lblEstecTest.Text = "Test"
         '
-        'OptAptoPendiente
-        '
-        Me.OptAptoPendiente.AutoSize = True
-        Me.OptAptoPendiente.Location = New System.Drawing.Point(514, 97)
-        Me.OptAptoPendiente.Name = "OptAptoPendiente"
-        Me.OptAptoPendiente.Size = New System.Drawing.Size(73, 17)
-        Me.OptAptoPendiente.TabIndex = 2
-        Me.OptAptoPendiente.TabStop = True
-        Me.OptAptoPendiente.Tag = "24"
-        Me.OptAptoPendiente.Text = "Pendiente"
-        Me.OptAptoPendiente.UseVisualStyleBackColor = True
-        '
-        'OptAptoNo
-        '
-        Me.OptAptoNo.AutoSize = True
-        Me.OptAptoNo.Location = New System.Drawing.Point(514, 65)
-        Me.OptAptoNo.Name = "OptAptoNo"
-        Me.OptAptoNo.Size = New System.Drawing.Size(64, 17)
-        Me.OptAptoNo.TabIndex = 1
-        Me.OptAptoNo.TabStop = True
-        Me.OptAptoNo.Tag = "24"
-        Me.OptAptoNo.Text = "No Apto"
-        Me.OptAptoNo.UseVisualStyleBackColor = True
-        '
-        'optAptoSi
-        '
-        Me.optAptoSi.AutoSize = True
-        Me.optAptoSi.Location = New System.Drawing.Point(514, 29)
-        Me.optAptoSi.Name = "optAptoSi"
-        Me.optAptoSi.Size = New System.Drawing.Size(47, 17)
-        Me.optAptoSi.TabIndex = 0
-        Me.optAptoSi.TabStop = True
-        Me.optAptoSi.Tag = "24"
-        Me.optAptoSi.Text = "Apto"
-        Me.optAptoSi.UseVisualStyleBackColor = True
-        '
         'cmdSalir
         '
         Me.cmdSalir.Location = New System.Drawing.Point(897, 543)
@@ -1065,6 +1029,54 @@ Partial Class FrmFichas
         Me.lblNombreCurso.TabIndex = 57
         Me.lblNombreCurso.Text = "Label1"
         '
+        'GbRdBtCalificaciones
+        '
+        Me.GbRdBtCalificaciones.Controls.Add(Me.OptAptoPendiente)
+        Me.GbRdBtCalificaciones.Controls.Add(Me.OptAptoNo)
+        Me.GbRdBtCalificaciones.Controls.Add(Me.optAptoSi)
+        Me.GbRdBtCalificaciones.Location = New System.Drawing.Point(476, 30)
+        Me.GbRdBtCalificaciones.Name = "GbRdBtCalificaciones"
+        Me.GbRdBtCalificaciones.Size = New System.Drawing.Size(138, 138)
+        Me.GbRdBtCalificaciones.TabIndex = 42
+        Me.GbRdBtCalificaciones.TabStop = False
+        Me.GbRdBtCalificaciones.Text = "Calificacion"
+        '
+        'OptAptoPendiente
+        '
+        Me.OptAptoPendiente.AutoSize = True
+        Me.OptAptoPendiente.Location = New System.Drawing.Point(33, 95)
+        Me.OptAptoPendiente.Name = "OptAptoPendiente"
+        Me.OptAptoPendiente.Size = New System.Drawing.Size(73, 17)
+        Me.OptAptoPendiente.TabIndex = 5
+        Me.OptAptoPendiente.TabStop = True
+        Me.OptAptoPendiente.Tag = "24"
+        Me.OptAptoPendiente.Text = "Pendiente"
+        Me.OptAptoPendiente.UseVisualStyleBackColor = True
+        '
+        'OptAptoNo
+        '
+        Me.OptAptoNo.AutoSize = True
+        Me.OptAptoNo.Location = New System.Drawing.Point(33, 63)
+        Me.OptAptoNo.Name = "OptAptoNo"
+        Me.OptAptoNo.Size = New System.Drawing.Size(64, 17)
+        Me.OptAptoNo.TabIndex = 4
+        Me.OptAptoNo.TabStop = True
+        Me.OptAptoNo.Tag = "24"
+        Me.OptAptoNo.Text = "No Apto"
+        Me.OptAptoNo.UseVisualStyleBackColor = True
+        '
+        'optAptoSi
+        '
+        Me.optAptoSi.AutoSize = True
+        Me.optAptoSi.Location = New System.Drawing.Point(33, 27)
+        Me.optAptoSi.Name = "optAptoSi"
+        Me.optAptoSi.Size = New System.Drawing.Size(47, 17)
+        Me.optAptoSi.TabIndex = 3
+        Me.optAptoSi.TabStop = True
+        Me.optAptoSi.Tag = "24"
+        Me.optAptoSi.Text = "Apto"
+        Me.optAptoSi.UseVisualStyleBackColor = True
+        '
         'FrmFichas
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1130,12 +1142,13 @@ Partial Class FrmFichas
         Me.GbEntrevista.ResumeLayout(False)
         Me.GbEntrevista.PerformLayout()
         Me.GbCalificacion.ResumeLayout(False)
-        Me.GbCalificacion.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         CType(Me.PicBx1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GbRdBtCalificaciones.ResumeLayout(False)
+        Me.GbRdBtCalificaciones.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1191,9 +1204,6 @@ Partial Class FrmFichas
     Friend WithEvents txtNivelEstudios As System.Windows.Forms.TextBox
     Friend WithEvents lblNivelEstudios As System.Windows.Forms.Label
     Friend WithEvents GbCalificacion As System.Windows.Forms.GroupBox
-    Friend WithEvents OptAptoPendiente As System.Windows.Forms.RadioButton
-    Friend WithEvents OptAptoNo As System.Windows.Forms.RadioButton
-    Friend WithEvents optAptoSi As System.Windows.Forms.RadioButton
     Friend WithEvents txtInFecha As System.Windows.Forms.MaskedTextBox
     Friend WithEvents lblInFecha As System.Windows.Forms.Label
     Friend WithEvents cmdSalir As System.Windows.Forms.Button
@@ -1238,4 +1248,8 @@ Partial Class FrmFichas
     Friend WithEvents MtxtEstecDinam As System.Windows.Forms.MaskedTextBox
     Friend WithEvents MtxtEstecTest As System.Windows.Forms.MaskedTextBox
     Friend WithEvents lblNombreCurso As System.Windows.Forms.Label
+    Friend WithEvents GbRdBtCalificaciones As System.Windows.Forms.GroupBox
+    Friend WithEvents OptAptoPendiente As System.Windows.Forms.RadioButton
+    Friend WithEvents OptAptoNo As System.Windows.Forms.RadioButton
+    Friend WithEvents optAptoSi As System.Windows.Forms.RadioButton
 End Class
